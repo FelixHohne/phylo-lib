@@ -1,5 +1,4 @@
 type clade_id = int
-
 exception UnknownClade of clade_id
 
 type node = Clade of {
