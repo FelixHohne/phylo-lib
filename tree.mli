@@ -23,3 +23,6 @@ val is_empty : t -> bool
 [clade_id] to phylogenetic tree [t]. Throws [UnknownClade clade_id] if clade_id
 cannot be found in the phylogenetic tree. *)
 val add_species: t -> clade_id -> string -> t 
+
+(** [size t] is the size of tree t. Counts both clodes and species.  *)
+(** val size: t -> int *)
