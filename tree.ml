@@ -16,7 +16,6 @@ let empty = Node (Clade { clade_id = 0; bootstrap = None }, [])
 
 let is_empty t = (t == empty) 
 
-
 let rec add_species (tree : t) (clade_id : clade_id) (species : string) : t = 
   match tree with
   | Node (Leaf _, lst) -> raise (UnknownClade clade_id)
@@ -32,4 +31,15 @@ add_species_helper (lst: t list) (clade_id : clade_id) (species : string) : t =
   | [] -> raise (UnknownClade clade_id)
   | h::t -> try add_species h clade_id species
     with UnknownClade _ -> add_species_helper t clade_id species
+
+
+let rec size (tree:t) = size_helper tree 0 
+and 
+size_helper (tree: t) (size: int) : int = 
+  match tree with 
+  | Node (Leaf _, lst) -> size + 1
+  | Node (Clade _, []) -> size
+  | Node (Clade _, h :: t) -> let lst = h :: t in 
+  1 + List.fold_left (fun acc x -> acc + (size_helper h size)) 0 lst 
+  
 

@@ -24,5 +24,5 @@ val is_empty : t -> bool
 cannot be found in the phylogenetic tree. *)
 val add_species: t -> clade_id -> string -> t 
 
-(** [size t] is the size of tree t. Counts both clodes and species.  *)
-(** val size: t -> int *)
+(** [size t] is the size of tree t including both clodes and species.  *)
+val size: t -> int 
