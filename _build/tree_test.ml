@@ -5,6 +5,7 @@ open Tree
 let tree_empty = [
   
   "empty" >:: (fun _ -> assert_equal true (is_empty(empty)));
+  
 
 ]
 

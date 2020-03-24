@@ -6,7 +6,7 @@ test:
 
 docs:
 	mkdir -p doc
-	ocamldoc -d doc -html tree.ml
+	ocamldoc -d doc -html tree.mli
 
 clean:
 	ocamlbuild -clean

@@ -2,15 +2,15 @@
 # Target: tree_test.ml.depends, tags: { package(oUnit), debug, extension:ml, file:tree_test.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -modules tree_test.ml > tree_test.ml.depends
 # Target: tree.mli.depends, tags: { package(oUnit), debug, extension:mli, file:tree.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules tree.mli > tree.mli.depends # cached
+ocamlfind ocamldep -package oUnit -modules tree.mli > tree.mli.depends
 # Target: tree.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:tree.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -o tree.cmi tree.mli # cached
+ocamlfind ocamlc -c -g -package oUnit -o tree.cmi tree.mli
 # Target: tree_test.cmo, tags: { package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:tree_test.cmo, file:tree_test.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -g -package oUnit -o tree_test.cmo tree_test.ml
 # Target: tree.ml.depends, tags: { package(oUnit), debug, extension:ml, file:tree.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules tree.ml > tree.ml.depends # cached
+ocamlfind ocamldep -package oUnit -modules tree.ml > tree.ml.depends
 # Target: tree.cmo, tags: { package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:tree.cmo, file:tree.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -o tree.cmo tree.ml # cached
+ocamlfind ocamlc -c -g -package oUnit -o tree.cmo tree.ml
 # Target: tree_test.byte, tags: { package(oUnit), byte, debug, dont_link_with, extension:byte, file:tree_test.byte, link, ocaml, program, quiet, traverse }
 ocamlfind ocamlc -linkpkg -g -package oUnit tree.cmo tree_test.cmo -o tree_test.byte
 # Compilation successful.
