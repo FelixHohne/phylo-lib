@@ -2,9 +2,9 @@ type tree = Node of string * tree list
 
 let tree_a : tree = Node ("M", 
                           [Node ("A", [Node ("C", []); Node ("D", [])]); 
-                           Node ("Z", [])])
+                           Node ("Z", []); Node ("X", [])])
 
-let tree_b : tree = Node ("A", [])
+let tree_b : tree = Node ("A", [Node ("B", []); Node ("C", []); Node ("D", []); Node ("E", [])])
 
 let tree_c : tree = Node ("M", [Node ("A", [Node ("C", []); 
                                             Node ("D", []); 
@@ -18,7 +18,8 @@ let tree_d : tree = Node ("M", [Node
                                                      Node ("G", [])]); 
                                          Node ("E", [])]); 
                                 Node ("S", [Node ("P", [Node ("V", [])]); 
-                                            Node ("Q", [])])])
+                                            Node ("Q", [])]);
+                                Node ("Z", []); Node ("L", [])])
 
 (** [print_spaces n] prints [n] spaces to the console. *)
 let print_spaces (n : int) : unit =
