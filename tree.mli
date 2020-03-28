@@ -3,9 +3,9 @@ Representation invariant: the phylogenetic tree never contains two
 species with the same name. *)
 type t
 
-(** The abstract data type of values representing a node in the phylo tree.
+(* (** The abstract data type of values representing a node in the phylo tree.
     Can represent both clades and species.  *)
-type node
+type node *)
 
 (** The type of clade node identifiers. *)
 type clade_id = int
@@ -26,3 +26,14 @@ val add_species: t -> clade_id -> string -> t
 
 (** [size t] is the size of tree t including both clodes and species.  *)
 val size: t -> int 
+
+(** [zip trees id] is the tree with a clade of [clade_id] as the root and
+[trees] as the children.  *)
+val zip: t list -> clade_id -> t
+
+(** [leaf species] is the tree consisting of only [species]*)
+val leaf: string -> t
+
+(** [is_equal a b] is true if [a] and [b] are structurally similar, ignoring
+the order of the children*)
+val is_equal: t -> t -> bool

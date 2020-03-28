@@ -2,10 +2,13 @@ open OUnit2
 open Tree
 
 
-  let dog = add_species empty 0 "dog" 
+  let dog = add_species empty 0 "dog"
   let dog_cat = add_species dog 0  "cat" 
   let dog_cat_mouse = add_species dog_cat 0 "mouse" 
-
+  let a = leaf "dog"
+  let b = leaf "cat"
+  let z = zip [a; b] 0
+  let z' = dog_cat
 
 let tree_empty = [
   
@@ -13,15 +16,19 @@ let tree_empty = [
 ]
 
 let tree_add = [
-
   "zero size" >:: (fun _ -> assert_equal (size empty) 0); 
   "add_test" >:: (fun _ -> assert_equal (size dog_cat_mouse) 4);
-
 ]
+
+let tree_zip = [
+  "leaf zip" >:: (fun _ -> assert_bool "" (is_equal z z'));
+]
+
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
     tree_empty;
     tree_add; 
+    tree_zip;
   ]
 
 let _ = run_test_tt_main tests
