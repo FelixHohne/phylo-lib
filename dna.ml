@@ -37,12 +37,17 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   | '_' -> Hashtbl.add dna (!cur_count) "N"; add_dna rem_string dna cur_count
   | h -> add_dna rem_string dna cur_count  
 
+(** [parse_line] parses the inputted [str] and updates dna and counter to 
+    create t file. *)
 let parse_line str (dna:t) counter : unit= 
   if length str = 0 then () else 
   let first_char = get str 0 in 
   if first_char = '>' || first_char = ' ' then () else 
   (add_dna str dna counter)
 
+(** [parse_file f] reads file [f] line by line and uses [dna] and [counter] 
+    to create t data structure. 
+    dna and counter are modified. *)
 let parse_file f dna counter = 
   let in_channel = open_in f in 
   try 
@@ -75,6 +80,8 @@ let phys_equals t t =
 let length t = 
   Hashtbl.length t 
 
+(** [str_range_helper t ] modifies b by reading the chars 
+    from t.start to t.end exlusive and adding these values to b. *)
 let str_range_helper t (b:Buffer.t) start finish = 
   for i = start to finish do 
     let v = get t i in 
