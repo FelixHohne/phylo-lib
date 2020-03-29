@@ -2,21 +2,23 @@ open String
 
 type dna = string 
 
+(** Representation Invariant: DNA is a string of "A" or "C", "G", "T", "N" *)
 type t = (int, dna) Hashtbl.t 
 
 exception Done
 
 exception Malformed
 
-
-let print_variant dna cur_count= 
+(** [print_variant dna cur_count] is a helper printing function that 
+    prints the value associated with the [cur_count key] for the dna sequence 
+    [dna].*)
+let print_variant dna cur_count = 
   print_endline "print variant: ";
   print_endline "current counter: ";
   print_int cur_count; 
   match Hashtbl.find_opt dna 0 with 
   | None -> print_endline "None"; ()
   | Some h -> print_endline h; ()
-
 
 (** [add_dna t str] is t with valid DNA sequences in str added. 
     Precondition: [str] is not empty *)
@@ -53,11 +55,10 @@ let parse_file f dna counter =
   | e -> close_in_noerr in_channel; raise Malformed
 
 let from_fasta (f:string) : t = 
-  let dna_sequence = Hashtbl.create 1048576 in 
+  let dna_sequence = Hashtbl.create 10485760 in 
   let counter = ref (-1) in 
   try parse_file f dna_sequence counter; dna_sequence  
   with Malformed -> raise Malformed 
-
 
 let get (t:t) pos = 
   Hashtbl.find_opt t pos 
@@ -65,8 +66,26 @@ let get (t:t) pos =
 let is_empty t = 
   if Hashtbl.length t = 0 then true else false
 
+let phys_equals t t = 
+  (** Implementation Note: physical equality was chosen because structural 
+      equality tests for large DNA sequences (i.e. millions of base pairs)
+      is prohibitively expensive O(1) vs O(n) *)
+  (t == t)
   
+let length t = 
+  Hashtbl.length t 
 
-  
-  
+let str_range_helper t (b:Buffer.t) start finish = 
+  for i = start to finish do 
+    let v = get t i in 
+    match v with 
+    | Some h -> Buffer.add_string b h
+    | None -> failwith "Invalid inputs"
+  done 
+
+let string_of_range t start finish = 
+  let output = Buffer.create (finish - start) in 
+  str_range_helper t output start finish; 
+  Buffer.contents output
+
 
