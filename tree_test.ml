@@ -20,6 +20,7 @@ let tree_size = [
 let tree_zip = [
   "leaf zip" >:: (fun _ -> assert_bool "" (is_equal dog_cat_mouse z));
 ]
+
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
     tree_empty;

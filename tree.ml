@@ -70,7 +70,6 @@ and
   | h::t -> try add_species h clade_id species
     with UnknownClade _ -> add_species_helper t clade_id species
 
-
 let rec size (tree:t) = size_helper tree 0 
 and 
   size_helper (tree: t) (size: int) : int = 
@@ -102,5 +101,3 @@ and
   | Clade t1, Clade t2 -> let s1 = List.sort (hierarchy) t1.children in
     let s2 = List.sort (hierarchy) t1.children in tlist_comp s1 s2 true
   | _ -> false
-
-
