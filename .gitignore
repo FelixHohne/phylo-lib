@@ -7,3 +7,4 @@
 *.native
 *.byte
 _build
+.DS_Store
