@@ -1,5 +1,6 @@
 open OUnit2
 open Tree
+open Sample_trees
 
 let dog = leaf "dog"
 let cat = leaf "cat"
@@ -22,8 +23,7 @@ let tree_zip = [
 ]
 
 let tree_print = [
-  "printing a tree with clades and sub-clades" >:: 
-  (fun _ -> assert_equal (size empty) 0); 
+  (* can't test printing!! ! *)
 ]
 
 

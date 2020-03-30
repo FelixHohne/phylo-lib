@@ -32,8 +32,6 @@ let dna_functions = [
   "str2" >:: (fun _ -> assert_equal (string_of_range ex2 0 1) "G");
   "str2" >:: (fun _ -> assert_equal (string_of_range ex2 0 0) "");
   "str3" >:: (fun _ -> assert_equal (string_of_range ex2 1 3) "AA");
-  "str3" >:: (fun _ -> assert_equal (string_of_range ex2 1 0) "AA");
-
 
 ]
 let tests =
