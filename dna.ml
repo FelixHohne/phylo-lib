@@ -2,7 +2,8 @@ open String
 
 type dna = string 
 
-(** Representation Invariant: DNA is a string of "A" or "C", "G", "T", "N" *)
+(** Representation Invariant: DNA is a string of one fo the following
+    letters: "A" "C", "G", "T", "N" *)
 type t = (int, dna) Hashtbl.t 
 
 exception Malformed
@@ -27,7 +28,7 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   let rem_string = (sub str 1 (length - 1)) in 
   incr(cur_count);
   match (get str 0 |> Char.uppercase_ascii) with 
-  | 'A' -> Hashtbl.add dna (!cur_count) "A";  add_dna rem_string dna cur_count
+  | 'A' -> Hashtbl.add dna (!cur_count) "A"; add_dna rem_string dna cur_count
   | 'C' -> Hashtbl.add dna (!cur_count) "C"; add_dna rem_string dna cur_count
   | 'G' -> Hashtbl.add dna (!cur_count) "G"; add_dna rem_string dna cur_count
   | 'T' -> Hashtbl.add dna (!cur_count) "T"; add_dna rem_string dna cur_count
@@ -69,14 +70,6 @@ let get (t:t) pos =
 let is_empty t = 
   if Hashtbl.length t = 0 then true else false
 
-(* 
-let phys_equals t t = 
-  (** Implementation Note: physical equality was chosen because structural 
-      equality tests for large DNA sequences (i.e. millions of base pairs)
-      is prohibitively expensive O(1) vs O(n) *)
-  (t = t)
-*) 
-
 let length t = 
   Hashtbl.length t 
 
@@ -95,4 +88,10 @@ let string_of_range t start finish =
   str_range_helper t output start finish; 
   Buffer.contents output
 
-
+(* 
+let phys_equals t t = 
+  (** Implementation Note: physical equality was chosen because structural 
+      equality tests for large DNA sequences (i.e. millions of base pairs)
+      is prohibitively expensive O(1) vs O(n) *)
+  (t = t)
+*) 
