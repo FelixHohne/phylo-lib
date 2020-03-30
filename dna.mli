@@ -17,7 +17,6 @@ val length : t -> int
    if [int] is not a valid position for [t]. *)
 val get : t -> int -> string option 
 
-
 (** [string_of_range t start finish] is a string with base pairs represented as 
     chars of [t.start, t.finish). 
     Requires: start, finish are valid positions in t and finish > start. 
@@ -26,5 +25,5 @@ val get : t -> int -> string option
 val string_of_range : t -> int -> int -> string
 
 (** [phys_equals t t] is the physical equality test for DNA sequences.  *)
-val phys_equals : t -> t -> bool
+(* val phys_equals : t -> t -> bool *) 
 

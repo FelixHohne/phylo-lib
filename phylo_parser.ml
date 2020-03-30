@@ -43,6 +43,12 @@ used for internal nodes.
 
 *)
 
+type phylo = {
+  name : string; 
+  description : string;
+  tree : Tree.t;
+}
+
 type token =
 Phylogeny of bool | Name | Description 
 | Clade | Rank | Confidence 
@@ -60,3 +66,6 @@ let to_string (t : token) : string =
   | Taxonomy -> "Taxonomy"
   | SciName -> "SciName"
   | Id -> "Id"
+
+let from_phylo str = 
+ failwith "Unimplemted"

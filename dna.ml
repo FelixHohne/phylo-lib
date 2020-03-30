@@ -71,19 +71,21 @@ let get (t:t) pos =
 let is_empty t = 
   if Hashtbl.length t = 0 then true else false
 
+(* 
 let phys_equals t t = 
   (** Implementation Note: physical equality was chosen because structural 
       equality tests for large DNA sequences (i.e. millions of base pairs)
       is prohibitively expensive O(1) vs O(n) *)
-  (t == t)
-  
+  (t = t)
+*) 
+
 let length t = 
   Hashtbl.length t 
 
 (** [str_range_helper t ] modifies b by reading the chars 
     from t.start to t.end exlusive and adding these values to b. *)
 let str_range_helper t (b:Buffer.t) start finish = 
-  for i = start to finish do 
+  for i = start to (finish -1) do 
     let v = get t i in 
     match v with 
     | Some h -> Buffer.add_string b h
