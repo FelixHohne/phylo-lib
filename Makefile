@@ -2,7 +2,7 @@ build:
 	ocamlbuild -use-ocamlfind tree.cmo tree_test.cmo
 	ocamlbuild -use-ocamlfind dna.cmo dna_test.cmo
 	ocamlbuild -use-ocamlfind phylo_parser.cmo phylo_parser_test.cmo 
-	ocamlbuild -use-ocamlfind resources/sample_trees.cmo
+	ocamlbuild -use-ocamlfind -I resources/sample_trees.cmo
 
 
 test:
