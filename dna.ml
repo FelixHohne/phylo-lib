@@ -2,10 +2,9 @@ open String
 
 type dna = string 
 
-(** Representation Invariant: DNA is a string of "A" or "C", "G", "T", "N" *)
+(** Representation Invariant: DNA is a string of one fo the following
+    letters: "A" "C", "G", "T", "N" *)
 type t = (int, dna) Hashtbl.t 
-
-exception Done
 
 exception Malformed
 
@@ -20,8 +19,8 @@ let print_variant dna cur_count =
   | None -> print_endline "None"; ()
   | Some h -> print_endline h; ()
 
-(** [add_dna t str] is t with valid DNA sequences in str added. 
-    Precondition: [str] is not empty *)
+(** [add_dna str t cur_count] mutates t by adding valid DNA sequences 
+    in str with counter cur_ref. *)
 let rec add_dna str dna (cur_count:int ref) : unit = 
   let str = str |> uppercase_ascii in 
   let length = length str in 
@@ -29,7 +28,7 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   let rem_string = (sub str 1 (length - 1)) in 
   incr(cur_count);
   match (get str 0 |> Char.uppercase_ascii) with 
-  | 'A' -> Hashtbl.add dna (!cur_count) "A";  add_dna rem_string dna cur_count
+  | 'A' -> Hashtbl.add dna (!cur_count) "A"; add_dna rem_string dna cur_count
   | 'C' -> Hashtbl.add dna (!cur_count) "C"; add_dna rem_string dna cur_count
   | 'G' -> Hashtbl.add dna (!cur_count) "G"; add_dna rem_string dna cur_count
   | 'T' -> Hashtbl.add dna (!cur_count) "T"; add_dna rem_string dna cur_count
@@ -37,8 +36,8 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   | '_' -> Hashtbl.add dna (!cur_count) "N"; add_dna rem_string dna cur_count
   | h -> add_dna rem_string dna cur_count  
 
-(** [parse_line] parses the inputted [str] and updates dna and counter to 
-    create t file. *)
+(** [parse_line] parses the inputted [str] and calls add_dna to update
+    t based on valid DNA inputs in [str] *)
 let parse_line str (dna:t) counter : unit= 
   if length str = 0 then () else 
   let first_char = get str 0 in 
@@ -71,19 +70,11 @@ let get (t:t) pos =
 let is_empty t = 
   if Hashtbl.length t = 0 then true else false
 
-(* 
-let phys_equals t t = 
-  (** Implementation Note: physical equality was chosen because structural 
-      equality tests for large DNA sequences (i.e. millions of base pairs)
-      is prohibitively expensive O(1) vs O(n) *)
-  (t = t)
-*) 
-
 let length t = 
   Hashtbl.length t 
 
 (** [str_range_helper t ] modifies b by reading the chars 
-    from t.start to t.end exlusive and adding these values to b. *)
+    from [t.start, t.end) and adding these values to b. *)
 let str_range_helper t (b:Buffer.t) start finish = 
   for i = start to (finish -1) do 
     let v = get t i in 
@@ -97,4 +88,10 @@ let string_of_range t start finish =
   str_range_helper t output start finish; 
   Buffer.contents output
 
-
+(* 
+let phys_equals t t = 
+  (** Implementation Note: physical equality was chosen because structural 
+      equality tests for large DNA sequences (i.e. millions of base pairs)
+      is prohibitively expensive O(1) vs O(n) *)
+  (t = t)
+*) 
