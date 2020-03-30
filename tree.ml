@@ -1,7 +1,8 @@
 type clade_id = int
 exception UnknownClade of clade_id
 
-(** Represents a node in the phylogenetic tree. *)
+(** The phylogenetic tree.
+    Representation Invariant: clade_ids must be unique *)
 type t = Clade of {
     clade_id : clade_id;
     bootstrap : float option;
