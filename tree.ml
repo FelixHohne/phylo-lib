@@ -101,9 +101,6 @@ and is_equal a b = match a, b with
 | Clade t1, Clade t2 -> let s1 = List.sort (hierarchy) t1.children in
   let s2 = List.sort (hierarchy) t1.children in tlist_comp s1 s2 true
 | _ -> false
-
-let zip (trees: t list) (id: clade_id) : t = 
-  Clade {clade_id = id; bootstrap = None; children = trees}
   
 (** [print_spaces n] prints [n] spaces to the console. *)
 let print_spaces (n : int) : unit =
@@ -171,9 +168,3 @@ let rec print_tree_helper (t_lst : t list) (d : int) (ds : int list): unit =
 let print_tree (t : t) : unit = 
   print_tree_helper [t] 0 []
 
-and 
-  is_equal a b = match a, b with
-  | Leaf _, Leaf _ -> true
-  | Clade t1, Clade t2 -> let s1 = List.sort (hierarchy) t1.children in
-    let s2 = List.sort (hierarchy) t1.children in tlist_comp s1 s2 true
-  | _ -> false

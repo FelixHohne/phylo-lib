@@ -21,6 +21,12 @@ let tree_zip = [
   "leaf zip" >:: (fun _ -> assert_bool "" (is_equal dog_cat_mouse z));
 ]
 
+let tree_print = [
+  "printing a tree with clades and sub-clades" >:: 
+  (fun _ -> assert_equal (size empty) 0); 
+]
+
+
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
     tree_empty;
@@ -29,3 +35,4 @@ let tests =
   ]
 
 let _ = run_test_tt_main tests
+
