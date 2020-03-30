@@ -33,3 +33,6 @@ val zip: t list -> t
 (** [is_equal a b] is true if [a] and [b] are structurally similar, ignoring
     the order of the children. *)
 val is_equal: t -> t -> bool
+
+(** [print_tree t] prints an ASCII-art [t] to console semi-prettily. *)
+val print_tree: t -> unit
