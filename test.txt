@@ -1,5 +1,6 @@
+<clade>x </clade>
+<description>contains examples of commonly used elements</description>
 <name>Alcohol dehydrogenase class-3</name>
 <accession source="UniProtKB">P81431</accession>
 <id provider="ncbi">6645</id>
-<description>contains examples of commonly used elements</description>
-<clade>x </clade>
+
