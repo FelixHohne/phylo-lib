@@ -109,7 +109,7 @@ let rec tokenize_line (stream : char Stream.t) (acc : token list): token list =
   | '>' -> tokenize_line stream (RAngle::acc)
   | '"' -> tokenize_line stream (Quote::acc)
   | '=' -> tokenize_line stream (Eq::acc)
-  | ' ' | '\t' | '\n' -> tokenize_line stream acc
+  | ' ' | '\t' | '\n' | '\r'-> tokenize_line stream acc
   | c when is_number c -> 
     tokenize_line stream ((lex_number stream (Char.escaped c))::acc)
   | c -> tokenize_line stream ((lex_keyword stream (Char.escaped c))::acc)
@@ -118,6 +118,15 @@ let rec tokenize_line (stream : char Stream.t) (acc : token list): token list =
 let tokenize_next_line (stream : string Stream.t) : token list =
   let char_stream = stream_of_line stream in
   tokenize_line char_stream []
+
+let next_token_builder (stream : string Stream.t) =
+  let tokens_in_line = ref (tokenize_next_line stream) in
+  let next_token_fun = ref (fun () -> LAngle) in
+  next_token_fun := (fun () ->
+      match !tokens_in_line with
+      | [] -> tokens_in_line := tokenize_next_line stream; !next_token_fun ()
+      | h::t -> tokens_in_line := t; h);
+  !next_token_fun
 
 (* 
 let print_char_opt = print_endline "Print char";
