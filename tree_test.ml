@@ -26,7 +26,6 @@ let tree_print = [
   (* can't test printing!! ! *)
 ]
 
-
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
     tree_empty;

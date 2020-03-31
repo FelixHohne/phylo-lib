@@ -3,4 +3,3 @@
 <name>Alcohol dehydrogenase class-3</name>
 <accession source="UniProtKB">P81431</accession>
 <id provider="ncbi">6645</id>
-

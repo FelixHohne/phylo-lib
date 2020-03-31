@@ -1,3 +1,2 @@
-abg
-cde
-f
+<clade>
+x </clade>
