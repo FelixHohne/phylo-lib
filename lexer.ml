@@ -37,14 +37,16 @@ let stream_of_file (f : string) : string Stream.t =
 
 (** [stream_of_line stream] is a character stream of the next line of 
     string stream [stream]. 
-    Effects: Removes the first element in [stream]. *)
+    Effects: Removes the first element in [stream]. 
+    Raises: [EOF] if the end of the file is reached. *)
 let stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.next stream) with
   | str -> Stream.of_string str
   | exception Stream.Failure -> print_endline "End of file"; raise EOF
 
 (** [peek_stream_of_line stream] is a character stream of the next line of
-    string stream [stream]. Does not modify [stream]. *)
+    string stream [stream]. Does not modify [stream]. 
+    Raises: [EOF] if the end of the file is reached. *)
 let peek_stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.peek stream) with
   | Some str -> Stream.of_string str
@@ -82,10 +84,11 @@ and
   if is_token acc
   then string_to_token acc else Word acc
 
-(** [is_number n] is true if n is a number from 0 to 9 *)
-let is_number (n : char) = 
-  try n |> Char.escaped |> int_of_string |> ignore; true
-  with _ -> false
+(** [is_number c] is true if c represents a numerical digit. *)
+let is_number (c : char) = 
+  match c with 
+  | '0'..'9' -> true
+  | _ -> false
 
 (** [lex_number stream acc] lexes a number in [stream], taking into account 
     the digits of the number that have already been read, which are in [acc]. *)
