@@ -44,6 +44,9 @@ type phylo = {
   tree : Tree.t;
 }
 
+let peek = ref (fun () -> EOF)
+let consume_token = ref (fun () -> EOF)
+
 (** [to_string t] is a string representing [t]. *)
 (* let to_string (t : token) : string = 
    match t with 
@@ -81,8 +84,8 @@ let empty_phylo =
 
 (** Where are we checking that the file is syntactically or semantically correct?*)
 (* in the helper functions, like if you have a left angle then the helper function for that should expect a CLade/etc tag, and if it's something weird it throws an exception? *)
-let consume (t : (bool -> token)) (token:token) = 
-  match (t true) with
+let consume (token:token) = 
+  match (!peek ()) with
   | x when x = token -> ()
   | _ -> raise SyntaxError
 
@@ -90,14 +93,16 @@ let rec parse_name (t : Lexer.t) =
   failwith "Unimplemented"
 
 let rec parse_start_tag (t : Lexer.t) =
-  consume t LAngle;
+  consume LAngle;
   match (t true) with
   | Name -> parse_name
   | _ -> raise SyntaxError
 
 let rec from_phylo_helper f =
-  let tokenizer = consume_token_builder f in
-  match (tokenizer true) with
+  let tokenizer = token_function_builder f in
+  peek := tokenizer true;
+  consume_token := tokenizer false;
+  match (!peek ()) with
   | EOF -> empty_phylo
   | _ -> failwith "Unimplemented" (*parse_start_tag*)
 

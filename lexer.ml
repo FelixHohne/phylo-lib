@@ -129,21 +129,38 @@ let tokenize_next_line (stream : string Stream.t)
    | x -> tokenize_line x [] *)
 
 
+let token_function_builder (stream : string Stream.t) : (bool -> (unit -> token)) =
+  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let token_function = ref (fun x -> ( fun () -> EOF)) in
+  (token_function := (fun x ->
+       if x then (fun () ->
+           match !tokens_in_line with
+           | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); 
+             !token_function x ()
+           | h::_ -> h)
+       else (fun () ->
+           match !tokens_in_line with
+           | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); 
+             Unit
+           | _::t -> tokens_in_line := t; Unit)));
+  !token_function
 
 
 let consume_token_builder (stream : string Stream.t) : (bool -> token) =
-  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let tokens_in_line = ref (tokenize_next_line stream stream_of_line) in 
   let consume_token_fun = ref (fun x -> EOF) in
   (consume_token_fun := (fun x ->
        if x then
          match !tokens_in_line with
-         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); !consume_token_fun x
+         | [] -> tokens_in_line := (tokenize_next_line stream peek_stream_of_line); !consume_token_fun x
          | h::_ -> h
        else 
          match !tokens_in_line with
          | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); Unit(*!consume_token_fun false*)
          | _::t -> tokens_in_line := t; Unit));
   !consume_token_fun
+
+
 (* 
 let peek_token_builder (stream: string Stream.t) = 
   let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 

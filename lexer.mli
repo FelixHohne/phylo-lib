@@ -21,6 +21,19 @@ val stream_of_file : string -> string Stream.t
 val tokenize_next_line: string Stream.t -> (string Stream.t -> char Stream.t)
   ->  token list 
 
+(** [token_function_builder stream] is a function that takes in a boolean 
+    value that indicates whether the function to be built will be used to 
+    peek or consume the next token in [stream].
+
+    Sample usage:
+    [let x = stream_of_file "file.txt" in
+    let token_fun = token_function_builder x in
+    let peek = token_fun true in
+    let consume = token_fun false in
+    true] will bind peek and consume to functions that take in a unit and
+    peek and consume, respectively. *)
+val token_function_builder : string Stream.t -> (bool -> (unit -> token))
+
 (** [consume_token_builder stream] is a function that takes in unit and 
     consumes the next token in [stream]. This modifies [stream].
 
