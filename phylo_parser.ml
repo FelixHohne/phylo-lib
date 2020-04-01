@@ -1,5 +1,8 @@
 open Tree
-(** Supported tags: Tokens 
+open Lexer
+
+exception SyntaxError
+(** Supported tags: Tokens
 
     Things we need
     Tokens
@@ -7,15 +10,6 @@ open Tree
     Parser
 
     1 is Shirley
-        ___     ___
-       | + |___| + |
-       |           | 
-       |__       __|
-       |  \_____/  |
-    ___|___________|___
-    |                   |
-    |___________________|
-    \___________________/
     2 is Vaish
     3 is Felix
 
@@ -63,5 +57,64 @@ type phylo = {
    | SciName -> "SciName"
    | Id -> "Id" *)
 
-let from_phylo str = 
-  failwith "Unimplemted"
+
+(* We probably should write a recursive helper function. That is better OCaml style *)
+
+let empty_phylo = 
+  {
+    name="empty";
+    description="empty tree";
+    tree= Tree.empty
+  }
+
+
+(* Would it not be easier to convert the tokens into an intermediary form that combine names with words, clades with floats...*)
+
+(* Then we could convert these into trees more easily, rather than trying to do everything at once *)
+
+
+
+(** Do we want to create an intermediary data structure during the parsing process or directly create trees? *)
+(* We need to put statements together first, then check depth, then create trees. *)
+(** Have helpers that deal with creating the clades / leaves, while top-level
+    function only works with whole trees. *)
+
+(** Where are we checking that the file is syntactically or semantically correct?*)
+(* in the helper functions, like if you have a left angle then the helper function for that should expect a CLade/etc tag, and if it's something weird it throws an exception? *)
+let consume (t : (bool -> token)) (token:token) = 
+  match (t true) with
+  | x when x = token -> ()
+  | _ -> raise SyntaxError
+
+let rec parse_name (t : Lexer.t) =
+  failwith "Unimplemented"
+
+let rec parse_start_tag (t : Lexer.t) =
+  consume t LAngle;
+  match (t true) with
+  | Name -> parse_name
+  | _ -> raise SyntaxError
+
+let rec from_phylo_helper f =
+  let tokenizer = consume_token_builder f in
+  match (tokenizer true) with
+  | EOF -> empty_phylo
+  | _ -> failwith "Unimplemented" (*parse_start_tag*)
+
+let from_phylo f = 
+  f |> stream_of_file |> from_phylo_helper
+(* let peek x:unit = tokenizer true in
+   let consume x:unit = tokenizer false *)
+
+
+(* ___     ___
+   | + |___| + |
+   |           | 
+   |__       __|
+   |  \_____/  |
+   ___|___________|___
+   |                   |
+   |___________________|
+   \___________________/ 
+
+*)

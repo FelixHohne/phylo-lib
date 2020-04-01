@@ -4,7 +4,9 @@ type token =
   | Taxonomy | SciName | ID
   | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
-  | EOF
+  | EOF | Unit
+
+type t = bool -> token 
 
 (** Map binding strings to their corresponding token. *)
 let word_token_map = Hashtbl.create 16 
@@ -126,21 +128,33 @@ let tokenize_next_line (stream : string Stream.t)
    | exception End_of_file -> [EOF]
    | x -> tokenize_line x [] *)
 
-let consume_token_builder (stream : string Stream.t) : (unit -> unit) =
-  let tokens_in_line = ref (tokenize_next_line stream stream_of_line) in 
-  let consume_token_fun = ref (fun () -> ()) in
-  (consume_token_fun := (fun () ->
+
+
+
+let consume_token_builder (stream : string Stream.t) : (bool -> token) =
+  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let consume_token_fun = ref (fun x -> EOF) in
+  (consume_token_fun := (fun x ->
+       if x then
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); !consume_token_fun x
+         | h::_ -> h
+       else 
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); Unit(*!consume_token_fun false*)
+         | _::t -> tokens_in_line := t; Unit));
+  !consume_token_fun
+(* 
+let peek_token_builder (stream: string Stream.t) = 
+  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let peek_token_fun = ref (fun () -> EOF) in
+  (peek_token_fun := (fun () ->
        begin
          match !tokens_in_line with
-         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); !consume_token_fun ()
-         | h::t -> tokens_in_line := t
+         | [] -> tokens_in_line := (tokenize_next_line stream peek_stream_of_line); !peek_token_fun ()
+         | h::_ -> h
        end ));
-  !consume_token_fun
-
-(* (** [peak_builder stream] is the next token in stream. 
-   Does not modify the stream. Returns EOF if stream has no more tokens. *)
-   let peek_builder (stream: string Stream.t) =  *)
-
+  !peek_token_fun *)
 
    (*
 
