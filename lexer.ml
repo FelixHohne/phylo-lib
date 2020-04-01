@@ -1,11 +1,10 @@
-exception EOF
-
 type token =
   | Phylogeny | Name | Description
   | Clade | Rank | Confidence
   | Taxonomy | SciName | ID
   | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
+  | EOF
 
 (** Map binding strings to their corresponding token. *)
 let word_token_map = Hashtbl.create 16 
@@ -42,7 +41,7 @@ let stream_of_file (f : string) : string Stream.t =
 let stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.next stream) with
   | str -> Stream.of_string str
-  | exception Stream.Failure -> print_endline "End of file"; raise EOF
+  | exception Stream.Failure -> raise End_of_file
 
 (** [peek_stream_of_line stream] is a character stream of the next line of
     string stream [stream]. Does not modify [stream]. 
@@ -50,7 +49,7 @@ let stream_of_line (stream : string Stream.t) : char Stream.t =
 let peek_stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.peek stream) with
   | Some str -> Stream.of_string str
-  | None -> raise EOF
+  | None -> raise End_of_file
 
 (** [is_special_char c] is true if [c] is a special character. Special 
     characters are: '<', '/', '>', '"', and '='. *)
@@ -113,47 +112,64 @@ let rec tokenize_line (stream : char Stream.t) (acc : token list): token list =
     tokenize_line stream ((lex_number stream (Char.escaped c))::acc)
   | c -> tokenize_line stream ((lex_keyword stream (Char.escaped c))::acc)
   | exception Stream.Failure -> List.rev acc
+  | exception End_of_file -> [EOF]
 
-let tokenize_next_line (stream : string Stream.t) : token list =
-  let char_stream = stream_of_line stream in
-  tokenize_line char_stream []
+(** Requires: f is either stream_of_line or peak_stream_of*)
+let tokenize_next_line (stream : string Stream.t)
+    (f : (string Stream.t -> char Stream.t)) : token list =
+  match f stream with
+  | exception End_of_file -> [EOF]
+  | x -> tokenize_line x []
 
-let next_token_builder (stream : string Stream.t) =
-  let tokens_in_line = ref (tokenize_next_line stream) in
-  let next_token_fun = ref (fun () -> LAngle) in
-  next_token_fun := (fun () ->
-      match !tokens_in_line with
-      | [] -> tokens_in_line := tokenize_next_line stream; !next_token_fun ()
-      | h::t -> tokens_in_line := t; h);
-  !next_token_fun
+(* let tokenize_next_line (stream : string Stream.t) : token list =
+   match stream_of_line stream with
+   | exception End_of_file -> [EOF]
+   | x -> tokenize_line x [] *)
+
+let consume_token_builder (stream : string Stream.t) : (unit -> unit) =
+  let tokens_in_line = ref (tokenize_next_line stream stream_of_line) in 
+  let consume_token_fun = ref (fun () -> ()) in
+  (consume_token_fun := (fun () ->
+       begin
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); !consume_token_fun ()
+         | h::t -> tokens_in_line := t
+       end ));
+  !consume_token_fun
+
+(* (** [peak_builder stream] is the next token in stream. 
+   Does not modify the stream. Returns EOF if stream has no more tokens. *)
+   let peek_builder (stream: string Stream.t) =  *)
+
+
+   (*
+
+   let print_char_opt = print_endline "Print char";
+   function
+   | None -> print_char '\n'
+   | Some c -> print_char c; print_newline ()
+
+   let print_string_opt =
+   print_endline "Print string"; 
+   function
+   | None -> print_endline "" 
+   | Some c -> print_endline c
+
+   let rec next_char (str_stream : string Stream.t) (char_stream : char Stream.t) =
+   char_stream |> Stream.peek |> print_char_opt;
+   str_stream |> Stream.peek |> print_string_opt;
+   match Stream.next char_stream with
+   | c -> c
+   | exception Stream.Failure -> print_endline "Moving to next line"; 
+   Stream.junk str_stream;
+   next_char (str_stream) (stream_of_line str_stream)
+
+ *)
 
 (* 
-let print_char_opt = print_endline "Print char";
-function
-| None -> print_char '\n'
-| Some c -> print_char c; print_newline ()
-
-let print_string_opt =
-print_endline "Print string"; 
-function
-| None -> print_endline "" 
-| Some c -> print_endline c
-
-let rec next_char (str_stream : string Stream.t) (char_stream : char Stream.t) =
-  char_stream |> Stream.peek |> print_char_opt;
-  str_stream |> Stream.peek |> print_string_opt;
-  match Stream.next char_stream with
-  | c -> c
-  | exception Stream.Failure -> print_endline "Moving to next line"; 
-    Stream.junk str_stream;
-    next_char (str_stream) (stream_of_line str_stream)
-
-*)
-
-(* 
-abg
-cde
-f *)
+   abg
+   cde
+   f *)
 (* let rec next_char (stream : string Stream.t) =
    match (stream |> sn |> Stream.next) with
    | s -> print_char s; s

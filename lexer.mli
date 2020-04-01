@@ -5,6 +5,7 @@ type token =
   | Taxonomy | SciName | ID
   | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
+  | EOF
 
 (** [line_stream_of_file f] is a stream of lines from the file with filename 
     [f]. Requires [f] to be a valid file.  *)
@@ -12,15 +13,17 @@ val stream_of_file : string -> string Stream.t
 
 (** [tokenize_next_line stream] is a list of tokens in [stream].
     Effects: Removes the first element in [stream]. 
-    Raises: [EOF] if the end of the file is reached. *)
-val tokenize_next_line: string Stream.t -> token list
+    Requires: f is either stream_of_line or peak_stream_of_line
 
-(** [next_token_builder stream] is a function that takes in unit and outputs 
-    the next token in [stream]. The function returned raises [EOF] when the
-    end of the file is reached.
+    Raises: [EOF] if the end of the file is reached. *)
+val tokenize_next_line: string Stream.t -> (string Stream.t -> char Stream.t)
+  ->  token list 
+
+(** [consume_token_builder stream] is a function that takes in unit and consumes 
+    the next token in [stream]. This modifies [stream].
 
     Sample usage:
     [let x = stream_of_file "file.txt" in
-    let next_token = next_token_builder x in
-    next_token ()] will output the first token in file "file.txt". *)
-val next_token_builder : string Stream.t -> (unit -> token)
+    let consume_token = consume_token_builder x in
+    consume_token ()] will consume the first token in file "file.txt". *)
+val consume_token_builder : string Stream.t -> (unit -> unit)
