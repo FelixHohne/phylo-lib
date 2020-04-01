@@ -7,15 +7,15 @@ type token =
   | Word of string | True | False
 
 (** [line_stream_of_file f] is a stream of lines from the file with filename 
-    [f]. *)
+    [f]. Requires [f] to be a valid file.  *)
 val stream_of_file : string -> string Stream.t
 
-(** [tokenize_next_line stream] is a list of the tokens in [stream].
+(** [tokenize_next_line stream] is a list of tokens in [stream].
     Effects: Removes the first element in [stream]. 
     Raises: [EOF] if the end of the file is reached. *)
 val tokenize_next_line: string Stream.t -> token list
 
-(** [next_token_builder stream] is a function that takes in a unit and outputs 
+(** [next_token_builder stream] is a function that takes in unit and outputs 
     the next token in [stream]. The function returned raises [EOF] when the
     end of the file is reached.
 

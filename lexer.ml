@@ -85,7 +85,7 @@ and
   then string_to_token acc else Word acc
 
 (** [is_number c] is true if c represents a numerical digit. *)
-let is_number (c : char) = 
+let is_number (c : char) : bool = 
   match c with 
   | '0'..'9' -> true
   | _ -> false
@@ -98,8 +98,7 @@ let rec lex_number (stream : char Stream.t) (acc : string) : token =
   | Some c when (is_number c) -> 
     Stream.junk stream; 
     lex_number (stream) (acc ^ (Char.escaped c))
-  | Some _ 
-  | None -> Num (int_of_string acc)
+  | Some _ | None -> Num (int_of_string acc)
 
 (** [tokenize_line stream] is a list of the tokens in [stream] *)
 let rec tokenize_line (stream : char Stream.t) (acc : token list): token list = 

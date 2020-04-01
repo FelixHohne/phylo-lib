@@ -22,9 +22,7 @@ let create_DNA = [
 
 ]
 
-
 let dna_functions = [
-
   "is_empty" >:: (fun _ -> assert_equal (is_empty ex2) (false));
   "length" >:: (fun _ -> assert_equal (length ex2) 13); 
   (* "phys_equals" >:: (fun _ -> assert_equal (phys_equals ex2 ex3) false); *)
