@@ -2,7 +2,7 @@ type token =
   | Phylogeny | Name | Description
   | Clade | Rank | Confidence
   | Taxonomy | SciName | ID
-  | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
+  | LAngle | LAngleSlash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
   | EOF | Unit
 
@@ -54,11 +54,10 @@ let peek_stream_of_line (stream : string Stream.t) : char Stream.t =
   | None -> raise End_of_file
 
 (** [is_special_char c] is true if [c] is a special character. Special 
-    characters are: '<', '/', '>', '"', and '='. *)
+    characters are: '<', '>', '"', and '='. *)
 let is_special_char (c : char) : bool =
   match c with 
   | '<' 
-  | '/'
   | '>' 
   | '"'
   | '='-> true
@@ -104,8 +103,13 @@ let rec lex_number (stream : char Stream.t) (acc : string) : token =
 (** [tokenize_line stream] is a list of the tokens in [stream] *)
 let rec tokenize_line (stream : char Stream.t) (acc : token list): token list = 
   match Stream.next stream with 
-  | '<' -> tokenize_line stream (LAngle::acc) 
-  | '/' -> tokenize_line stream (Slash::acc)
+  | '<' -> begin
+      match Stream.peek stream with
+      | Some n when (n = '/') -> Stream.junk stream; 
+        tokenize_line stream (LAngleSlash::acc) 
+      | Some n -> tokenize_line stream (LAngle::acc)
+      | None -> List.rev (LAngle::acc)
+    end
   | '>' -> tokenize_line stream (RAngle::acc)
   | '"' -> tokenize_line stream (Quote::acc)
   | '=' -> tokenize_line stream (Eq::acc)
@@ -130,7 +134,7 @@ let tokenize_next_line (stream : string Stream.t)
 
 
 let token_function_builder (stream : string Stream.t) : (bool -> (unit -> token)) =
-  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let tokens_in_line = ref (tokenize_next_line stream stream_of_line) in 
   let token_function = ref (fun x -> ( fun () -> EOF)) in
   (token_function := (fun x ->
        if x then (fun () ->
