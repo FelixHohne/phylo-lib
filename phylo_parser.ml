@@ -66,22 +66,22 @@ let consume_token = ref (fun () -> EOF)
     Raises: [SyntaxError] if the next token is not equal to [token]. *)
 let consume (token : token) = 
   match (!peek ()) with
-  | x when x = token -> ignore(!consume_token ()); ()
-  | _ -> raise SyntaxError
+  | x when x = token -> ignore(!consume_token ())
+  | _ -> print_endline "SyntaxError 2"; raise SyntaxError
 
 let rec parse_name (t : Lexer.t) =
   failwith "Unimplemented"
 
 type start_tag = {
   tag_name : token;
-  string_attr : (string * string) list option;
+  str_attr : (string * string) list option;
   num_attr : (string * int) list option;
   bool_attr : (string * bool) list option;
 }
 
 let empty_start_tag (t : token) : start_tag = {
   tag_name = t;
-  string_attr = None;
+  str_attr = None;
   num_attr = None;
   bool_attr = None;
 }
@@ -95,11 +95,65 @@ let is_valid_tag (t : token) : bool =
   | Word _ -> true
   | _ -> false
 
-let parse_start_tag (t : Lexer.t) : start_tag =
-  consume LAngle;
+let rec parse_words (acc : string) : string =
   match (!peek ()) with
-  | x when is_valid_tag x -> empty_start_tag x
+  | Word s -> consume (Word s); 
+    if acc <> "" then parse_words (acc ^ " " ^ s) else parse_words s
+  | _ -> acc
+
+let add_str_assoc (lst : (string * string) list option) 
+    (attr : (string * string)) : (string * string) list option =
+  match lst with
+  | None -> Some [attr]
+  | Some assoc -> Some (attr::assoc)
+
+let add_bool_assoc (lst : (string * bool) list option)
+    (attr : (string * bool)) : (string * bool) list option =
+  match lst with
+  | None -> Some [attr]
+  | Some assoc -> Some (attr::assoc)
+
+let add_int_assoc (lst : (string * int) list option)
+    (attr : (string * int)) : (string * int) list option =
+  match lst with
+  | None -> Some [attr]
+  | Some assoc -> Some (attr::assoc)
+
+let rec parse_start_tag () : start_tag =
+  consume LAngle;
+  let tag =
+    (match (!peek ()) with
+     | x when is_valid_tag x -> consume x; empty_start_tag x
+     | _ -> print_endline "SyntaxError 1"; raise SyntaxError) in
+  parse_attr tag
+and
+  parse_attr (tag : start_tag) : start_tag = 
+  match (!peek ()) with
+  | Word attr -> consume (Word attr); consume Eq; 
+    let new_tag =
+      begin
+        match (!peek ()) with
+        | Quote -> consume Quote; 
+          let return_tag =
+            begin
+              match (!peek ()) with
+              | Word _ -> let words = parse_words "" in 
+                {tag with str_attr = add_str_assoc tag.str_attr (attr, words)}
+              | True -> consume True; 
+                {tag with bool_attr = add_bool_assoc tag.bool_attr (attr, true)}
+              | False -> consume False;
+                {tag with bool_attr = add_bool_assoc tag.bool_attr (attr, false)}
+              | _ -> raise SyntaxError
+            end
+          in consume Quote; return_tag
+        | Num x -> consume (Num x);
+          {tag with num_attr = add_int_assoc tag.num_attr (attr, x)}
+        | _ -> print_endline "SyntaxError 3"; raise SyntaxError
+      end
+    in parse_attr new_tag
+  | RAngle -> consume RAngle; tag
   | _ -> raise SyntaxError
+
 
 let rec from_phylo_helper (f : string Stream.t )=
   let tokenizer = token_function_builder f in
