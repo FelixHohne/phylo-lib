@@ -4,11 +4,6 @@ open Lexer
 exception SyntaxError
 (** Supported tags: Tokens
 
-    Things we need
-    Tokens
-    Tokenizer
-    Parser
-
     1 is Shirley
     2 is Vaish
     3 is Felix
@@ -44,6 +39,12 @@ type phylo = {
   tree : Tree.t;
 }
 
+let empty_phylo = {
+  name = "empty";
+  description = "empty tree";
+  tree = Tree.empty
+}
+
 let peek = ref (fun () -> EOF)
 let consume_token = ref (fun () -> EOF)
 
@@ -60,66 +61,53 @@ let consume_token = ref (fun () -> EOF)
    | SciName -> "SciName"
    | Id -> "Id" *)
 
-
-(* We probably should write a recursive helper function. That is better OCaml style *)
-
-let empty_phylo = 
-  {
-    name="empty";
-    description="empty tree";
-    tree= Tree.empty
-  }
-
-
-(* Would it not be easier to convert the tokens into an intermediary form that combine names with words, clades with floats...*)
-
-(* Then we could convert these into trees more easily, rather than trying to do everything at once *)
-
-
-
-(** Do we want to create an intermediary data structure during the parsing process or directly create trees? *)
-(* We need to put statements together first, then check depth, then create trees. *)
-(** Have helpers that deal with creating the clades / leaves, while top-level
-    function only works with whole trees. *)
-
-(** Where are we checking that the file is syntactically or semantically correct?*)
-(* in the helper functions, like if you have a left angle then the helper function for that should expect a CLade/etc tag, and if it's something weird it throws an exception? *)
-let consume (token:token) = 
+(** [consume token] consumes the next token in the file currently being 
+    processed. 
+    Raises: [SyntaxError] if the next token is not equal to [token]. *)
+let consume (token : token) = 
   match (!peek ()) with
-  | x when x = token -> ()
+  | x when x = token -> ignore(!consume_token ()); ()
   | _ -> raise SyntaxError
 
 let rec parse_name (t : Lexer.t) =
   failwith "Unimplemented"
 
-let rec parse_start_tag (t : Lexer.t) =
+type start_tag = {
+  tag_name : token;
+  string_attr : (string * string) list option;
+  num_attr : (string * int) list option;
+  bool_attr : (string * bool) list option;
+}
+
+let empty_start_tag (t : token) : start_tag = {
+  tag_name = t;
+  string_attr = None;
+  num_attr = None;
+  bool_attr = None;
+}
+
+(** [is_valid_tag t] is true if [t] is the name of a valid phyloXML tag. *)
+let is_valid_tag (t : token) : bool =
+  match t with
+  | Phylogeny | Name | Description
+  | Clade | Rank | Confidence
+  | Taxonomy | SciName | ID
+  | Word _ -> true
+  | _ -> false
+
+let parse_start_tag (t : Lexer.t) : start_tag =
   consume LAngle;
-  match (t true) with
-  | Name -> parse_name
+  match (!peek ()) with
+  | x when is_valid_tag x -> empty_start_tag x
   | _ -> raise SyntaxError
 
-let rec from_phylo_helper f =
+let rec from_phylo_helper (f : string Stream.t )=
   let tokenizer = token_function_builder f in
   peek := tokenizer true;
   consume_token := tokenizer false;
   match (!peek ()) with
   | EOF -> empty_phylo
-  | _ -> failwith "Unimplemented" (*parse_start_tag*)
+  | _ -> failwith "Unimplemented"
 
 let from_phylo f = 
   f |> stream_of_file |> from_phylo_helper
-(* let peek x:unit = tokenizer true in
-   let consume x:unit = tokenizer false *)
-
-
-(* ___     ___
-   | + |___| + |
-   |           | 
-   |__       __|
-   |  \_____/  |
-   ___|___________|___
-   |                   |
-   |___________________|
-   \___________________/ 
-
-*)

@@ -15,11 +15,8 @@ val stream_of_file : string -> string Stream.t
 
 (** [tokenize_next_line stream] is a list of tokens in [stream].
     Effects: Removes the first element in [stream]. 
-    Requires: f is either stream_of_line or peak_stream_of_line
-
-    Raises: [EOF] if the end of the file is reached. *)
-val tokenize_next_line: string Stream.t -> (string Stream.t -> char Stream.t)
-  ->  token list 
+    Note that it is [EOF] if the end of the file is reached. *)
+val tokenize_next_line: string Stream.t ->  token list 
 
 (** [token_function_builder stream] is a function that takes in a boolean 
     value that indicates whether the function to be built will be used to 
@@ -41,7 +38,7 @@ val token_function_builder : string Stream.t -> (bool -> (unit -> token))
     [let x = stream_of_file "file.txt" in
     let consume_token = consume_token_builder x in
     consume_token ()] will consume the first token in file "file.txt". *)
-val consume_token_builder : string Stream.t -> (bool -> token)
+(* val consume_token_builder : string Stream.t -> (bool -> token) *)
 
 
 
