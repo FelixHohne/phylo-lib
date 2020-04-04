@@ -7,6 +7,9 @@ type token =
   | Word of string | True | False
   | EOF | Unit
 
+(** [to_string t] is a string representing [t]. *)
+val to_string : token -> string
+
 type t = bool -> token
 
 (** [line_stream_of_file f] is a stream of lines from the file with filename 

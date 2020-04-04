@@ -6,6 +6,30 @@ type token =
   | Word of string | True | False
   | EOF | Unit
 
+let to_string (t : token) : string = 
+  match t with 
+  | Phylogeny -> "phylogeny" 
+  | Name -> "name" 
+  | Description -> "description"
+  | Clade -> "clade"
+  | Rank -> "rank"
+  | Confidence -> "confidence"
+  | Taxonomy -> "taxonomy"
+  | SciName -> "scientific_name"
+  | ID -> "id"
+  | LAngle -> "<"
+  | LAngleSlash -> "</"
+  | RAngle -> ">"
+  | Quote -> "quote"
+  | Eq -> "="
+  | Num int -> string_of_int int
+  | Dot -> "."
+  | Word string -> string
+  | True -> "true"
+  | False -> "false"
+  | EOF -> "EOF"
+  | Unit -> "Unit"
+
 type t = bool -> token 
 
 (** Map binding strings to their corresponding token. *)

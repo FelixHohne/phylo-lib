@@ -1,0 +1,33 @@
+<phyloxml>
+  <phylogeny rooted="false">
+    <clade>
+      <clade>
+        <clade>
+          <clade>
+            <clade>
+              <name>Gallus_gallus</name>
+            </clade>
+            <clade>
+              <clade>
+                <name>Mus_musculus</name>
+              </clade>
+              <clade>
+                <name>Homo_sapiens</name>
+              </clade>
+              <name>Euarchontoglires</name>
+            </clade>
+            <name>Amniota</name>
+          </clade>
+          <clade>
+            <name>Drosophila_melanogaster</name>
+          </clade>
+          <name>Bilateria</name>
+        </clade>
+        <clade>
+          <name>Escherichia_coli</name>
+        </clade>
+        <name>cellular_organisms</name>
+      </clade>
+    </clade>
+  </phylogeny>
+</phyloxml>
