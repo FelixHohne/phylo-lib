@@ -3,8 +3,14 @@ type token =
   | Phylogeny | Name | Description
   | Clade | Rank | Confidence
   | Taxonomy | SciName | ID
-  | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
+  | LAngle | LAngleSlash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
+  | EOF | Unit
+
+(** [to_string t] is a string representing [t]. *)
+val to_string : token -> string
+
+type t = bool -> token
 
 (** [line_stream_of_file f] is a stream of lines from the file with filename 
     [f]. Requires [f] to be a valid file.  *)
@@ -12,15 +18,38 @@ val stream_of_file : string -> string Stream.t
 
 (** [tokenize_next_line stream] is a list of tokens in [stream].
     Effects: Removes the first element in [stream]. 
-    Raises: [EOF] if the end of the file is reached. *)
-val tokenize_next_line: string Stream.t -> token list
+    Note that it is [EOF] if the end of the file is reached. *)
+val tokenize_next_line: string Stream.t ->  token list 
 
-(** [next_token_builder stream] is a function that takes in unit and outputs 
-    the next token in [stream]. The function returned raises [EOF] when the
-    end of the file is reached.
+(** [token_function_builder stream] is a function that takes in a boolean 
+    value that indicates whether the function to be built will be used to 
+    peek or consume the next token in [stream].
 
     Sample usage:
     [let x = stream_of_file "file.txt" in
-    let next_token = next_token_builder x in
-    next_token ()] will output the first token in file "file.txt". *)
-val next_token_builder : string Stream.t -> (unit -> token)
+    let token_fun = token_function_builder x in
+    let peek = token_fun true in
+    let consume = token_fun false in
+    true] will bind peek and consume to functions that take in a unit and
+    peek and consume, respectively. *)
+val token_function_builder : string Stream.t -> (bool -> (unit -> token))
+
+(** [consume_token_builder stream] is a function that takes in unit and 
+    consumes the next token in [stream]. This modifies [stream].
+
+    Sample usage:
+    [let x = stream_of_file "file.txt" in
+    let consume_token = consume_token_builder x in
+    consume_token ()] will consume the first token in file "file.txt". *)
+(* val consume_token_builder : string Stream.t -> (bool -> token) *)
+
+
+
+(* (** [peek_token_builder stream] is a function that takes in unit and 
+    returns the next token in [stream], and EOF if [stream] does not have any more tokens. This does not modify [stream].
+
+    Sample usage:
+    [let x = stream_of_file "file.txt" in
+    let peek_token = peek_token_builder x in
+    peek_token ()] will return the first token in file "file.txt". *)
+   val peek_token_builder : string Stream.t -> (unit -> token)y *)

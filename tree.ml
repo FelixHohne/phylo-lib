@@ -5,11 +5,15 @@ exception UnknownClade of clade_id
     Representation Invariant: clade_ids must be unique *)
 type t = Clade of {
     clade_id : clade_id;
-    bootstrap : float option;
     children : t list;
+    bootstrap : float option;
+    rank : string option;
+    id : string option;
+    name : string option;
   } | Leaf of {
-    (* species_id : int; *)
-    species : string;
+    scientific_name : string;
+    id : string option;
+    name : string option;
   }
 
 (** True if the representation invariant is being checked. *)
@@ -41,35 +45,48 @@ let rep_ok t =
 let id =
   let counter = ref 0 in 
   fun () -> 
-    incr counter;
+    incr counter; 
     !counter
 
-let empty = Clade { clade_id = id (); bootstrap = None ; children = []}
+let empty = Clade { 
+    clade_id = id (); 
+    children = []; 
+    bootstrap = None;
+    rank = None;
+    id = None;
+    name = None;
+  }
 
 let is_empty = function
-  | Clade info -> info.bootstrap = None && info.children = []
+  | Clade info -> info.children = [] 
+                  && info.bootstrap = None 
+                  && info.rank = None 
+                  && info.id = None 
+                  && info.name = None
   | Leaf _ -> false
 
-let leaf (species : string) : t =
-  Leaf {species = species}
+let leaf (sci_name : string) (id : string option) (name : string option) : t =
+  Leaf {scientific_name = sci_name; id = id; name = name}
 
-(** [add_species t clade_id species] adds [species] as a child of 
+let leaf_no_params sci_name = 
+  Leaf {scientific_name = sci_name; id = None; name = None}
+
+(** [add_scientific_name t clade_id scientific_name] adds [scientific_name] as a child of 
     [clade_id] to phylogenetic tree [t]. Throws [UnknownClade clade_id] if 
     clade_id cannot be found in the phylogenetic tree. *)
-let rec add_species (tree : t) (clade_id : clade_id) (species : string) : t = 
+let rec add_node (tree : t) (clade_id : clade_id) (node : t) : t = 
   match tree with
   | Leaf _ -> raise (UnknownClade clade_id)
   | Clade info -> 
     if info.clade_id = clade_id 
-    then let new_sub_tree = Leaf {species = species} in 
-      Clade {info with children =  new_sub_tree::info.children}
-    else add_species_helper info.children clade_id species
+    then Clade {info with children =  node::info.children}
+    else add_scientific_name_helper info.children clade_id node
 and 
-  add_species_helper (lst: t list) (clade_id : clade_id) (species : string) : t =
+  add_scientific_name_helper (lst: t list) (clade_id : clade_id) (node : t) : t =
   match lst with
   | [] -> raise (UnknownClade clade_id)
-  | h::t -> try add_species h clade_id species
-    with UnknownClade _ -> add_species_helper t clade_id species
+  | h::t -> try add_node h clade_id node
+    with UnknownClade _ -> add_scientific_name_helper t clade_id node
 
 let rec size (tree:t) = size_helper tree 0 
 and 
@@ -81,12 +98,27 @@ and
       | h::t ->
         1 + List.fold_left (fun acc x -> acc + (size_helper x size)) 0 (h::t))
 
-let zip (trees: t list) : t = 
-  Clade {clade_id = id (); bootstrap = None; children = trees} |> rep_ok
+let zip (trees: t list) (bootstrap: float option) (rank: string option)
+    (parsed_id: string option) (name: string option): t = 
+  match empty with 
+  | Clade x -> Clade {
+      clade_id = id (); 
+      children = trees; 
+      bootstrap = bootstrap; 
+      rank = rank; 
+      id = parsed_id; 
+      name = name;
+    } |> rep_ok
+  | _ -> failwith "Representation invariant broken"
+
+let zip_no_params (trees: t list) : t = 
+  match empty with 
+  | Clade x -> Clade {x with clade_id = id (); children = trees;} |> rep_ok
+  | _ -> failwith "Representation invariant broken"
 
 (** [hierarchy a b] is a comparator for [a] and [b]. *)
 let hierarchy a b = match a, b with
-  | Leaf t1, Leaf t2 -> compare t1.species t2.species
+  | Leaf t1, Leaf t2 -> compare t1.scientific_name t2.scientific_name
   | Clade t1, Clade t2 -> Int.compare t1.clade_id t2.clade_id
   | Leaf _, Clade _ -> -1
   | Clade _, Leaf _ -> 1
@@ -150,7 +182,7 @@ let rec print_tree_helper (t_lst : t list) (d : int) (ds : int list): unit =
       | Leaf info -> begin
           if ds <> [] then print_verts ds else print_newline ();
           if ds <> [] then print_branch ds;
-          info.species |> print_endline;
+          info.scientific_name |> print_endline;
           print_tree_helper t d ds
         end
       | Clade info -> 

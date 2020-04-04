@@ -2,12 +2,12 @@ open OUnit2
 open Tree
 open Sample_trees
 
-let dog = leaf "dog"
-let cat = leaf "cat"
-let mouse = leaf "mouse"
-let dog_cat = zip [dog; cat]
-let dog_cat_mouse = zip [dog_cat; mouse]
-let z = zip [mouse; dog_cat]
+let dog = leaf_no_params "dog"
+let cat = leaf_no_params "cat"
+let mouse = leaf_no_params "mouse"
+let dog_cat = zip_no_params [dog; cat]
+let dog_cat_mouse = zip_no_params [dog_cat; mouse]
+let z = zip_no_params [mouse; dog_cat]
 
 let tree_empty = [
   "empty_test" >:: (fun _ -> assert_equal true (is_empty(empty)));

@@ -3,8 +3,8 @@ OCAMLBUILD=ocamlbuild -use-ocamlfind
 build:
 	$(OCAMLBUILD) tree.cmo tree_test.cmo
 	$(OCAMLBUILD) dna.cmo dna_test.cmo
-	$(OCAMLBUILD) phylo_parser.cmo phylo_parser_test.cmo
 	$(OCAMLBUILD) lexer.cmo lexer_test.cmo
+	$(OCAMLBUILD) phylo_parser.cmo phylo_parser_test.cmo
 	$(OCAMLBUILD) sample_trees.cmo
 
 
@@ -13,8 +13,6 @@ test:
 	$(OCAMLBUILD) -tag 'debug' lexer_test.byte && ./lexer_test.byte
 	$(OCAMLBUILD) -tag 'debug' phylo_parser_test.byte && ./phylo_parser_test.byte
 	$(OCAMLBUILD) -tag 'debug' dna_test.byte && ./dna_test.byte
-
-
 
 docs:
 	mkdir -p doc

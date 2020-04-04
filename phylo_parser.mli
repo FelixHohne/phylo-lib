@@ -1,7 +1,5 @@
 open Tree
-(** [from_phylo string] parses the phyloXML file at the absolute path. 
-    Requires: there is a valid phyloXML file at the location represented by 
-    the string. *)
+exception SyntaxError
 
 type phylo = {
   name : string; 
@@ -9,6 +7,10 @@ type phylo = {
   tree : Tree.t;
 }
 
-val from_phylo : string -> phylo
+type start_tag
 
+(** [from_phylo string] parses the phyloXML file at the absolute path. 
+    Requires: there is a valid phyloXML file at the location represented by 
+    the string. *)
+val from_phylo : string -> phylo
 

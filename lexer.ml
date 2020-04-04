@@ -1,11 +1,36 @@
-exception EOF
-
 type token =
   | Phylogeny | Name | Description
   | Clade | Rank | Confidence
   | Taxonomy | SciName | ID
-  | LAngle | Slash | RAngle | Quote | Eq | Num of int | Dot
+  | LAngle | LAngleSlash | RAngle | Quote | Eq | Num of int | Dot
   | Word of string | True | False
+  | EOF | Unit
+
+let to_string (t : token) : string = 
+  match t with 
+  | Phylogeny -> "phylogeny" 
+  | Name -> "name" 
+  | Description -> "description"
+  | Clade -> "clade"
+  | Rank -> "rank"
+  | Confidence -> "confidence"
+  | Taxonomy -> "taxonomy"
+  | SciName -> "scientific_name"
+  | ID -> "id"
+  | LAngle -> "<"
+  | LAngleSlash -> "</"
+  | RAngle -> ">"
+  | Quote -> "quote"
+  | Eq -> "="
+  | Num int -> string_of_int int
+  | Dot -> "."
+  | Word string -> string
+  | True -> "true"
+  | False -> "false"
+  | EOF -> "EOF"
+  | Unit -> "Unit"
+
+type t = bool -> token 
 
 (** Map binding strings to their corresponding token. *)
 let word_token_map = Hashtbl.create 16 
@@ -20,6 +45,7 @@ let () = Hashtbl.add word_token_map "phylogeny" Phylogeny;
   Hashtbl.add word_token_map "id" ID;
   Hashtbl.add word_token_map "true" True;
   Hashtbl.add word_token_map "false" False
+
 
 (** [is_token s] is true if [s] represents a valid token. *)
 let is_token (s : string) : bool =
@@ -42,7 +68,7 @@ let stream_of_file (f : string) : string Stream.t =
 let stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.next stream) with
   | str -> Stream.of_string str
-  | exception Stream.Failure -> print_endline "End of file"; raise EOF
+  | exception Stream.Failure -> raise End_of_file
 
 (** [peek_stream_of_line stream] is a character stream of the next line of
     string stream [stream]. Does not modify [stream]. 
@@ -50,14 +76,13 @@ let stream_of_line (stream : string Stream.t) : char Stream.t =
 let peek_stream_of_line (stream : string Stream.t) : char Stream.t = 
   match (Stream.peek stream) with
   | Some str -> Stream.of_string str
-  | None -> raise EOF
+  | None -> raise End_of_file
 
 (** [is_special_char c] is true if [c] is a special character. Special 
-    characters are: '<', '/', '>', '"', and '='. *)
+    characters are: '<', '>', '"', and '='. *)
 let is_special_char (c : char) : bool =
   match c with 
   | '<' 
-  | '/'
   | '>' 
   | '"'
   | '='-> true
@@ -103,57 +128,107 @@ let rec lex_number (stream : char Stream.t) (acc : string) : token =
 (** [tokenize_line stream] is a list of the tokens in [stream] *)
 let rec tokenize_line (stream : char Stream.t) (acc : token list): token list = 
   match Stream.next stream with 
-  | '<' -> tokenize_line stream (LAngle::acc) 
-  | '/' -> tokenize_line stream (Slash::acc)
+  | '<' -> begin
+      match Stream.peek stream with
+      | Some n when (n = '/') -> Stream.junk stream; 
+        tokenize_line stream (LAngleSlash::acc) 
+      | Some n -> tokenize_line stream (LAngle::acc)
+      | None -> List.rev (LAngle::acc)
+    end
   | '>' -> tokenize_line stream (RAngle::acc)
   | '"' -> tokenize_line stream (Quote::acc)
   | '=' -> tokenize_line stream (Eq::acc)
+  | '.' -> tokenize_line stream (Dot::acc)
   | ' ' | '\t' | '\n' | '\r'-> tokenize_line stream acc
   | c when is_number c -> 
     tokenize_line stream ((lex_number stream (Char.escaped c))::acc)
   | c -> tokenize_line stream ((lex_keyword stream (Char.escaped c))::acc)
   | exception Stream.Failure -> List.rev acc
+  | exception End_of_file -> [EOF]
+
+(* * Requires: f is either stream_of_line or peak_stream_of
+   let tokenize_next_line (stream : string Stream.t)
+    (f : (string Stream.t -> char Stream.t)) : token list =
+   match f stream with
+   | exception End_of_file -> [EOF]
+   | x -> tokenize_line x [] *)
 
 let tokenize_next_line (stream : string Stream.t) : token list =
-  let char_stream = stream_of_line stream in
-  tokenize_line char_stream []
+  match stream_of_line stream with
+  | exception End_of_file -> [EOF]
+  | x -> tokenize_line x []
 
-let next_token_builder (stream : string Stream.t) =
-  let tokens_in_line = ref (tokenize_next_line stream) in
-  let next_token_fun = ref (fun () -> LAngle) in
-  next_token_fun := (fun () ->
-      match !tokens_in_line with
-      | [] -> tokens_in_line := tokenize_next_line stream; !next_token_fun ()
-      | h::t -> tokens_in_line := t; h);
-  !next_token_fun
+
+let token_function_builder (stream : string Stream.t) : (bool -> (unit -> token)) =
+  let tokens_in_line = ref (tokenize_next_line stream) in 
+  let token_function = ref (fun x -> ( fun () -> EOF)) in
+  (token_function := (fun x ->
+       if x then (fun () ->
+           match !tokens_in_line with
+           | [] -> tokens_in_line := (tokenize_next_line stream); 
+             !token_function x ()
+           | h::_ -> h)
+       else (fun () ->
+           match !tokens_in_line with
+           | [] -> tokens_in_line := (tokenize_next_line stream); Unit
+           | _::t -> tokens_in_line := t; Unit))); !token_function
+
+
+(* let consume_token_builder (stream : string Stream.t) : (bool -> token) =
+   let tokens_in_line = ref (tokenize_next_line stream stream_of_line) in 
+   let consume_token_fun = ref (fun x -> EOF) in
+   (consume_token_fun := (fun x ->
+       if x then
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream peek_stream_of_line); !consume_token_fun x
+         | h::_ -> h
+       else 
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream stream_of_line); Unit(*!consume_token_fun false*)
+         | _::t -> tokens_in_line := t; Unit));
+   !consume_token_fun *)
+
 
 (* 
-let print_char_opt = print_endline "Print char";
-function
-| None -> print_char '\n'
-| Some c -> print_char c; print_newline ()
+let peek_token_builder (stream: string Stream.t) = 
+  let tokens_in_line = ref (tokenize_next_line stream peek_stream_of_line) in 
+  let peek_token_fun = ref (fun () -> EOF) in
+  (peek_token_fun := (fun () ->
+       begin
+         match !tokens_in_line with
+         | [] -> tokens_in_line := (tokenize_next_line stream peek_stream_of_line); !peek_token_fun ()
+         | h::_ -> h
+       end ));
+  !peek_token_fun *)
 
-let print_string_opt =
-print_endline "Print string"; 
-function
-| None -> print_endline "" 
-| Some c -> print_endline c
+   (*
 
-let rec next_char (str_stream : string Stream.t) (char_stream : char Stream.t) =
-  char_stream |> Stream.peek |> print_char_opt;
-  str_stream |> Stream.peek |> print_string_opt;
-  match Stream.next char_stream with
-  | c -> c
-  | exception Stream.Failure -> print_endline "Moving to next line"; 
-    Stream.junk str_stream;
-    next_char (str_stream) (stream_of_line str_stream)
+   let print_char_opt = print_endline "Print char";
+   function
+   | None -> print_char '\n'
+   | Some c -> print_char c; print_newline ()
 
-*)
+   let print_string_opt =
+   print_endline "Print string"; 
+   function
+   | None -> print_endline "" 
+   | Some c -> print_endline c
+
+   let rec next_char (str_stream : string Stream.t) (char_stream : char Stream.t) =
+   char_stream |> Stream.peek |> print_char_opt;
+   str_stream |> Stream.peek |> print_string_opt;
+   match Stream.next char_stream with
+   | c -> c
+   | exception Stream.Failure -> print_endline "Moving to next line"; 
+   Stream.junk str_stream;
+   next_char (str_stream) (stream_of_line str_stream)
+
+ *)
 
 (* 
-abg
-cde
-f *)
+   abg
+   cde
+   f *)
 (* let rec next_char (stream : string Stream.t) =
    match (stream |> sn |> Stream.next) with
    | s -> print_char s; s
