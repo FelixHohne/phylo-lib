@@ -255,7 +255,6 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
   | _ -> print_endline "Unexpected token encountered when parsing taxonomy";
     raise SyntaxError
 
-
 let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
   match (!peek ()) with 
   | LAngle -> let tag = parse_start_tag () in 

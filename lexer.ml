@@ -46,7 +46,6 @@ let () = Hashtbl.add word_token_map "phylogeny" Phylogeny;
   Hashtbl.add word_token_map "true" True;
   Hashtbl.add word_token_map "false" False
 
-
 (** [is_token s] is true if [s] represents a valid token. *)
 let is_token (s : string) : bool =
   Hashtbl.mem word_token_map s
@@ -57,9 +56,15 @@ let string_to_token (s : string) : token =
   Hashtbl.find word_token_map s
 
 let stream_of_file (f : string) : string Stream.t =
-  let in_channel = open_in f in 
-  Stream.from (fun _ ->
-      try Some (input_line in_channel) with End_of_file -> None)
+  let streams = 
+    let in_channel = open_in f in 
+    Stream.from (fun _ ->
+        try Some (input_line in_channel) with End_of_file -> None)
+  in 
+  match Stream.peek streams with
+  | Some s -> if String.sub s 0 5 = "<?xml" then (Stream.junk streams; streams)
+    else streams
+  | None -> raise End_of_file
 
 (** [stream_of_line stream] is a character stream of the next line of 
     string stream [stream]. 
