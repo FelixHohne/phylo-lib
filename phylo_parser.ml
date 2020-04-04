@@ -117,7 +117,7 @@ let consume_end_tag (t : token) : unit =
   consume LAngleSlash;
   consume t;
   consume RAngle;
-  print_endline ("Just consumed a " ^ (to_string t) ^ " end tag")
+  print_endline ("Consumed a " ^ (to_string t) ^ " end tag")
 
 (** [parse_start_tag ()] is a start_tag that represents the information
     gained from parsing a starting phyloXML tag that may have attributes, 
@@ -229,15 +229,20 @@ let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
   | LAngle -> let tag = parse_start_tag () in 
     begin
       match tag.tag_name with
-      | Taxonomy -> parse_clade acc {attr with taxonomy = Some (parse_taxonomy ())}
-      | Clade -> parse_clade (parse_clade Tree.empty empty_clade_attr) attr
+      | Taxonomy -> 
+        parse_clade acc {attr with taxonomy = Some (parse_taxonomy ())}
+      | Clade -> 
+        if is_empty acc then
+          parse_clade (parse_clade acc empty_clade_attr) attr
+        else
+          parse_clade (zip [acc; (parse_clade Tree.empty empty_clade_attr)]) attr
       | x -> ignore_tag x; parse_clade acc attr
     end
   | LAngleSlash -> consume_end_tag Clade; 
     begin
       match acc with
       | t when is_empty t -> leaf "Unimplemented"
-      | t -> zip [acc; leaf "Unimplemented"]
+      | t -> zip [acc]
     end
   | _ -> print_endline "SyntaxError 7"; raise SyntaxError 
 
