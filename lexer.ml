@@ -46,6 +46,7 @@ let () = Hashtbl.add word_token_map "phylogeny" Phylogeny;
   Hashtbl.add word_token_map "true" True;
   Hashtbl.add word_token_map "false" False
 
+
 (** [is_token s] is true if [s] represents a valid token. *)
 let is_token (s : string) : bool =
   Hashtbl.mem word_token_map s
@@ -137,6 +138,7 @@ let rec tokenize_line (stream : char Stream.t) (acc : token list): token list =
   | '>' -> tokenize_line stream (RAngle::acc)
   | '"' -> tokenize_line stream (Quote::acc)
   | '=' -> tokenize_line stream (Eq::acc)
+  | '.' -> tokenize_line stream (Dot::acc)
   | ' ' | '\t' | '\n' | '\r'-> tokenize_line stream acc
   | c when is_number c -> 
     tokenize_line stream ((lex_number stream (Char.escaped c))::acc)

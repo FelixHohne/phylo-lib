@@ -20,15 +20,24 @@ val empty : t
 (** [is_empty t] is true iff. the tree is empty. *)
 val is_empty : t -> bool
 
-(** [leaf species] is the tree consisting of only [species]. *)
-val leaf: string -> t
+(** [leaf species id name] is the tree consisting of leaf with [species], [id] 
+    and [name]. *)
+val leaf: string -> string option -> string option -> t
+
+(** [leaf_no_params species] is the tree consisting of leaf with species [species]. *)
+val leaf_no_params: string -> t
 
 (** [size t] is the size of tree t including both clades and species. *)
 val size: t -> int 
 
-(** [zip trees] is the tree with a clade as the root and [trees] as the 
+(** [zip trees bootstrap id rank name ] is the tree with a clade as the root and 
+    [trees] as the children. The root clade has attributes [bootstrap], [id], 
+    [rank], and [name]. *)
+val zip: t list -> float option -> string option -> string option -> string option -> t
+
+(** [zip_no_params trees] is the tree with a clade as the root and [trees] as the 
     children. *)
-val zip: t list -> t
+val zip_no_params: t list -> t
 
 (** [is_equal a b] is true if [a] and [b] are structurally similar, ignoring
     the order of the children. *)

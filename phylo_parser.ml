@@ -2,36 +2,30 @@ open Tree
 open Lexer
 
 exception SyntaxError
-(** Supported tags: Tokens
 
-    1 is Shirley
-    2 is Vaish
-    3 is Felix
+type metadata = {
+  confidence: float option;
+  id: string option;
+}
 
-    1
-    <phylogeny rooted = true/false>
-    2
-    <name>
-    3
-    <description>
+type taxonomy = {
+  id : string option;
+  scientific_name : string;
+}
 
-    1
-    <clade>
-    Include ranks, but don't pretty-print them. They are 
-    used for internal nodes.
-    2
-    <rank>
-    3
-    <confidence>
+type clade_attr = {
+  name : string option;
+  rank : string option;
+  confidence : float option;
+  taxonomy : taxonomy option;
+}
 
-    1
-    <taxonomy>
-    2
-    <scientific_name>
-    3
-    <id>
-
-*)
+let empty_clade_attr = {
+  name = None;
+  rank = None; 
+  confidence = None; 
+  taxonomy = None
+}
 
 type phylo = {
   name : string; 
@@ -81,14 +75,19 @@ let is_valid_tag (t : token) : bool =
   | Word _ -> true
   | _ -> false
 
-(** [parse_words acc] is a string that represents the next consecutive [Word] 
-    tokens in the current file. 
-    Effects: Consumes [Word] tokens in the current file until a non-[Word] token
-    is reached. *)
+(** [parse_words acc] is a string that represents the next consecutive [Word] or
+    [Num] tokens in the current file. 
+    Effects: Consumes [Word] and [Num] tokens in the current file until a 
+    non-[Word] or [Num] token is reached. *)
 let rec parse_words (acc : string) : string =
   match (!peek ()) with
   | Word s -> consume (Word s); 
     if acc <> "" then parse_words (acc ^ " " ^ s) else parse_words s
+  | Num n -> consume (Num n);
+    if acc <> "" then parse_words (acc ^ " " ^ (string_of_int n))
+    else n |> string_of_int |> parse_words
+  | True -> consume True;
+    if acc <> "" then parse_words (acc ^ " true") else parse_words "true"
   | _ -> acc
 
 let add_str_assoc (lst : (string * string) list option) 
@@ -177,74 +176,132 @@ let rec ignore_tag (t : token) : unit =
     print_endline "The previous end tag was ignored"
   | x -> consume x; ignore_tag t
 
-type confidence = {
-  category : string
-}
-
-type id = {
-  provider : string;
-  num_id : int;
-}
-
-type taxonomy = {
-  id : id option;
-  scientific_name : string option;
-}
-
-type clade_attr = {
-  rank : string option;
-  confidence : confidence option;
-  taxonomy : taxonomy option;
-}
-
-let empty_clade_attr = {
-  rank = None; 
-  confidence = None; 
-  taxonomy = None
-}
-
 let parse_name () : string =
-  failwith "Unimplemented"
+  match (!peek ()) with
+  | Word _ | Num _ -> let name = parse_words "" in consume_end_tag Name; name
+  | _ -> print_endline "SyntaxError: Name not word/number"; raise SyntaxError 
 
 let parse_description () : string =
-  failwith "Unimplemented"
+  match (!peek ()) with
+  | Word _ | Num _ -> 
+    let descr = parse_words "" in consume_end_tag Description; descr
+  | _ -> print_endline "SyntaxError: Description not word/number";
+    raise SyntaxError 
 
 let parse_rank () : string = 
-  failwith "Unimplemented"
+  match (!peek ()) with 
+  | Word _ -> let rank = parse_words "" in consume_end_tag Rank; rank
+  | _ -> print_endline "SyntaxError: Rank not a string"; raise SyntaxError 
 
-let parse_confidence () : confidence = 
-  failwith "Unimplemented"
+let parse_confidence () : float = 
+  match (!peek ()) with 
+  | Num n -> 
+    (if (!peek ()) = Dot 
+     then 
+       (consume Dot; 
+        begin
+          match (!peek ()) with 
+          | Num x -> 
+            let f = 
+              float_of_string ((string_of_int n) ^ "." ^ (string_of_int x)) 
+            in consume_end_tag Confidence; f
+          | _ -> 
+            print_endline "Warning: confidence not valid. Set to default 0.0";
+            consume_end_tag Confidence; 0.0
+        end)
+     else (consume (Num n); consume_end_tag Confidence; float_of_int n))
+  | Dot -> (consume Dot; 
+            begin
+              match (!peek ()) with 
+              | Num x -> 
+                let f = float_of_string ("0." ^ (string_of_int x)) 
+                in consume_end_tag Confidence; f
+              | _ -> print_endline 
+                       "Warning: confidence not valid. Set to default 0.0";  
+                consume_end_tag Confidence; 0.0
+            end)
+  | _ -> print_endline "SyntaxError: Rank not a string"; raise SyntaxError 
 
-let parse_id () : id =
-  failwith "Unimplemented"
+let parse_id () : string =
+  match (!peek ()) with
+  | Word _ | Num _ -> let name = parse_words "" in consume_end_tag ID; name
+  | _ -> print_endline "SyntaxError: ID not word/number";
+    raise SyntaxError 
 
 let parse_scientific_name () : string =
-  failwith "Unimplemented"
+  match (!peek ()) with
+  | Word _ | Num _ -> let name = parse_words "" in consume_end_tag SciName; name
+  | _ -> print_endline "SyntaxError: Scientific name not word/number";
+    raise SyntaxError 
 
-let parse_taxonomy () : taxonomy =
-  failwith "Unimplemented"
+let empty_taxonomy : taxonomy = {
+  id = None;
+  scientific_name = "Unnamed";
+}
+
+let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
+  match (!peek ()) with
+  | LAngle -> let tag = parse_start_tag () in
+    begin
+      match (tag.tag_name) with
+      | ID -> parse_taxonomy
+                {taxonomy with id = Some (parse_id ())}
+      | SciName -> print_endline "Parsing scientific name";
+        parse_taxonomy 
+          {taxonomy with scientific_name = parse_scientific_name ()}
+      | x -> ignore_tag x; parse_taxonomy taxonomy
+    end
+  | LAngleSlash -> consume_end_tag Taxonomy; Some taxonomy
+  | _ -> print_endline "Unexpected token encountered when parsing taxonomy";
+    raise SyntaxError
+
 
 let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
   match (!peek ()) with 
   | LAngle -> let tag = parse_start_tag () in 
     begin
       match tag.tag_name with
+      | Confidence -> 
+        parse_clade acc {attr with confidence = Some (parse_confidence ())} 
       | Taxonomy -> 
-        parse_clade acc {attr with taxonomy = Some (parse_taxonomy ())}
+        parse_clade acc {attr with taxonomy = parse_taxonomy empty_taxonomy} 
+      | Name ->
+        parse_clade acc {attr with name = Some (parse_name ())}
       | Clade -> 
         if is_empty acc then
-          parse_clade (parse_clade acc empty_clade_attr) attr
+          (print_endline "is_empty acc";
+           parse_clade (parse_clade acc empty_clade_attr) attr)
         else
-          parse_clade (zip [acc; (parse_clade Tree.empty empty_clade_attr)]) attr
+          (print_endline "acc not empty";
+           parse_clade (zip_no_params [acc; (parse_clade Tree.empty empty_clade_attr)]) attr)
       | x -> ignore_tag x; parse_clade acc attr
     end
-  | LAngleSlash -> consume_end_tag Clade; 
+  | LAngleSlash -> print_endline "langleslash"; consume_end_tag Clade; 
     begin
       match acc with
-      | t when is_empty t -> leaf "Unimplemented"
-      | t -> zip [acc]
+      | t when is_empty t -> 
+        begin
+          match attr.taxonomy with
+          | Some taxon -> leaf taxon.scientific_name taxon.id attr.name
+          | None -> 
+            begin
+              match attr.name with 
+              | Some n -> leaf n None (Some n)
+              | None -> print_endline "Warning: no name provided"; 
+                leaf_no_params "Unnamed"
+            end
+        end
+      | t -> 
+        let id = 
+          begin
+            match attr.taxonomy with 
+            | None -> None 
+            | Some t -> t.id
+          end in 
+        print_endline ".."; zip [acc] attr.confidence attr.rank id attr.name
     end
   | _ -> print_endline "SyntaxError 7"; raise SyntaxError 
+
 
 let rec parse_phylogeny (acc : phylo) : phylo =
   match (!peek ()) with
