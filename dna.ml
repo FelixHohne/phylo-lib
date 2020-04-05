@@ -1,6 +1,6 @@
 open String 
 
-type dna = string 
+type dna = A | C | T | G | N 
 
 (** Representation Invariant: DNA is a string of one fo the following
     letters: "A" "C", "G", "T", "N" *)
