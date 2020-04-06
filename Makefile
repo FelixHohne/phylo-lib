@@ -2,10 +2,10 @@ OCAMLBUILD=ocamlbuild -use-ocamlfind
 
 build:
 	$(OCAMLBUILD) tree.cmo tree_test.cmo
-	$(OCAMLBUILD) dna.cmo dna_test.cmo
 	$(OCAMLBUILD) lexer.cmo lexer_test.cmo
 	$(OCAMLBUILD) phylo_parser.cmo phylo_parser_test.cmo
 	$(OCAMLBUILD) sample_trees.cmo
+	$(OCAMLBUILD) dna.cmo dna_test.cmo
 
 
 test:

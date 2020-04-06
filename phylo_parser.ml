@@ -80,14 +80,17 @@ let is_valid_tag (t : token) : bool =
     Effects: Consumes [Word] and [Num] tokens in the current file until a 
     non-[Word] or [Num] token is reached. *)
 let rec parse_words (acc : string) : string =
-  match (!peek ()) with
+  let w = !peek () in
+  match w with
   | Word s -> consume (Word s); 
     if acc <> "" then parse_words (acc ^ " " ^ s) else parse_words s
   | Num n -> consume (Num n);
     if acc <> "" then parse_words (acc ^ " " ^ (string_of_int n))
     else n |> string_of_int |> parse_words
-  | True -> consume True;
-    if acc <> "" then parse_words (acc ^ " true") else parse_words "true"
+  | Dot | True | Clade | Name | Description | Taxonomy | ID | Rank | Confidence 
+    -> consume w;
+    if acc <> "" then parse_words (acc ^ " " ^ (to_string w))
+    else w |> to_string |> parse_words
   | _ -> acc
 
 let add_str_assoc (lst : (string * string) list option) 
@@ -141,13 +144,13 @@ and
           let return_tag =
             begin
               match (!peek ()) with
-              | Word _ -> let words = parse_words "" in 
+              | Word _ | Num _ -> let words = parse_words "" in 
                 {tag with str_attr = add_str_assoc tag.str_attr (attr, words)}
               | True -> consume True; 
                 {tag with bool_attr = add_bool_assoc tag.bool_attr (attr, true)}
               | False -> consume False;
                 {tag with bool_attr = add_bool_assoc tag.bool_attr (attr, false)}
-              | _ -> raise SyntaxError
+              | _ -> print_endline "SyntaxError ?"; raise SyntaxError
             end
           in consume Quote; return_tag
         | Num x -> consume (Num x);
@@ -177,6 +180,7 @@ let rec ignore_tag (t : token) : unit =
   | x -> consume x; ignore_tag t
 
 let parse_name () : string =
+  print_endline "starting to parse name contents";
   match (!peek ()) with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag Name; name
   | _ -> print_endline "SyntaxError: Name not word/number"; raise SyntaxError 
@@ -230,7 +234,8 @@ let parse_id () : string =
 
 let parse_scientific_name () : string =
   match (!peek ()) with
-  | Word _ | Num _ -> let name = parse_words "" in consume_end_tag SciName; name
+  | Word _ | Num _ -> let name = parse_words "" in consume_end_tag SciName; 
+    print_endline name; name
   | _ -> print_endline "SyntaxError: Scientific name not word/number";
     raise SyntaxError 
 
@@ -257,7 +262,7 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
 
 let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
   match (!peek ()) with 
-  | LAngle -> let tag = parse_start_tag () in 
+  | LAngle -> print_endline "Parsing clade contents"; let tag = parse_start_tag () in 
     begin
       match tag.tag_name with
       | Confidence -> 
