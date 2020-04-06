@@ -37,3 +37,9 @@ let rec set (a : 'a t) (i : int) (x : 'a) : 'a t =
           a'
     | Diff _ -> ref (Diff(i, x, a))
 
+
+type 'a matrix = 'a data ref t
+
+let rec create_matrix (m: int) (n: int) : 'a t = 
+  
+

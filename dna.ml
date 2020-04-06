@@ -1,7 +1,6 @@
 open String 
 
-type dna = A | C | T | G | N 
-
+type dna = string 
 (** Representation Invariant: DNA is a string of one fo the following
     letters: "A" "C", "G", "T", "N" *)
 type t = (int, dna) Hashtbl.t 
