@@ -1,12 +1,18 @@
+MODULES=tree lexer phylo_parser sample_trees dna
+OBJECTS=$(MODULES:=.cmo)
+MLS=$(MODULES:=.ml)
+MLIS=$(MODULES:=.mli)
+MAIN=phylo_parser.byte
 OCAMLBUILD=ocamlbuild -use-ocamlfind
 
+default: build
+	utop
+	
 build:
-	$(OCAMLBUILD) tree.cmo tree_test.cmo
-	$(OCAMLBUILD) lexer.cmo lexer_test.cmo
-	$(OCAMLBUILD) phylo_parser.cmo phylo_parser_test.cmo
-	$(OCAMLBUILD) sample_trees.cmo
-	$(OCAMLBUILD) dna.cmo dna_test.cmo
+	$(OCAMLBUILD) $(OBJECTS)
 
+play:
+	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
 test:
 	$(OCAMLBUILD) -tag 'debug' tree_test.byte && ./tree_test.byte
