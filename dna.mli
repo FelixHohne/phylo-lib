@@ -15,7 +15,7 @@ val length : t -> int
 
 (** [get t int] is the DNA letter at position [int]. 0 indexed. Returns None
     if [int] is not a valid position for [t]. *)
-val get : t -> int -> string option 
+val get : t -> int -> char option 
 
 (** [string_of_range t start finish] is a string with base pairs represented as 
     chars in the interval from [t.start] to [t.finish], excluding [t.finish].

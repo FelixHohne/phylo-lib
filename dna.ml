@@ -1,6 +1,6 @@
 open String 
 
-type dna = string 
+type dna = char
 (** Representation Invariant: DNA is a string of one fo the following
     letters: "A" "C", "G", "T", "N" *)
 type t = (int, dna) Hashtbl.t 
@@ -24,24 +24,24 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   let str = str |> uppercase_ascii in 
   let length = length str in 
   if length = 0 then () else 
-  let rem_string = (sub str 1 (length - 1)) in 
-  incr(cur_count);
-  match (get str 0 |> Char.uppercase_ascii) with 
-  | 'A' -> Hashtbl.add dna (!cur_count) "A"; add_dna rem_string dna cur_count
-  | 'C' -> Hashtbl.add dna (!cur_count) "C"; add_dna rem_string dna cur_count
-  | 'G' -> Hashtbl.add dna (!cur_count) "G"; add_dna rem_string dna cur_count
-  | 'T' -> Hashtbl.add dna (!cur_count) "T"; add_dna rem_string dna cur_count
-  | '-' -> Hashtbl.add dna (!cur_count) "N"; add_dna rem_string dna cur_count
-  | '_' -> Hashtbl.add dna (!cur_count) "N"; add_dna rem_string dna cur_count
-  | h -> add_dna rem_string dna cur_count  
+    let rem_string = (sub str 1 (length - 1)) in 
+    incr(cur_count);
+    match (get str 0 |> Char.uppercase_ascii) with 
+    | 'A' -> Hashtbl.add dna (!cur_count) 'A'; add_dna rem_string dna cur_count
+    | 'C' -> Hashtbl.add dna (!cur_count) 'C'; add_dna rem_string dna cur_count
+    | 'G' -> Hashtbl.add dna (!cur_count) 'G'; add_dna rem_string dna cur_count
+    | 'T' -> Hashtbl.add dna (!cur_count) 'T'; add_dna rem_string dna cur_count
+    | '-' -> Hashtbl.add dna (!cur_count) 'N'; add_dna rem_string dna cur_count
+    | '_' -> Hashtbl.add dna (!cur_count) 'N'; add_dna rem_string dna cur_count
+    | h -> add_dna rem_string dna cur_count  
 
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
 let parse_line str (dna:t) counter : unit= 
   if length str = 0 then () else 
-  let first_char = get str 0 in 
-  if first_char = '>' || first_char = ' ' then () else 
-  (add_dna str dna counter)
+    let first_char = get str 0 in 
+    if first_char = '>' || first_char = ' ' then () else 
+      (add_dna str dna counter)
 
 (** [parse_file f] reads file [f] line by line and uses [dna] and [counter] 
     to create t data structure. 
@@ -78,7 +78,7 @@ let str_range_helper t (b:Buffer.t) start finish =
   for i = start to (finish -1) do 
     let v = get t i in 
     match v with 
-    | Some h -> Buffer.add_string b h
+    | Some h -> Buffer.add_char b h
     | None -> failwith "Invalid inputs"
   done 
 
