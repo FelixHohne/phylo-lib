@@ -80,8 +80,6 @@ let get (t:t) pos =
   | Mismatch -> Some 'M'
   | exception Not_found -> None
 
-let mutate (t: t) (mutation: char) = 
-
 let is_empty (_, tbl) = 
   if Hashtbl.length tbl = 0 then true else false
 
