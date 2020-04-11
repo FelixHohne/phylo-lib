@@ -17,6 +17,12 @@ val length : t -> int
     if [int] is not a valid position for [t]. *)
 val get : t -> int -> char option 
 
+(** [get_name t] is the name of DNA sequence [t]. *)
+val get_name: t -> string 
+
+(** [extract_names dnas] is a string list of the names in dnas *)
+val extract_names: t list -> string list
+
 (** [string_of_range t start finish] is a string with base pairs represented as 
     chars in the interval from [t.start] to [t.finish], excluding [t.finish].
     Requires: [start], [finish] are valid positions in [t], [finish] > [start]. 

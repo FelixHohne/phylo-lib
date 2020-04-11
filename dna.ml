@@ -1,7 +1,6 @@
 type dna = A | C | T | G | Gap | Mismatch
 
-
-type t = (int, dna) Hashtbl.t 
+type t = string ref * (int, dna) Hashtbl.t 
 
 exception Malformed
 
@@ -15,6 +14,15 @@ let print_variant dna cur_count =
   match Hashtbl.find_opt dna 0 with 
   | None -> print_endline "None"; ()
   | Some h -> print_endline h; ()
+
+(** [extract_name str dna] extracts a name from str and mutates the 
+    name of the dna_seq to the extracted name. *)
+let extract_name str (dna_seq: t) : unit = 
+  let line_length = String.length str in 
+  let name = String.sub str 1 (line_length - 1) in 
+  match dna_seq with 
+    (n, tbl) -> n := name;
+  ()
 
 (** [add_dna str t cur_count] mutates t by adding valid DNA sequences 
     in str with counter cur_ref. *)
@@ -33,13 +41,14 @@ let rec add_dna str dna (cur_count:int ref) : unit =
     | '_' -> Hashtbl.add dna (!cur_count) Gap; add_dna rem_string dna cur_count
     | h -> add_dna rem_string dna cur_count  
 
+
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
-let parse_line str (dna:t) counter : unit= 
+let parse_line str (dna:t) counter : unit = 
   if String.length str = 0 then () else 
     let first_char = String.get str 0 in 
-    if first_char = '>' || first_char = ' ' then () else 
-      (add_dna str dna counter)
+    if first_char = '>' || first_char = ' ' then extract_name str dna else 
+      (add_dna str (snd dna) counter)
 
 (** [parse_file f] reads file [f] line by line and uses [dna] and [counter] 
     to create t data structure. 
@@ -56,26 +65,33 @@ let parse_file f dna counter =
   | e -> close_in_noerr in_channel; raise Malformed
 
 let from_fasta (f:string) : t = 
-  let dna_sequence = Hashtbl.create 10485760 in 
+  let dna_sequence = (ref "", Hashtbl.create 10485760) in 
   let counter = ref (-1) in 
   try parse_file f dna_sequence counter; dna_sequence  
   with Malformed -> raise Malformed 
 
 let get (t:t) pos = 
-  match Hashtbl.find_opt t pos with 
-  | Some A -> Some 'A' 
-  | Some C -> Some 'C' 
-  | Some G -> Some 'G' 
-  | Some T -> Some 'T' 
-  | Some Gap -> Some '_'
-  | Some Mismatch -> Some 'M'
-  | None -> failwith "impossible"
+  match Hashtbl.find (snd t) pos with 
+  | A -> Some 'A' 
+  | C -> Some 'C' 
+  | G -> Some 'G' 
+  | T -> Some 'T' 
+  | Gap -> Some '_'
+  | Mismatch -> Some 'M'
+  | exception Not_found -> None
 
-let is_empty t = 
-  if Hashtbl.length t = 0 then true else false
+let mutate (t: t) (mutation: char) = 
 
-let length t = 
-  Hashtbl.length t 
+let is_empty (_, tbl) = 
+  if Hashtbl.length tbl = 0 then true else false
+
+let length (_, tbl) = 
+  Hashtbl.length tbl
+
+let get_name (name, _)  = !name 
+
+let extract_names (dnas: t list) = 
+  List.map (fun (name, _) -> !name) dnas 
 
 (** [str_range_helper t ] modifies b by reading the chars 
     from [t.start, t.end) and adding these values to b. *)
