@@ -1,8 +1,6 @@
-open String 
+type dna = A | C | T | G | Gap | Mismatch
 
-type dna = char
-(** Representation Invariant: DNA is a string of one fo the following
-    letters: "A" "C", "G", "T", "N" *)
+
 type t = (int, dna) Hashtbl.t 
 
 exception Malformed
@@ -21,25 +19,25 @@ let print_variant dna cur_count =
 (** [add_dna str t cur_count] mutates t by adding valid DNA sequences 
     in str with counter cur_ref. *)
 let rec add_dna str dna (cur_count:int ref) : unit = 
-  let str = str |> uppercase_ascii in 
-  let length = length str in 
+  let str = str |> String.uppercase_ascii in 
+  let length = String.length str in 
   if length = 0 then () else 
-    let rem_string = (sub str 1 (length - 1)) in 
+    let rem_string = (String.sub str 1 (length - 1)) in 
     incr(cur_count);
-    match (get str 0 |> Char.uppercase_ascii) with 
-    | 'A' -> Hashtbl.add dna (!cur_count) 'A'; add_dna rem_string dna cur_count
-    | 'C' -> Hashtbl.add dna (!cur_count) 'C'; add_dna rem_string dna cur_count
-    | 'G' -> Hashtbl.add dna (!cur_count) 'G'; add_dna rem_string dna cur_count
-    | 'T' -> Hashtbl.add dna (!cur_count) 'T'; add_dna rem_string dna cur_count
-    | '-' -> Hashtbl.add dna (!cur_count) 'N'; add_dna rem_string dna cur_count
-    | '_' -> Hashtbl.add dna (!cur_count) 'N'; add_dna rem_string dna cur_count
+    match (String.get str 0 |> Char.uppercase_ascii) with 
+    | 'A' -> Hashtbl.add dna (!cur_count) A; add_dna rem_string dna cur_count
+    | 'C' -> Hashtbl.add dna (!cur_count) C; add_dna rem_string dna cur_count
+    | 'G' -> Hashtbl.add dna (!cur_count) G; add_dna rem_string dna cur_count
+    | 'T' -> Hashtbl.add dna (!cur_count) T; add_dna rem_string dna cur_count
+    | '-' -> Hashtbl.add dna (!cur_count) Gap; add_dna rem_string dna cur_count
+    | '_' -> Hashtbl.add dna (!cur_count) Gap; add_dna rem_string dna cur_count
     | h -> add_dna rem_string dna cur_count  
 
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
 let parse_line str (dna:t) counter : unit= 
-  if length str = 0 then () else 
-    let first_char = get str 0 in 
+  if String.length str = 0 then () else 
+    let first_char = String.get str 0 in 
     if first_char = '>' || first_char = ' ' then () else 
       (add_dna str dna counter)
 
@@ -64,7 +62,14 @@ let from_fasta (f:string) : t =
   with Malformed -> raise Malformed 
 
 let get (t:t) pos = 
-  Hashtbl.find_opt t pos 
+  match Hashtbl.find_opt t pos with 
+  | Some A -> Some 'A' 
+  | Some C -> Some 'C' 
+  | Some G -> Some 'G' 
+  | Some T -> Some 'T' 
+  | Some Gap -> Some '_'
+  | Some Mismatch -> Some 'M'
+  | None -> failwith "impossible"
 
 let is_empty t = 
   if Hashtbl.length t = 0 then true else false
@@ -86,11 +91,3 @@ let string_of_range t start finish =
   let output = Buffer.create (finish - start) in 
   str_range_helper t output start finish; 
   Buffer.contents output
-
-(* 
-let phys_equals t t = 
-  (** Implementation Note: physical equality was chosen because structural 
-      equality tests for large DNA sequences (i.e. millions of base pairs)
-      is prohibitively expensive O(1) vs O(n) *)
-  (t = t)
-*) 

@@ -12,14 +12,14 @@ let simple_ex = from_fasta "FASTA/simple_ex.fasta"
 
 let create_DNA = [
 
-  "easy 1 " >:: (fun _ -> assert_equal (get easy_example 0) (Some "G"));
-  "easy 2 " >:: (fun _ -> assert_equal (get easy_example 1) (Some "A"));
-  "easy 3 " >:: (fun _ -> assert_equal (get easy_example 5) (Some "C"));
-  "fruit fly 1 " >:: (fun _ -> assert_equal (get fruit_fly_x 0) (Some "G")); 
-  "fruit fly 2 " >:: (fun _ -> assert_equal (get fruit_fly_x 1) (Some "A")); 
-  "fruit fly 3" >:: (fun _ -> assert_equal (get fruit_fly_3r 0) (Some "A"));
-  "fruit fly 3" >:: (fun _ -> assert_equal (get fruit_fly_x 5) (Some "C"));
-  "fruit fly 4" >:: (fun _ -> assert_equal (get fruit_fly_3r 9) (Some "A"));
+  "easy 1 " >:: (fun _ -> assert_equal (get easy_example 0) (Some 'G'));
+  "easy 2 " >:: (fun _ -> assert_equal (get easy_example 1) (Some 'A'));
+  "easy 3 " >:: (fun _ -> assert_equal (get easy_example 5) (Some 'C'));
+  "fruit fly 1 " >:: (fun _ -> assert_equal (get fruit_fly_x 0) (Some 'G')); 
+  "fruit fly 2 " >:: (fun _ -> assert_equal (get fruit_fly_x 1) (Some 'A')); 
+  "fruit fly 3" >:: (fun _ -> assert_equal (get fruit_fly_3r 0) (Some 'A'));
+  "fruit fly 3" >:: (fun _ -> assert_equal (get fruit_fly_x 5) (Some 'C'));
+  "fruit fly 4" >:: (fun _ -> assert_equal (get fruit_fly_3r 9) (Some 'A'));
 
 ]
 
@@ -35,8 +35,8 @@ let dna_functions = [
 let more_dna = [
 
 "hard" >:: (fun _ -> assert_equal (string_of_range simple_ex 24 32) "TCCTGCTG");
-"counter check" >:: (fun _ -> assert_equal (get ex2 7) (Some ("A"))); 
-"counter check2" >:: (fun _ -> assert_equal (get fruit_fly_3r 7) (Some ("C")));
+"counter check" >:: (fun _ -> assert_equal (get ex2 7) (Some ('A'))); 
+"counter check2" >:: (fun _ -> assert_equal (get fruit_fly_3r 7) (Some ('C')));
 
 ]
 
