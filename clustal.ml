@@ -8,7 +8,7 @@ let align dnas = failwith "Unimplemented"
 
 let align_test dnas = dnas
 
-let size msa = Array.length msa
+let num_seq msa = Array.length msa
 
 let seq_len msa = 
   Dna.length msa.(0)

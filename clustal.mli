@@ -8,8 +8,8 @@ type t
     [dnas]. *)
 val align : Dna.t array -> t
 
-(** [size msa] is the number of sequences in [msa]. *)
-val size : t -> int
+(** [num_seq msa] is the number of sequences in [msa]. *)
+val num_seq : t -> int
 
 (** [seq_len msa] is the length of each sequence in [msa], where the length
     is the total number of gaps and nucleotide bases. *)
