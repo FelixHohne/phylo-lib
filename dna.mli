@@ -22,8 +22,8 @@ val get : t -> int -> char option
 (** [get_name t] is the name of DNA sequence [t]. *)
 val get_name: t -> string 
 
-(** [extract_names dnas] is a string list of the names in dnas *)
-val extract_names: t list -> string list
+(** [extract_names dnas] is a string array of the names in dnas *)
+val extract_names: t array -> string array
 
 (** [string_of_range t start finish] is a string with base pairs represented as 
     chars in the interval from [t.start] to [t.finish], excluding [t.finish].

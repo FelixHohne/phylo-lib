@@ -12,8 +12,8 @@ let simple_ex = from_fasta "FASTA/simple_ex.fasta"
 let name = from_fasta "FASTA/name_1.fasta"
 let name2 = from_fasta "FASTA/name_2.fasta"
 
-let names = ["ferredoxin oxidoreductase"; 
-            "Drosophila melanogaster chromosome 3R"]
+let names = [|"ferredoxin oxidoreductase"; 
+              "Drosophila melanogaster chromosome 3R"|]
 
 let mut = from_fasta "FASTA/insert.fasta"
 let c_mut = from_fasta "FASTA/insert.fasta"
@@ -42,11 +42,11 @@ let dna_functions = [
 
 let more_dna = [
 
-"hard" >:: (fun _ -> assert_equal (string_of_range simple_ex 24 32) "TCCTGCTG");
-"counter check" >:: (fun _ -> assert_equal (get ex2 7) (Some ('A'))); 
-"counter check2" >:: (fun _ -> assert_equal (get fruit_fly_3r 7) (Some ('C')));
-"name" >:: (fun _ -> assert_equal (get_name name) ("ferredoxin oxidoreductase"));
-"names" >:: (fun _ -> assert_equal (extract_names [name; name2]) (names));
+  "hard" >:: (fun _ -> assert_equal (string_of_range simple_ex 24 32) "TCCTGCTG");
+  "counter check" >:: (fun _ -> assert_equal (get ex2 7) (Some ('A'))); 
+  "counter check2" >:: (fun _ -> assert_equal (get fruit_fly_3r 7) (Some ('C')));
+  "name" >:: (fun _ -> assert_equal (get_name name) ("ferredoxin oxidoreductase"));
+  "names" >:: (fun _ -> assert_equal (extract_names [|name; name2|]) (names));
 ]
 
 let mutability = [

@@ -22,7 +22,7 @@ let extract_name str (dna_seq: t) : unit =
   let name = String.sub str 1 (line_length - 1) in 
   match dna_seq with 
     (n, tbl) -> n := name;
-  ()
+    ()
 
 (** [add_dna str t cur_count] mutates t by adding valid DNA sequences 
     in str with counter cur_ref. *)
@@ -88,8 +88,8 @@ let length (_, tbl) =
 
 let get_name (name, _)  = !name 
 
-let extract_names (dnas: t list) = 
-  List.map (fun (name, _) -> !name) dnas 
+let extract_names (dnas: t array) = 
+  Array.map (fun (name, _) -> !name) dnas 
 
 (** [str_range_helper t ] modifies b by reading the chars 
     from [t.start, t.end) and adding these values to b. *)
@@ -116,7 +116,7 @@ let to_string t =
 
 let mutate d pos (_, dna_seq) = 
   if Hashtbl.mem dna_seq pos = true 
-    then Hashtbl.replace dna_seq pos d 
+  then Hashtbl.replace dna_seq pos d 
   else 
     raise (Invalid_argument "index out of bounds")
 
@@ -129,9 +129,9 @@ let append d ((_, dna_seq):t) =
 let update_bindings (pos:int) full_dna_seq = 
   let dna_seq = 
     match full_dna_seq with 
-    (_, t) -> t
+      (_, t) -> t
   in 
-  
+
   let current_value = ref (Hashtbl.find dna_seq (pos)) in  
   let current_pos = ref (pos + 1) in 
   let next_value = ref (Hashtbl.find dna_seq (pos + 1)) in 
@@ -144,16 +144,16 @@ let update_bindings (pos:int) full_dna_seq =
     try next_value := Hashtbl.find dna_seq !current_pos; 
     with _ -> ()
   done  
- 
+
 
 let insert d pos full_dna_seq = 
   let dna_seq = 
-      match full_dna_seq with 
+    match full_dna_seq with 
       (_, t) -> t 
-      in 
+  in 
   if pos = (Hashtbl.length dna_seq) 
-    then append d full_dna_seq
+  then append d full_dna_seq
   else 
-  update_bindings pos full_dna_seq; 
+    update_bindings pos full_dna_seq; 
   Hashtbl.replace dna_seq pos d; 
 

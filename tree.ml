@@ -135,6 +135,12 @@ and is_equal a b = match a, b with
     let s2 = List.sort (hierarchy) t1.children in tlist_comp s1 s2 true
   | _ -> false
 
+let rec mem s t =
+  match t with
+  | Leaf {scientific_name} -> scientific_name = s
+  | Clade {children} -> 
+    List.fold_left (fun acc tree -> acc || (mem s tree)) false children
+
 (** [print_spaces n] prints [n] spaces to the console. *)
 let print_spaces (n : int) : unit =
   for x = 1 to n do print_char ' ' done
