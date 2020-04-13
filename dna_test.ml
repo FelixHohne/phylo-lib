@@ -15,6 +15,9 @@ let name2 = from_fasta "FASTA/name_2.fasta"
 let names = ["ferredoxin oxidoreductase"; 
             "Drosophila melanogaster chromosome 3R"]
 
+let mut = from_fasta "FASTA/insert.fasta"
+let c_mut = from_fasta "FASTA/insert.fasta"
+
 let create_DNA = [
 
   "easy 1 " >:: (fun _ -> assert_equal (get easy_example 0) (Some 'G'));
@@ -44,9 +47,17 @@ let more_dna = [
 "counter check2" >:: (fun _ -> assert_equal (get fruit_fly_3r 7) (Some ('C')));
 "name" >:: (fun _ -> assert_equal (get_name name) ("ferredoxin oxidoreductase"));
 "names" >:: (fun _ -> assert_equal (extract_names [name; name2]) (names));
-
 ]
 
+let mutability = [
+
+  "append" >:: (fun _ -> assert_equal (append A mut; get mut 4 ) (Some 'A')); 
+  "mutate" >:: (fun _ -> assert_equal (mutate G 2 mut; get mut 2) (Some 'G')); 
+  "mutate2" >:: (fun _ -> assert_equal (mutate G 4 mut; get mut 4) (Some 'G')); 
+  "ins1" >:: (fun _ -> assert_equal (insert G 1 c_mut; to_string c_mut) "AGTCG"); 
+  (* "ins2" >:: (fun _ -> assert_equal (insert A 0 c_mut; to_string c_mut) "AAGTCG");  *)
+  (* "ins3" >:: (fun _ -> assert_equal (insert G 5 c_mut; to_string c_mut)"AAGTCGG");  *)
+]
 
 
 let tests =
@@ -54,6 +65,7 @@ let tests =
     create_DNA;
     dna_functions;
     more_dna; 
+    mutability;
   ]
 
 let _ = run_test_tt_main tests

@@ -32,9 +32,9 @@ val extract_names: t list -> string list
 val string_of_range : t -> int -> int -> string
 
 (** [to_string t] is a string representation of dna sequence [t]. *)
-val to_string: t 
+val to_string: t -> string 
 
-(** [append dna dna_seq] appends dna to the end of t. 
+(** [append dna dna_seq] appends [dna] to the end of [dna_seq]. 
     Performance: O(1). *)
 val append: dna -> t -> unit 
 

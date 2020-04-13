@@ -107,7 +107,12 @@ let string_of_range t start finish =
   Buffer.contents output
 
 let to_string t = 
-  string_of_range t 0 (length t)
+  let s = string_of_range t 0 (length t)
+  in 
+  print_endline ""; 
+  print_endline s; 
+  print_endline ""; 
+  s
 
 let mutate d pos (_, dna_seq) = 
   if Hashtbl.mem dna_seq pos = true 
@@ -142,10 +147,13 @@ let update_bindings (pos:int) full_dna_seq =
  
 
 let insert d pos full_dna_seq = 
-  update_bindings pos full_dna_seq; 
   let dna_seq = 
-    match full_dna_seq with 
-    (_, t) -> t 
-    in 
+      match full_dna_seq with 
+      (_, t) -> t 
+      in 
+  if pos = (Hashtbl.length dna_seq) 
+    then append d full_dna_seq
+  else 
+  update_bindings pos full_dna_seq; 
   Hashtbl.replace dna_seq pos d; 
 
