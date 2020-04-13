@@ -106,49 +106,46 @@ let string_of_range t start finish =
   str_range_helper t output start finish; 
   Buffer.contents output
 
-let mutate n pos (_, dna_seq) = 
-  if Hashtbl.mem dna_seq pos = true 
-    then Hashtbl.replace dna_seq pos n 
-  else 
-    raise (Invalid_argument "index out of bounds")
-
-let append_dna (n:dna) ((_, dna_seq):t) = 
-  let l = Hashtbl.length dna_seq in 
-  Hashtbl.add dna_seq l n 
-
-
 let to_string t = 
   string_of_range t 0 (length t)
 
+let mutate d pos (_, dna_seq) = 
+  if Hashtbl.mem dna_seq pos = true 
+    then Hashtbl.replace dna_seq pos d 
+  else 
+    raise (Invalid_argument "index out of bounds")
+
+let append d ((_, dna_seq):t) = 
+  let l = Hashtbl.length dna_seq in 
+  Hashtbl.add dna_seq l d 
+
 (* [update_bindings pos dna_seq] increments the index of all dna nucleotides 
     in [dna_seq] by 1 starting at position [pos]. *)
-let update_bindings (pos:int) dna_seq_with_name = 
+let update_bindings (pos:int) full_dna_seq = 
   let dna_seq = 
-    match dna_seq_with_name with 
+    match full_dna_seq with 
     (_, t) -> t
   in 
+  
   let current_value = ref (Hashtbl.find dna_seq (pos)) in  
   let current_pos = ref (pos + 1) in 
   let next_value = ref (Hashtbl.find dna_seq (pos + 1)) in 
   let l = Hashtbl.length dna_seq in 
 
-  let () = for i = pos to (l-1) do 
+  for i = pos to (l-1) do 
     Hashtbl.replace dna_seq !current_pos !current_value; 
     current_value := !next_value; 
     incr(current_pos);
     try next_value := Hashtbl.find dna_seq !current_pos; 
     with _ -> ()
   done  
-  in 
-  ()
-  (* in  *)
-  (* append_dna !current_value dna_seq_with_name *)
+ 
 
-let insert n pos dna_seq_with_name = 
-  update_bindings pos dna_seq_with_name; 
+let insert d pos full_dna_seq = 
+  update_bindings pos full_dna_seq; 
   let dna_seq = 
-    match dna_seq_with_name with 
+    match full_dna_seq with 
     (_, t) -> t 
     in 
-  Hashtbl.replace dna_seq pos n; 
+  Hashtbl.replace dna_seq pos d; 
 
