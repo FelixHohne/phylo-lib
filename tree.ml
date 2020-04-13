@@ -130,7 +130,7 @@ let rec tlist_comp a b acc =
     | _ -> false
 
 and is_equal a b = match a, b with
-  | Leaf _, Leaf _ -> true
+  | Leaf a, Leaf b -> a.scientific_name = b.scientific_name
   | Clade t1, Clade t2 -> let s1 = List.sort (hierarchy) t1.children in
     let s2 = List.sort (hierarchy) t1.children in tlist_comp s1 s2 true
   | _ -> false

@@ -49,7 +49,8 @@ let remove i dist =
 (** [avg_helper j k dist] is the value stored at 
     indices [j] and [k] in [dist]. *)
 let avg_helper j k dist =
-   Hashtbl.find dist ((Stdlib.min j k), max j k) 
+  print_int j; print_newline (); print_int k; print_newline ();
+  Hashtbl.find dist ((Stdlib.min j k), max j k) 
 
 (** [average i j dist] iterates over the elements in matrix dist and updates 
     the entries where row = [i] or column = [i] to the average of 
@@ -57,22 +58,31 @@ let avg_helper j k dist =
     Used for UPGMA. 
     See https://en.wikipedia.org/wiki/UPGMA for detailed algorithm.  *)
 let average (i : int) (j : int) dist = 
+  print_int i; print_newline (); print_int j; print_newline ();
   let avg (k : index) (v : float) = 
-        if fst k = i then 
-          let other = snd k in 
-          let v_val = v +. (avg_helper other j dist) in 
-          Some (v_val /. 2.)
-        else if snd k = i then
-          let other = fst k in 
-          Some ((v +. (avg_helper other j dist)) /. 2.)
-        else Some v
-    in 
+    if fst k = i then 
+      let other = snd k in 
+      let v_val = v +. (avg_helper other i dist) in 
+      Some (v_val /. 2.)
+    else if snd k = i then
+      let other = fst k in 
+      Some ((v +. (avg_helper other i dist)) /. 2.)
+    else Some v
+  in 
   Hashtbl.filter_map_inplace avg dist
 
 let combine i j dist = 
   if i >= j 
-    then failwith "invalid input"
+  then failwith "invalid input"
   else 
-    average i j dist; 
-    remove j dist; 
-    dist
+    print_endline "calling avg";
+  average i j dist;
+  print_endline "calling remove";
+  remove j dist; 
+  print_endline "finished remove";
+  dist
+
+let size dist = Hashtbl.length dist
+
+let is_done dist = 
+  (size dist = 0)

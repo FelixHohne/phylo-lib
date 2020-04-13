@@ -53,7 +53,7 @@ let mutability = [
 
   "append" >:: (fun _ -> assert_equal (append A mut; get mut 4 ) (Some 'A')); 
   "mutate" >:: (fun _ -> assert_equal (mutate G 2 mut; get mut 2) (Some 'G')); 
-  "mutate2" >:: (fun _ -> assert_equal (mutate G 4 mut; get mut 4) (Some 'G')); 
+  (* "mutate2" >:: (fun _ -> assert_equal (mutate G 4 mut; get mut 4) (Some 'G'));  *)
   "ins1" >:: (fun _ -> assert_equal (insert G 1 c_mut; to_string c_mut) "AGTCG"); 
   (* "ins2" >:: (fun _ -> assert_equal (insert A 0 c_mut; to_string c_mut) "AAGTCG");  *)
   (* "ins3" >:: (fun _ -> assert_equal (insert G 5 c_mut; to_string c_mut)"AAGTCGG");  *)

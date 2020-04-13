@@ -4,9 +4,7 @@ open Dna
 
 type t = Dna.t array
 
-let align dnas = failwith "Unimplemented"
-
-let align_test dnas = dnas
+let align dnas = dnas
 
 let num_seq msa = Array.length msa
 
