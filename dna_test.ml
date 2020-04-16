@@ -68,7 +68,7 @@ let mutability = [
 let bbox_mutability = [
 
   "ins0" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "A");
-  (* "ins1" >:: (fun _ -> assert_equal (insert A 0 ins1; to_string ins0) "AC"); *)
+  "ins1" >:: (fun _ -> assert_equal (insert A 0 ins1; to_string ins1) "AC");
   "ins2" >:: (fun _ -> assert_equal (insert A 2 ins2; to_string ins2) "CTA") 
 
 ]
