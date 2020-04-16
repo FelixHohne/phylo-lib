@@ -8,7 +8,7 @@ let d2 = from_fasta "FASTA/example_3.fasta"
 let d3 = from_fasta "FASTA/example_4.fasta"
 let d4 = from_fasta "FASTA/example_5.fasta"
 let d5 = from_fasta "FASTA/example_6.fasta"
-let aligned = Clustal.align [|d1; d2; d3; d4; d4;|]
+let aligned = Msa.align [|d1; d2; d3; d4; d4;|]
 
 let c1 = zip_no_params [leaf_no_params "A"; leaf_no_params "B"]
 let c2 = zip_no_params [leaf_no_params "E"; leaf_no_params "F"]

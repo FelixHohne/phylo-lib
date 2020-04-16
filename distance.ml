@@ -1,4 +1,4 @@
-open Clustal
+open Msa
 
 (** RI: The index of the first sequence is strictly less than the index of the 
     second sequence. As a result, if there is only one sequence, 
@@ -6,7 +6,7 @@ open Clustal
 type index = int * int 
 type t = (index, float) Hashtbl.t
 
-let dist (msa: Clustal.t) (gap: int) : t = 
+let dist (msa: Msa.t) (gap: int) : t = 
   let m = num_seq msa in
   let n = seq_len msa in
   let dist_matrix = Hashtbl.create m in 

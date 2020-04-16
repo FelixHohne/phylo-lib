@@ -1,0 +1,42 @@
+open Dna
+
+(** [max_thre a b c] is the largest of a, b, and c. *)
+let max_three a b c = max (max a b) c
+
+(** [init_matrix d1 d2 indel] is an initalized matrix of size 
+    len(d1) + 1 * len(d2) + 1 with the row and column headers initialized 
+    according to the [indel] penalty. *)
+let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) =
+  let m = (Dna.length d1) + 1 in
+  let n = (Dna.length d2) + 1 in
+  let mat = Array.make_matrix m n Int.min_int in
+  for r = 0 to m - 1 do
+    mat.(r).(0) <- r * indel
+  done;
+  for c = 0 to n - 1 do
+    mat.(0).(c) <- c * indel
+  done;
+  mat
+
+(** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix that uses
+    the [align], [misalign], and [indel] parameters. The algorithm used is 
+    Needleman-Wunsch. *)
+let fill_matrix d1 d2 align misalign indel =
+  let mat = init_matrix d1 d2 indel in
+  let m = Array.length mat in 
+  let n = Array.length mat.(0) in
+  for r = 1 to m - 1 do 
+    for c = 1 to n - 1 do
+      let left = indel + mat.(r).(c-1) in
+      let up = indel + mat.(r -1).(c) in
+      let diagonal = match Dna.get d1 (r-1), Dna.get d2 (c-1) with
+        | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
+        | Some i, None -> failwith ("Uh oh 1: " ^ Char.escaped i)
+        | None, Some j -> failwith ("Uh oh 2: " ^ Char.escaped j)
+        | _ -> failwith "this should never happen" in
+      mat.(r).(c) <- max_three left up diagonal
+    done;
+  done;
+  mat
+
+let align_pair s1 s2 = failwith "Very sad"

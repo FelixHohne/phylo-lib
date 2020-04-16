@@ -8,7 +8,7 @@ type index = int * int
     based on Hamming distance, where a distance of 1 represents a mismatch 
     between two different nucleotides, and a distance of [gap] when either a gap
     or a nucleotide is compared with a gap. *)
-val dist : Clustal.t -> int -> t
+val dist : Msa.t -> int -> t
 
 (** [min_index dist_matrix] is a pair of indices of DNA sequences with the 
     minimum distance between them. *)
