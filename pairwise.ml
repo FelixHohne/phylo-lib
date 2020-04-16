@@ -3,12 +3,11 @@ open Dna
 (** [max_thre a b c] is the largest of a, b, and c. *)
 let max_three a b c = max (max a b) c
 
-(** [init_matrix d1 d2 indel] is an initalized matrix of size 
-    len(d1) + 1 * len(d2) + 1 with the row and column headers initialized 
+(** [init_matrix d1 d2 indel m n ] is an initalized matrix of size 
+    m * n with the row and column headers initialized 
     according to the [indel] penalty. *)
-let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) =
-  let m = (Dna.length d1) + 1 in
-  let n = (Dna.length d2) + 1 in
+let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) (m:int) (n:int)  =
+
   let mat = Array.make_matrix m n Int.min_int in
   for r = 0 to m - 1 do
     mat.(r).(0) <- r * indel
@@ -18,13 +17,10 @@ let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) =
   done;
   mat
 
-(** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix that uses
-    the [align], [misalign], and [indel] parameters. The algorithm used is 
-    Needleman-Wunsch. *)
-let fill_matrix d1 d2 align misalign indel =
-  let mat = init_matrix d1 d2 indel in
-  let m = Array.length mat in 
-  let n = Array.length mat.(0) in
+(** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix of dimensions m by n that uses
+    the [align], [misalign], and [indel] parameters. *)
+let fill_matrix d1 d2 align misalign indel m n =
+  let mat = init_matrix d1 d2 indel m n in
   for r = 1 to m - 1 do 
     for c = 1 to n - 1 do
       let left = indel + mat.(r).(c-1) in
@@ -39,4 +35,25 @@ let fill_matrix d1 d2 align misalign indel =
   done;
   mat
 
-let align_pair s1 s2 = failwith "Very sad"
+let align_pair d1 d2 align misalign indel = 
+  let m = (Dna.length d1) + 1 in
+  let n = (Dna.length d2) + 1 in
+  let mat = fill_matrix d1 d2 align misalign indel m n in
+  let r = m - 1 in 
+  let c = n - 1 in
+  let acc1 = "" in
+  let acc2 = "" in
+  (* while (r > 0 || c > 0) do
+     let left = if c < 1 then Int.min_int else indel + mat.(r).(c - 1) in
+     let up = if r < 1 then Int.min_int else indel + mat.(r - 1).(c) in
+     let diagonal = if r < 1 || c < 1 then min_int else
+        begin
+          match Dna.get d1 (max 0 r-1), Dna.get d2 (max 0 c-1) with
+          | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
+          | Some i, None -> failwith ("Uh oh 1: " ^ Char.escaped i)
+          | None, Some j -> failwith ("Uh oh 2: " ^ Char.escaped j)
+          | _ -> failwith "this should never happen" 
+        end in
+     (* let val = mat.(r).(c) in *)
+     done; *)
+  failwith "Very, very, very sad"

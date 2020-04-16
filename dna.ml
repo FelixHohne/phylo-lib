@@ -60,6 +60,16 @@ let from_fasta (f:string) : t =
   try parse_file f dna_sequence counter; dna_sequence  
   with Malformed -> raise Malformed 
 
+
+let from_string (str: string) : t = 
+  let dna = Hashtbl.create 10485760) in 
+let counter = ref (-1) in 
+add_dna str dna counter; 
+("", dna)
+
+
+
+
 let get (t:t) pos = 
   match Hashtbl.find (snd t) pos with 
   | A -> Some 'A' 
@@ -119,7 +129,7 @@ let update_bindings (pos:int) full_dna_seq =
   let current_value = ref (Hashtbl.find dna_seq (pos)) in  
   let current_pos = ref (pos + 1) in 
   let next_value = if pos = (l -1) then ref A else
-                   ref (Hashtbl.find dna_seq (pos + 1)) in 
+      ref (Hashtbl.find dna_seq (pos + 1)) in 
 
   for i = pos to (l-1) do 
     Hashtbl.replace dna_seq !current_pos !current_value; 
@@ -138,7 +148,7 @@ let insert d pos full_dna_seq =
   if pos = (Hashtbl.length dna_seq) 
   then append d full_dna_seq
   else 
-  (update_bindings pos full_dna_seq; 
-  Hashtbl.replace dna_seq pos d; 
-  )
+    (update_bindings pos full_dna_seq; 
+     Hashtbl.replace dna_seq pos d; 
+    )
 
