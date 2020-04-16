@@ -4,17 +4,6 @@ type t = string ref * (int, dna) Hashtbl.t
 
 exception Malformed
 
-(** [print_variant dna cur_count] is a helper printing function that 
-    prints the value associated with the [cur_count key] for the dna sequence 
-    [dna].*)
-let print_variant dna cur_count = 
-  print_endline "print variant: ";
-  print_endline "current counter: ";
-  print_int cur_count; 
-  match Hashtbl.find_opt dna 0 with 
-  | None -> print_endline "None"; ()
-  | Some h -> print_endline h; ()
-
 (** [extract_name str dna] extracts a name from str and mutates the 
     name of the dna_seq to the extracted name. *)
 let extract_name str (dna_seq: t) : unit = 
@@ -45,6 +34,7 @@ let rec add_dna str dna (cur_count:int ref) : unit =
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
 let parse_line str (dna:t) counter : unit = 
+  print_endline str; 
   if String.length str = 0 then () else 
     let first_char = String.get str 0 in 
     if first_char = '>' || first_char = ' ' then extract_name str dna else 
@@ -106,13 +96,7 @@ let string_of_range t start finish =
   str_range_helper t output start finish; 
   Buffer.contents output
 
-let to_string t = 
-  let s = string_of_range t 0 (length t)
-  in 
-  print_endline ""; 
-  print_endline s; 
-  print_endline ""; 
-  s
+let to_string t = string_of_range t 0 (length t)
 
 let mutate d pos (_, dna_seq) = 
   if Hashtbl.mem dna_seq pos = true 
@@ -122,7 +106,7 @@ let mutate d pos (_, dna_seq) =
 
 let append d ((_, dna_seq):t) = 
   let l = Hashtbl.length dna_seq in 
-  Hashtbl.add dna_seq l d 
+  Hashtbl.add dna_seq (l) d 
 
 (* [update_bindings pos dna_seq] increments the index of all dna nucleotides 
     in [dna_seq] by 1 starting at position [pos]. *)
@@ -131,11 +115,11 @@ let update_bindings (pos:int) full_dna_seq =
     match full_dna_seq with 
       (_, t) -> t
   in 
-
+  let l = Hashtbl.length dna_seq in 
   let current_value = ref (Hashtbl.find dna_seq (pos)) in  
   let current_pos = ref (pos + 1) in 
-  let next_value = ref (Hashtbl.find dna_seq (pos + 1)) in 
-  let l = Hashtbl.length dna_seq in 
+  let next_value = if pos = (l -1) then ref A else
+                   ref (Hashtbl.find dna_seq (pos + 1)) in 
 
   for i = pos to (l-1) do 
     Hashtbl.replace dna_seq !current_pos !current_value; 
@@ -154,6 +138,7 @@ let insert d pos full_dna_seq =
   if pos = (Hashtbl.length dna_seq) 
   then append d full_dna_seq
   else 
-    update_bindings pos full_dna_seq; 
+  (update_bindings pos full_dna_seq; 
   Hashtbl.replace dna_seq pos d; 
+  )
 

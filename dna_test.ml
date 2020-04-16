@@ -49,6 +49,11 @@ let more_dna = [
   "names" >:: (fun _ -> assert_equal (extract_names [|name; name2|]) (names));
 ]
 
+
+let ins0 = from_fasta "FASTA/insert0.fasta"
+let ins1 = from_fasta "FASTA/insert1.fasta"
+let ins2 = from_fasta "FASTA/insert2.fasta"
+
 let mutability = [
 
   "append" >:: (fun _ -> assert_equal (append A mut; get mut 4 ) (Some 'A')); 
@@ -60,21 +65,21 @@ let mutability = [
 ]
 
 
-let ins0 = from_fasta "FASTA/insert0.fasta"
-let ins1 = from_fasta "FASTA/insert1.fasta"
-let ins2 = from_fasta "FASTA/insert2.fasta"
-
 let bbox_mutability = [
 
   "ins0" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "A");
-  "ins1" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "AC");
-  "ins2" >:: (fun _ -> assert_equal (insert A 2 ins0; to_string ins0) "CTA") 
+  (* "ins1" >:: (fun _ -> assert_equal (insert A 0 ins1; to_string ins0) "AC"); *)
+  "ins2" >:: (fun _ -> assert_equal (insert A 2 ins2; to_string ins2) "CTA") 
 
 ]
 
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
-    bbox_mutability;
+
+   mutability; 
+   more_dna; 
+   dna_functions; 
+   create_DNA;
   ]
 
 let _ = run_test_tt_main tests
