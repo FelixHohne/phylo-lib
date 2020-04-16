@@ -60,12 +60,21 @@ let mutability = [
 ]
 
 
+let ins0 = from_fasta "FASTA/insert0.fasta"
+let ins1 = from_fasta "FASTA/insert1.fasta"
+let ins2 = from_fasta "FASTA/insert2.fasta"
+
+let bbox_mutability = [
+
+  "ins0" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "A");
+  "ins1" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "AC");
+  "ins2" >:: (fun _ -> assert_equal (insert A 2 ins0; to_string ins0) "CTA") 
+
+]
+
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
-    create_DNA;
-    dna_functions;
-    more_dna; 
-    mutability;
+    bbox_mutability;
   ]
 
 let _ = run_test_tt_main tests
