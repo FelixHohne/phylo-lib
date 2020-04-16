@@ -62,12 +62,10 @@ let from_fasta (f:string) : t =
 
 
 let from_string (str: string) : t = 
-  let dna = Hashtbl.create 10485760) in 
-let counter = ref (-1) in 
-add_dna str dna counter; 
-("", dna)
-
-
+  let dna = Hashtbl.create 10485760 in 
+  let counter = ref (-1) in 
+  add_dna str dna counter; 
+  (ref "", dna)
 
 
 let get (t:t) pos = 
@@ -79,6 +77,16 @@ let get (t:t) pos =
   | Gap -> Some '_'
   | Mismatch -> Some 'M'
   | exception Not_found -> None
+
+let get_e (t: t) pos = 
+  match Hashtbl.find (snd t) pos with 
+  | A ->  'A' 
+  | C ->  'C' 
+  | G ->  'G' 
+  | T ->  'T' 
+  | Gap -> '_'
+  | Mismatch ->  'M'
+  | exception Not_found -> raise Not_found
 
 let is_empty (_, tbl) = 
   if Hashtbl.length tbl = 0 then true else false
@@ -130,12 +138,11 @@ let update_bindings (pos:int) full_dna_seq =
   let current_pos = ref (pos + 1) in 
   let next_value = if pos = (l -1) then ref A else
       ref (Hashtbl.find dna_seq (pos + 1)) in 
-
   for i = pos to (l-1) do 
     Hashtbl.replace dna_seq !current_pos !current_value; 
     current_value := !next_value; 
     incr(current_pos);
-    try next_value := Hashtbl.find dna_seq !current_pos; 
+    try next_value := Hashtbl.find dna_seq !current_pos;
     with _ -> ()
   done  
 
@@ -143,7 +150,7 @@ let update_bindings (pos:int) full_dna_seq =
 let insert d pos full_dna_seq = 
   let dna_seq = 
     match full_dna_seq with 
-      (_, t) -> t 
+      (_,t) -> t
   in 
   if pos = (Hashtbl.length dna_seq) 
   then append d full_dna_seq

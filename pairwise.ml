@@ -39,21 +39,39 @@ let align_pair d1 d2 align misalign indel =
   let m = (Dna.length d1) + 1 in
   let n = (Dna.length d2) + 1 in
   let mat = fill_matrix d1 d2 align misalign indel m n in
-  let r = m - 1 in 
-  let c = n - 1 in
-  let acc1 = "" in
-  let acc2 = "" in
-  (* while (r > 0 || c > 0) do
-     let left = if c < 1 then Int.min_int else indel + mat.(r).(c - 1) in
-     let up = if r < 1 then Int.min_int else indel + mat.(r - 1).(c) in
-     let diagonal = if r < 1 || c < 1 then min_int else
-        begin
-          match Dna.get d1 (max 0 r-1), Dna.get d2 (max 0 c-1) with
-          | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
-          | Some i, None -> failwith ("Uh oh 1: " ^ Char.escaped i)
-          | None, Some j -> failwith ("Uh oh 2: " ^ Char.escaped j)
-          | _ -> failwith "this should never happen" 
-        end in
-     (* let val = mat.(r).(c) in *)
-     done; *)
-  failwith "Very, very, very sad"
+  let r = ref (m - 1) in 
+  let c = ref (n - 1) in
+  let acc1 = ref "" in
+  let acc2 = ref "" in
+  while (!r > 0 || !c > 0) do
+    let left = if !c < 1 then Int.min_int else indel + mat.(!r).(!c - 1) in
+    let up = if !r < 1 then Int.min_int else indel + mat.(!r - 1).(!c) in
+    let diagonal = (if !r < 1 || !c < 1 then min_int else
+                      (mat.(!r-1).(!c-1) + (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) then align else misalign)))
+    in
+    let cell = mat.(!r).(!c) in
+    (if cell = diagonal then
+       begin
+         acc1 := Char.escaped(Dna.get_e d1 (!r - 1))^ (!acc1);
+         acc2 := Char.escaped(Dna.get_e d2 (!c - 1))^ (!acc2);
+         decr r; decr c;
+       end
+     else if cell = left then 
+       begin
+         acc1 := "_" ^ !acc1; 
+         acc2 := Char.escaped(Dna.get_e d2 (!c - 1)) ^ (!acc2);
+         decr c
+       end
+     else if cell = up then 
+       begin
+         acc2 := "_" ^ !acc2; 
+         acc1 := Char.escaped(Dna.get_e d1 (!r - 1))^ (!acc1);
+         decr r
+       end
+     else failwith "This should not happen");
+    (* print_newline ();
+       print_endline !acc1;
+       print_endline !acc2 *)
+  done;
+  print_endline !acc1; print_endline !acc2;
+  [|Dna.from_string !acc1; Dna.from_string !acc2|]

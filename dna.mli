@@ -9,15 +9,21 @@ type dna = A | C | T | G | Gap | Mismatch
     Implementation Note: Supports DNA only. Other characters ignored. *)
 val from_fasta : string -> t
 
+val from_string : string -> t
+
 (** [is_empty t ] is true iff. t is empty *)
 val is_empty : t -> bool 
 
 (** [length t] is the number of base pairs stored in [t]. *)
 val length : t -> int
 
-(** [get t int] is the DNA letter at position [int]. 0 indexed. Returns None
+(** [get t int] is the DNA letter at [pos]. 0 indexed. Returns None
     if [int] is not a valid position for [t]. *)
 val get : t -> int -> char option 
+
+(** [get_e [dna pos] is the DNA letter at position [pos].0 indexed.
+    Throws exception if [pos] is not valid.  ]*)
+val get_e: t -> int -> char 
 
 (** [get_name t] is the name of DNA sequence [t]. *)
 val get_name: t -> string 
