@@ -9,6 +9,8 @@ type dna = A | C | T | G | Gap | Mismatch
     Implementation Note: Supports DNA only. Other characters ignored. *)
 val from_fasta : string -> t
 
+(** [from_string] parses a .FASTA file and creates a DNA sequence. 
+    Note: name will be empty. *)
 val from_string : string -> t
 
 (** [is_empty t ] is true iff. t is empty *)
