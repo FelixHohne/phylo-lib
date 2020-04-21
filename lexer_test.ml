@@ -2,8 +2,9 @@ open OUnit2
 open Tree
 open Lexer
 
-let file1 = "resources/test.txt"
-let file2 = "resources/test2.txt"
+let file1 = "resources/common_xml.txt"
+let file2 = "resources/small_xml.txt"
+let file3 = "resources/edge_case_xml.txt"
 let s = stream_of_file file1
 let t1 = [LAngle; Clade; RAngle; Word "x"; LAngleSlash; Clade; RAngle]
 let t2 = [LAngle; Description; RAngle; Word "contains"; Word "examples";
@@ -44,6 +45,23 @@ let () = consume () |> ignore; consume () |> ignore;
   consume () |> ignore; ()
 let n6 = peek ()
 
+let s3 = stream_of_file file3
+let l1 = 
+  [LAngle; Word "phyloxml"; Word "xmlns:xsi"; Eq; Quote;
+   Word "http://www.w3.org/2001/XMLSchema-instance"; Quote; Word "xmlns"; Eq;
+   Quote; Word "http://www.phyloxml.org"; Quote; Word "xsi:schemaLocation"; Eq;
+   Quote; Word "http://www.phyloxml.org";
+   Word "http://www.phyloxml.org/1.10/phyloxml.xsd"; Quote; RAngle]
+let l2 = 
+  [LAngle; Confidence; Word "type"; Eq; Quote; Word "bootstrap"; Quote; RAngle;
+   Num 99; Dot; Num 9; LAngleSlash; Confidence; RAngle]
+let l3 =
+  [LAngle; ID; Word "provider"; Eq; Quote; Word "ncbi"; Quote; RAngle;
+   Num 1423; LAngleSlash; ID; RAngle]
+let e1 = tokenize_next_line s3
+let e2 = tokenize_next_line s3
+let e3 = tokenize_next_line s3
+
 let tokenize_line = [
   "tokenize line 1" >:: (fun _ -> assert_equal t1 a1);
   "tokenize line 2" >:: (fun _ -> assert_equal t2 a2);
@@ -61,10 +79,17 @@ let next_token = [
   "eof" >:: (fun _ -> assert_equal EOF n6);
 ]
 
+let edge_token = [
+  "tokenize edge case 1" >:: (fun _ -> assert_equal l1 e1);
+  "tokenize edge case 2" >:: (fun _ -> assert_equal l2 e2);
+  "tokenize edge case 3" >:: (fun _ -> assert_equal l3 e3);
+]
+
 let tests =
   "test suite for lexer"  >::: List.flatten [
     tokenize_line; 
-    next_token
+    next_token;
+    edge_token;
   ]
 
 let _ = run_test_tt_main tests
