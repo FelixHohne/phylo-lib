@@ -39,6 +39,12 @@ let a41 = "ATA_TA"
 let a42 = "A_AGTA"
 let align4 = Pairwise.align_pair d7 d8 3 (-1) (-2)
 
+let d9 = Dna.from_string "TCTAA" 
+let d10 = Dna.from_string "TCTGG"
+let a51 = "TCTAA"
+let a52 = "TCTGG"
+let align5 = Pairwise.align_pair d9 d10 2 (-1) (-2)
+
 
 let pair_wise_align = [
   "A11" >:: (fun _ -> assert_equal (Dna.to_string align1.(0)) a11);
@@ -49,6 +55,8 @@ let pair_wise_align = [
   "A32" >:: (fun _ -> assert_equal (Dna.to_string align3.(1)) a32); 
   "A41" >:: (fun _ -> assert_equal (Dna.to_string align4.(0)) a41); 
   "A42" >:: (fun _ -> assert_equal (Dna.to_string align4.(1)) a42); 
+  "A51" >:: (fun _ -> assert_equal (Dna.to_string align5.(0)) a51); 
+  "A52" >:: (fun _ -> assert_equal (Dna.to_string align5.(1)) a52); 
 ]
 
 let suite = "test suite for sorts" >:::
