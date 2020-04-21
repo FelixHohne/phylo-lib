@@ -34,7 +34,6 @@ let rec add_dna str dna (cur_count:int ref) : unit =
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
 let parse_line str (dna:t) counter : unit = 
-  print_endline str; 
   if String.length str = 0 then () else 
     let first_char = String.get str 0 in 
     if first_char = '>' || first_char = ' ' then extract_name str dna else 
