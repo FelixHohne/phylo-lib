@@ -1,4 +1,6 @@
 doc
+doc.private
+doc.public
 report
 
 # ocaml

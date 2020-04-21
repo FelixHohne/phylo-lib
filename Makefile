@@ -1,8 +1,8 @@
-MODULES=tree lexer phylo_parser sample_trees dna pairwise msa distance phylo_algo
+MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
-MAIN=phylo_parser.byte
+MAIN=phylo_parser.byte 
 OCAMLBUILD=ocamlbuild -use-ocamlfind
 
 default: build
@@ -10,6 +10,7 @@ default: build
 	
 build:
 	$(OCAMLBUILD) $(OBJECTS)
+	$(OCAMLBUILD) sample_trees.cmo
 
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
@@ -28,16 +29,25 @@ bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
 	./pairwise_test.byte -runner sequential
 	bisect-ppx-report -I _build -html report bisect0001.out
+	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' lexer_test.byte
+	./lexer_test.byte -runner sequential
+	bisect-ppx-report -I _build -html report bisect0002.out
 
-docs:
-	mkdir -p doc
-	ocamldoc -d doc -html tree.mli
-	ocamldoc -d doc -html dna.mli
-	ocamldoc -d doc -html lexer.mli
-	# ocamldoc -d doc -html phylo_parser.mli
-	ocamldoc -d doc -html clustal.mli
-	ocamldoc -d doc -html distance.mli
+
+docs: docs-public docs-private
+
+docs-public: build
+	mkdir -p doc.public
+	ocamlfind ocamldoc -I _build \
+		-html -stars -d doc.public $(MLIS)
+
+docs-private: build
+	mkdir -p doc.private
+	ocamlfind ocamldoc -I _build \
+		-html -stars -d doc.private \
+		-inv-merge-ml-mli -m A $(MLIS) $(MLS)
+
 
 clean:
 	ocamlbuild -clean
-	rm -rf doc
+	rm -rf doc.public doc.private

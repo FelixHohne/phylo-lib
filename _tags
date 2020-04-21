@@ -1,3 +1,5 @@
 <pairwise.ml>: coverage
 <pairwise_test.{byte,native}>: coverage
+<lexer.ml>: coverage
+<lexer_test.{byte,native}>: coverage
 true: package(oUnit)

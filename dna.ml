@@ -98,8 +98,9 @@ let get_name (name, _)  = !name
 let extract_names (dnas: t array) = 
   Array.map (fun (name, _) -> !name) dnas 
 
-(** [str_range_helper t ] modifies b by reading the chars 
-    from [t.start, t.end) and adding these values to b. *)
+(** [str_range_helper t b start finish] modifies b by reading the chars 
+    from [t.start, t.end], not inclusive on [t.end] and adding these values 
+    to b. *)
 let str_range_helper t (b:Buffer.t) start finish = 
   for i = start to (finish -1) do 
     let v = get t i in 
