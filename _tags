@@ -1,3 +1,3 @@
-<sorts.ml>: coverage
-<test_sorts.{byte,native}>: coverage
+<pairwise.ml>: coverage
+<pairwise_test.{byte,native}>: coverage
 true: package(oUnit)

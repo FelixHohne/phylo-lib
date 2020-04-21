@@ -24,6 +24,10 @@ test:
 	$(OCAMLBUILD) -tag 'debug' distance_test.byte && ./distance_test.byte
 	$(OCAMLBUILD) -tag 'debug' phylo_algo_test.byte && ./phylo_algo_test.byte
 
+bisect:
+	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
+	./pairwise_test.byte -runner sequential
+	bisect-ppx-report -I _build -html report bisect0001.out
 
 docs:
 	mkdir -p doc
