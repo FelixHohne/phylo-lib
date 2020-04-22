@@ -1,16 +1,15 @@
 open Tree
 exception SyntaxError
 
+(** The type of a parsed phyloXML phylogenetic tree. *)
 type phylo = {
   name : string; 
   description : string;
   tree : Tree.t;
 }
 
-type start_tag
-
-(** [from_phylo string] parses the phyloXML file at the absolute path. 
+(** [from_phylo file] parses the phyloXML file at the absolute path [file].
     Requires: there is a valid phyloXML file at the location represented by 
-    the string. *)
+    [file]. *)
 val from_phylo : string -> phylo
 

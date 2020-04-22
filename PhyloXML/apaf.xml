@@ -24,6 +24,7 @@
                            <branch_length>0.06584</branch_length>
                            <confidence type="unknown">100.0</confidence>
                            <clade>
+                              <rank>Perhaps</rank>
                               <branch_length>0.02309</branch_length>
                               <confidence type="unknown">43.0</confidence>
                               <clade>
@@ -31,7 +32,7 @@
                                  <confidence type="unknown">100.0</confidence>
                                  <clade>
                                     <branch_length>0.02365</branch_length>
-                                    <confidence type="unknown">88.0</confidence>
+                                    <confidence type="unknown">.8</confidence>
                                     <clade>
                                        <name>22_MOUSE</name>
                                        <branch_length>0.05998</branch_length>

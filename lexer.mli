@@ -7,6 +7,9 @@ type token =
   | Word of string | True | False
   | EOF | Unit
 
+(** [is_word t] is true if [t] represents either a word or number. *)
+val is_word : token -> bool
+
 (** [to_string t] is a string representing [t]. *)
 val to_string : token -> string
 

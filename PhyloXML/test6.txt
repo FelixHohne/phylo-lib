@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <phyloxml>
   <phylogeny rooted="false">
     <clade>
+      <name>cellular_organisms</name>
       <clade>
         <name>Escherichia_coli</name>
       </clade>
-      <name>cellular_organisms</name>
     </clade>
   </phylogeny>
 </phyloxml>

@@ -6,6 +6,18 @@ type token =
   | Word of string | True | False
   | EOF | Unit
 
+(** [is_word t] is true if [t] represents either a word or number. *)
+let is_word (t : token) : bool = 
+  match t with 
+  | LAngle
+  | LAngleSlash 
+  | RAngle
+  | Quote
+  | Eq 
+  | EOF 
+  | Unit -> false
+  | _ -> true
+
 let to_string (t : token) : string = 
   match t with 
   | Phylogeny -> "phylogeny" 
