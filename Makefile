@@ -38,6 +38,9 @@ bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' phylo_algo_test.byte
 	./phylo_algo_test.byte -runner sequential
 	bisect-ppx-report -I _build -html report bisect0004.out
+	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' dna_test.byte
+	./dna_test.byte -runner sequential
+	bisect-ppx-report -I _build -html report bisect0005.out
 
 
 docs: docs-public docs-private
