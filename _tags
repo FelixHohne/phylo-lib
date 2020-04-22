@@ -4,4 +4,6 @@
 <lexer_test.{byte,native}>: coverage
 <phylo_parser.ml>: coverage
 <phylo_parser_test.{byte,native}>: coverage
+<phylo_algo.ml>: coverage
+<phylo_algo_test.{byte,native}>: coverage
 true: package(oUnit)
