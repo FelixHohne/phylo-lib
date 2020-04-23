@@ -24,8 +24,7 @@ test:
 bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' test.byte
 	./test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0001.out
-
+	bisect-ppx-report --html report
 
 docs: docs-public docs-private
 

@@ -8,6 +8,7 @@ report
 *.cma
 *.cmi
 *.out
+*.coverage
 *.cmx
 *.native
 *.byte
