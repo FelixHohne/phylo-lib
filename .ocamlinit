@@ -1,9 +1,9 @@
 #directory "_build";;
-#load_rec "Tree.cmo";;
-#load_rec "Lexer.cmo";;
-#load_rec "Phylo_parser.cmo";;
-#load_rec "Dna.cmo";;
-#load_rec "Pairwise.cmo";;
-#load_rec "Msa.cmo";;
-#load_rec "Distance.cmo";;
-#load_rec "Phylo_algo.cmo";;
+#load_rec "tree.cmo";;
+#load_rec "lexer.cmo";;
+#load_rec "phylo_parser.cmo";;
+#load_rec "dna.cmo";;
+#load_rec "pairwise.cmo";;
+#load_rec "msa.cmo";;
+#load_rec "distance.cmo";;
+#load_rec "phylo_algo.cmo";;

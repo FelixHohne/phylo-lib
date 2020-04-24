@@ -5,12 +5,12 @@ MLIS=$(MODULES:=.mli)
 MAIN=phylo_parser.byte 
 OCAMLBUILD=ocamlbuild -use-ocamlfind
 
+default: build
+	utop
+
 build:
 	$(OCAMLBUILD) $(OBJECTS)
 	$(OCAMLBUILD) sample_trees.cmo
-
-default: build
-	utop
 
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
