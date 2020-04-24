@@ -372,8 +372,7 @@ let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
             match attr.taxonomy with 
             | None -> None 
             | Some t -> t.id
-          end in 
-        print_endline ".."; zip [acc] attr.confidence attr.rank id attr.name
+          end in zip [acc] attr.confidence attr.rank id attr.name
     end
   | _ -> print_endline "SyntaxError 7"; raise SyntaxError 
 
