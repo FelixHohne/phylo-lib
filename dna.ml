@@ -21,6 +21,7 @@ let rec add_dna str dna (cur_count:int ref) : unit =
   if length = 0 then () else 
     let rem_string = (String.sub str 1 (length - 1)) in 
     incr(cur_count);
+    
     match (String.get str 0 |> Char.uppercase_ascii) with 
     | 'A' -> Hashtbl.add dna (!cur_count) A; add_dna rem_string dna cur_count
     | 'C' -> Hashtbl.add dna (!cur_count) C; add_dna rem_string dna cur_count

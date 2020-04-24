@@ -58,28 +58,38 @@ let mutability = [
 
   "append" >:: (fun _ -> assert_equal (append A mut; get mut 4 ) (Some 'A')); 
   "mutate" >:: (fun _ -> assert_equal (mutate G 2 mut; get mut 2) (Some 'G')); 
-  (* "mutate2" >:: (fun _ -> assert_equal (mutate G 4 mut; get mut 4) (Some 'G'));  *)
   "ins1" >:: (fun _ -> assert_equal (insert G 1 c_mut; to_string c_mut) "AGTCG"); 
-  (* "ins2" >:: (fun _ -> assert_equal (insert A 0 c_mut; to_string c_mut) "AAGTCG");  *)
-  (* "ins3" >:: (fun _ -> assert_equal (insert G 5 c_mut; to_string c_mut)"AAGTCGG");  *)
 ]
-
 
 let bbox_mutability = [
 
   "ins0" >:: (fun _ -> assert_equal (insert A 0 ins0; to_string ins0) "A");
   "ins1" >:: (fun _ -> assert_equal (insert A 0 ins1; to_string ins1) "AC");
   "ins2" >:: (fun _ -> assert_equal (insert A 2 ins2; to_string ins2) "CTA") 
-
 ]
 
+let empty_seq = Dna.from_string "_A-"
+let empty = Dna.from_string ""
+let empty2 = Dna.from_string "hhh"
+
+
+let bisect_gap = [
+
+  "empty_seq" >:: (fun _ -> assert_equal (to_string empty_seq) "_A_");
+  "_" >:: (fun _ -> assert_equal (get_e empty_seq 0) '_');
+  "empty" >:: (fun _ -> assert_equal (is_empty empty) true); 
+  "empty" >:: (fun _ -> assert_equal (is_empty empty2) true); 
+  "get" >:: (fun _ -> assert_equal (get empty_seq (-1)) None); 
+]
 let tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
 
    mutability; 
+   bbox_mutability;
    more_dna; 
    dna_functions; 
    create_DNA;
+   bisect_gap;
   ]
 
 let _ = run_test_tt_main tests

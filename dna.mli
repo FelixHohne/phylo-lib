@@ -24,7 +24,7 @@ val length : t -> int
 val get : t -> int -> char option 
 
 (** [get_e [dna pos] is the DNA letter at position [pos].0 indexed.
-    Throws exception if [pos] is not valid.  ]*)
+    Requires [pos] is a valid position. *)
 val get_e: t -> int -> char 
 
 (** [get_name t] is the name of DNA sequence [t]. *)

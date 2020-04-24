@@ -7,7 +7,6 @@ let max_three a b c = max (max a b) c
     m * n with the row and column headers initialized 
     according to the [indel] penalty. *)
 let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) (m:int) (n:int)  =
-
   let mat = Array.make_matrix m n Int.min_int in
   for r = 0 to m - 1 do
     mat.(r).(0) <- r * indel
@@ -17,8 +16,9 @@ let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) (m:int) (n:int)  =
   done;
   mat
 
-(** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix of dimensions m by n that uses
-    the [align], [misalign], and [indel] parameters. *)
+(** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix of 
+    dimensions m by n that uses the [align], [misalign], 
+    and [indel] parameters. *)
 let fill_matrix d1 d2 align misalign indel m n =
   let mat = init_matrix d1 d2 indel m n in
   for r = 1 to m - 1 do 
@@ -27,8 +27,6 @@ let fill_matrix d1 d2 align misalign indel m n =
       let up = indel + mat.(r -1).(c) in
       let diagonal = match Dna.get d1 (r-1), Dna.get d2 (c-1) with
         | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
-        | Some i, None -> failwith ("Uh oh 1: " ^ Char.escaped i)
-        | None, Some j -> failwith ("Uh oh 2: " ^ Char.escaped j)
         | _ -> failwith "this should never happen" in
       mat.(r).(c) <- max_three left up diagonal
     done;
@@ -47,7 +45,10 @@ let align_pair d1 d2 align misalign indel =
     let left = if !c < 1 then Int.min_int else indel + mat.(!r).(!c - 1) in
     let up = if !r < 1 then Int.min_int else indel + mat.(!r - 1).(!c) in
     let diagonal = (if !r < 1 || !c < 1 then min_int else
-                      (mat.(!r-1).(!c-1) + (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) then align else misalign)))
+                      (mat.(!r-1).(!c-1) + 
+                      (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
+                      then align 
+                      else misalign)))
     in
     let cell = mat.(!r).(!c) in
     (if cell = diagonal then
@@ -69,9 +70,5 @@ let align_pair d1 d2 align misalign indel =
          decr r
        end
      else failwith "This should not happen");
-    (* print_newline ();
-       print_endline !acc1;
-       print_endline !acc2 *)
   done;
-  print_endline !acc1; print_endline !acc2;
   [|Dna.from_string !acc1; Dna.from_string !acc2|]
