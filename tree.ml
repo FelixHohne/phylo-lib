@@ -175,7 +175,7 @@ let print_verts (ds : int list) : unit =
 let print_branch (ds : int list) : unit =
   match ds with
   | [] -> invalid_arg "ds"
-  | _::t -> print_vert_helper (List.rev ds) 0 "∘-"
+  | _::t -> print_vert_helper (List.rev ds) 0 "o-"
 
 (** [print_tree_helper t_list d ds] prints an ASCII-art of the trees in [t_lst] 
     with initial depth [d] and depth levels [ds] to console semi-prettily. *)
