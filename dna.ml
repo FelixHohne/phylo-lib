@@ -16,12 +16,12 @@ let extract_name str (dna_seq: t) : unit =
 (** [add_dna str t cur_count] mutates t by adding valid DNA sequences 
     in str with counter cur_ref. *)
 let rec add_dna str dna (cur_count:int ref) : unit = 
+
   let str = str |> String.uppercase_ascii in 
   let length = String.length str in 
   if length = 0 then () else 
-    let rem_string = (String.sub str 1 (length - 1)) in 
+    let rem_string = (String.sub str 1 (length-1)) in 
     incr(cur_count);
-    
     match (String.get str 0 |> Char.uppercase_ascii) with 
     | 'A' -> Hashtbl.add dna (!cur_count) A; add_dna rem_string dna cur_count
     | 'C' -> Hashtbl.add dna (!cur_count) C; add_dna rem_string dna cur_count
@@ -30,7 +30,6 @@ let rec add_dna str dna (cur_count:int ref) : unit =
     | '-' -> Hashtbl.add dna (!cur_count) Gap; add_dna rem_string dna cur_count
     | '_' -> Hashtbl.add dna (!cur_count) Gap; add_dna rem_string dna cur_count
     | h -> add_dna rem_string dna cur_count  
-
 
 (** [parse_line] parses the inputted [str] and calls add_dna to update
     t based on valid DNA inputs in [str] *)
@@ -60,13 +59,11 @@ let from_fasta (f:string) : t =
   try parse_file f dna_sequence counter; dna_sequence  
   with Malformed -> raise Malformed 
 
-
 let from_string (str: string) : t = 
   let dna = Hashtbl.create 10485760 in 
   let counter = ref (-1) in 
   add_dna str dna counter; 
   (ref "", dna)
-
 
 let get (t:t) pos = 
   match Hashtbl.find (snd t) pos with 

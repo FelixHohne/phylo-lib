@@ -46,6 +46,19 @@ let a52 = "TCTGG"
 let align5 = Pairwise.align_pair d9 d10 2 (-1) (-2)
 
 
+let d11 = Dna.from_string "AT"
+let d12 = Dna.from_string "AATCG"
+let align6 = Pairwise.align_pair d11 d12 1 (-1) (-1)
+let a61 = ["_AT__";"A_T__"]
+let a62 = "AATCG"
+
+
+let d13 = Dna.from_string "GGTAC"
+let d14 = Dna.from_string "ATC"
+let align7 = Pairwise.align_pair d13 d14 1 (-1) (-1)
+let a71 = "GGTAC"
+let a72 = ["_AT_C"; "A_T_C"]
+
 let pair_wise_align = [
   "A11" >:: (fun _ -> assert_equal (Dna.to_string align1.(0)) a11);
   "A12" >:: (fun _ -> assert_equal (Dna.to_string align1.(1)) a12);
@@ -57,6 +70,11 @@ let pair_wise_align = [
   "A42" >:: (fun _ -> assert_equal (Dna.to_string align4.(1)) a42); 
   "A51" >:: (fun _ -> assert_equal (Dna.to_string align5.(0)) a51); 
   "A52" >:: (fun _ -> assert_equal (Dna.to_string align5.(1)) a52); 
+  "A61" >:: (fun _ -> assert_equal (List.mem (Dna.to_string align6.(0)) a61) true); 
+  "A62" >:: (fun _ -> assert_equal (Dna.to_string align6.(1)) a62); 
+  "A71" >:: (fun _ -> assert_equal (Dna.to_string align7.(0)) a71); 
+  "A72" >:: (fun _ -> assert_equal (List.mem (Dna.to_string align7.(1)) a72) true); 
+
 ]
 
 let suite = "test suite for sorts" >:::
