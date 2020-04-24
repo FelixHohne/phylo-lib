@@ -21,22 +21,22 @@ let rec add_species species i j acc =
     ((Stdlib.min i j), zip_no_params [t1; t2])::r
 
 let rec upgma_help dist species acc = 
-  print_endline ("upgma_help called");
+  (* print_endline ("upgma_help called"); *)
   if is_done dist then 
-    (print_endline ("done dist");
-     let tree_list = (List.rev_map (fun x -> snd x) acc) in
-     if List.length tree_list = 1 then (List.hd tree_list)
-     else if List.length tree_list > 1 then zip_no_params tree_list
-     else failwith "Precondition violated in upgma_help")
+    ( (* print_endline ("done dist"); *)
+      let tree_list = (List.rev_map (fun x -> snd x) acc) in
+      if List.length tree_list = 1 then (List.hd tree_list)
+      else if List.length tree_list > 1 then zip_no_params tree_list
+      else failwith "Precondition violated in upgma_help")
   else
-    (print_endline ("not done dist");
-     let i, j = min_index dist in
-     print_endline ("min_index dist called");
-     let t = add_species species i j acc in
-     print_endline ("added species");
-     let d = combine i j dist in 
-     print_endline ("combined");
-     upgma_help d species t)
+    ( (* print_endline ("not done dist"); *)
+      let i, j = min_index dist in
+      (* print_endline ("min_index dist called"); *)
+      let t = add_species species i j acc in
+      (* print_endline ("added species"); *)
+      let d = combine i j dist in 
+      (* print_endline ("combined"); *)
+      upgma_help d species t)
 
 let upgma dist species = 
   match Array.length species with

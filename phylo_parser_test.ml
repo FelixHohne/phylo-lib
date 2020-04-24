@@ -6,7 +6,7 @@ open Phylo_parser
     Requires: [f] is a phyloXML file within the PhyloXML folder. *)
 let doesParse f =
   try 
-    ignore(let p = from_phylo ("PhyloXML/" ^ f) in Tree.print_tree p.tree);
+    ignore(from_phylo ("PhyloXML/" ^ f));
     true
   with _ -> false
 

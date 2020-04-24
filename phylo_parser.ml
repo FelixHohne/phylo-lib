@@ -133,8 +133,8 @@ let add_int_assoc (lst : (string * int) list option)
 let consume_end_tag (t : token) : unit =
   consume LAngleSlash;
   consume t;
-  consume RAngle;
-  print_endline ("Consumed a " ^ (to_string t) ^ " end tag")
+  consume RAngle
+(* print_endline ("Consumed a " ^ (to_string t) ^ " end tag") *)
 
 (** [parse_start_tag ()] is a start_tag that represents the information
     gained from parsing a starting phyloXML tag that may have attributes, 
@@ -176,7 +176,8 @@ and
       end
     in parse_attr new_tag
   | RAngle -> consume RAngle; 
-    print_endline ("Consumed a " ^ (to_string tag.tag_name) ^ " start tag"); 
+    (* print_endline 
+       ("Consumed a " ^ (to_string tag.tag_name) ^ " start tag"); *)
     tag
   | _ -> print_endline "SyntaxError 8"; raise SyntaxError
 
@@ -189,11 +190,11 @@ and
 let rec ignore_tag (t : token) : unit =
   match (!peek ()) with 
   | LAngle -> let tag = parse_start_tag () in 
-    print_endline "The previous start tag was ignored";
+    (* print_endline "The previous start tag was ignored"; *)
     ignore_tag tag.tag_name; 
     ignore_tag t
-  | LAngleSlash -> consume_end_tag t; 
-    print_endline "The previous end tag was ignored"
+  | LAngleSlash -> consume_end_tag t
+  (* print_endline "The previous end tag was ignored" *)
   | x -> consume x; ignore_tag t
 
 (** [parse_name ()] is the string held within a pair of phyloXML "name" tags.
@@ -203,7 +204,7 @@ let rec ignore_tag (t : token) : unit =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Name], or
     if there is invalid phyloXML syntax. *)
 let parse_name () : string =
-  print_endline "starting to parse name contents";
+  (* print_endline "starting to parse name contents"; *)
   match (!peek ()) with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag Name; name
   | _ -> print_endline "SyntaxError: Name not word/number"; raise SyntaxError 
@@ -294,7 +295,7 @@ let parse_id () : string =
 let parse_scientific_name () : string =
   match (!peek ()) with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag SciName; 
-    print_endline name; name
+    (* print_endline name; *) name
   | _ -> print_endline "SyntaxError: Scientific name not word/number";
     raise SyntaxError 
 
@@ -312,7 +313,7 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
       match (tag.tag_name) with
       | ID -> parse_taxonomy
                 {taxonomy with id = Some (parse_id ())}
-      | SciName -> print_endline "Parsing scientific name";
+      | SciName -> (* print_endline "Parsing scientific name"; *)
         parse_taxonomy 
           {taxonomy with scientific_name = parse_scientific_name ()}
       | x -> ignore_tag x; parse_taxonomy taxonomy
@@ -330,7 +331,7 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
     or if there is invalid phyloXML syntax. *)
 let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
   match (!peek ()) with 
-  | LAngle -> print_endline "Parsing clade contents"; 
+  | LAngle -> (* print_endline "Parsing clade contents"; *)
     let tag = parse_start_tag () in 
     begin
       match tag.tag_name with
@@ -342,15 +343,15 @@ let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
         parse_clade acc {attr with name = Some (parse_name ())}
       | Clade -> 
         if is_empty acc then
-          (print_endline "is_empty acc";
-           parse_clade (parse_clade acc empty_clade_attr) attr)
+          ( (* print_endline "is_empty acc"; *)
+            parse_clade (parse_clade acc empty_clade_attr) attr)
         else
-          (print_endline "acc not empty";
-           let clade = parse_clade Tree.empty empty_clade_attr in
-           parse_clade (zip_no_params [acc; clade]) attr)
+          ( (* print_endline "acc not empty"; *)
+            let clade = parse_clade Tree.empty empty_clade_attr in
+            parse_clade (zip_no_params [acc; clade]) attr)
       | x -> ignore_tag x; parse_clade acc attr
     end
-  | LAngleSlash -> print_endline "langleslash"; consume_end_tag Clade; 
+  | LAngleSlash -> consume_end_tag Clade; 
     begin
       match acc with
       | t when is_empty t -> 
