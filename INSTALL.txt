@@ -1,0 +1,57 @@
+We don't have any external dependencies. 
+Note:  We have primarily tested on Mac OS. For the optimal experience, please 
+use a Mac. We can't guarantee that the formatting will look perfect on all 
+other systems.
+
+First, run 'make'. This builds the system and imports all the needed modules
+into utop. You can see the modules imported in .ocamlinit.
+The functionality we would like to demo right now is:
+1) XML parser for phylogenetic trees stored in the phyloXML format
+2) ASCII pretty-printer for the phylogenetic trees
+3) The Needleman-Wunsch algorithm for pairwise alignment of DNA sequences. 
+
+Below, we have included demo code that you can run in utop to see each of these 
+features.
+While we have implemented additional functionality, it is not yet 
+ready to be demoed.
+
+Running the XML Parser:
+- We parse an amphibian species phyloXML file found in the Phylo folder 
+  called frog.xml into our custom built n-ary tree, then pretty-print it 
+  using ASCII art.
+
+let phylo1 = Phylo_parser.from_phylo "PhyloXML/frog.xml";;
+Tree.print_tree phylo1.tree;;
+
+let phylo2 = Phylo_parser.from_phylo "PhyloXML/collapsed_tree.xml";;
+Tree.print_tree phylo2.tree;;
+
+
+Needleman-Wunsch Algorithm: 
+- Needleman-Wunsch is a globally optimal algorithm for finding the pairwise 
+alignment of two strings. Here we implement it to find the optimal alignment 
+of two pairs of DNA sequences. We read in the sequences two ways through the 
+Dna module - from a string and from a .FASTA file.
+
+let dna1 = Dna.from_string "AATCGTAGGCCCC";; 
+let dna2 = Dna.from_string "ATTGCGACTCGTATC";; 
+let arr = Pairwise.align_pair dna1 dna2 1 (-1) (-1);;
+Dna.to_string arr.(0);;
+Dna.to_string arr.(1);;
+
+let dna3 = Dna.from_fasta "FASTA/install_dna1.fasta";; 
+let dna4 = Dna.from_fasta "FASTA/install_dna2.fasta";; 
+let arr2 = Pairwise.align_pair dna3 dna4 1 (-1) (-1);;
+Dna.to_string arr2.(0);;
+Dna.to_string arr2.(1);;
+
+Note: According to the Needleman-Wunsch algorithm, there may be multiple 
+different pairwise alignments that are equally optimal. The specific sequence
+we return is an implementation detail. 
+
+In case you want to test these features out with more files, we also have 
+"PhyloXML/tol_156.xml" to use with the xml parser, and the .FASTA files in the 
+FASTA folder to use as DNA sequences. Some .FASTA may be quite long and might 
+take time to perform an alignment on.
+
+ 

@@ -1,4 +1,4 @@
-MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo
+MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -56,7 +56,9 @@ docs-private: build
 		-html -stars -d doc.private \
 		-inv-merge-ml-mli -m A $(MLIS) $(MLS)
 
-
 clean:
 	ocamlbuild -clean
-	rm -rf doc.public doc.private
+	rm -rf doc.public doc.private report bisect*.out bisect*.coverage
+
+zip:
+	zip phylo_lib_src.zip *.ml* _tags Makefile FASTA PhyloXML resources .ocamlinit INSTALL.txt

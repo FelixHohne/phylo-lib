@@ -11,9 +11,9 @@ let doesParse f =
   with _ -> false
 
 let phylo1 = (from_phylo "PhyloXML/tree1.xml").tree
-let rotated1 = (from_phylo "PhyloXML/test3.txt").tree
-let phylo5 = (from_phylo "PhyloXML/test5.txt").tree
-let phylo6 = (from_phylo "PhyloXML/test6.txt").tree
+let rotated1 = (from_phylo "PhyloXML/test3.xml").tree
+let phylo5 = (from_phylo "PhyloXML/test5.xml").tree
+let phylo6 = (from_phylo "PhyloXML/test6.xml").tree
 
 let rotated_trees = [
   "tree1, test3" >:: (fun _ -> assert_equal phylo1 rotated1 ~cmp:Tree.is_equal);
@@ -23,10 +23,10 @@ let rotated_trees = [
 let large_files = [
   "frog.xml" >:: (fun _ -> assert_equal true (doesParse "frog.xml"));
   "expanded_tree.txt" >:: (fun _ -> assert_equal true 
-                              (doesParse "expanded_tree.txt"));
+                              (doesParse "expanded_tree.xml"));
   "tol_156.xml" >:: (fun _ -> assert_equal true (doesParse "tol_156.xml"));
   "collapsed_tree.txt" >:: (fun _ -> assert_equal true 
-                               (doesParse "collapsed_tree.txt"));
+                               (doesParse "collapsed_tree.xml"));
   "apaf.xml" >:: (fun _ -> assert_equal true (doesParse "apaf.xml"));
 ]
 
