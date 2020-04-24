@@ -23,7 +23,7 @@ val length : t -> int
     if [int] is not a valid position for [t]. *)
 val get : t -> int -> char option 
 
-(** [get_e [dna pos] is the DNA letter at position [pos].0 indexed.
+(** [get_e dna pos] is the DNA letter at position [pos].0 indexed.
     Requires [pos] is a valid position. *)
 val get_e: t -> int -> char 
 
