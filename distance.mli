@@ -23,8 +23,5 @@ val min_diff : t -> float
    Requires: [i] < [j]. *)
 val combine : int -> int -> t -> t
 
-(**[size dist_matrix] is the number of sequences in [dist_matrix].*)
-val size : t -> int
-
 (**[is_done dist_matrix] is true if there is only 1 sequence in [dist_matrix].*)
 val is_done : t -> bool
