@@ -80,14 +80,22 @@ let align_pair d1 d2 align misalign indel =
   let alignment = backtrack d1 d2 mat align misalign indel in 
   (alignment, score)
 
-let score d1 d2 align misalign indel =
+let diff d1 d2 align misalign indel=
   let m = (Dna.length d1) + 1 in
   let n = (Dna.length d2) + 1 in
   let mat = fill_matrix d1 d2 align misalign indel m n in
   let aligned = backtrack d1 d2 mat align misalign indel in
-
-  failwith "un"
-
+  let s1 = aligned.(0) in
+  let s2 = aligned.(1) in
+  let len = Dna.length s1 in
+  let diff = ref 0 in
+  for r = 0 to len - 1 do 
+    if (get_e s1 r) = '_' || (get_e s2 r) = '_' then
+      diff := !diff - indel
+    else if (get_e s1 r) <> (get_e s2 r) then
+      incr(diff)
+  done;
+  !diff
 
 (* (for k = 0 to (n - 1) do
          if (get_base i k msa) = '_' ||  (get_base j k msa) = '_' then

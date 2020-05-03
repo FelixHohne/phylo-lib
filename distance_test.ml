@@ -20,11 +20,11 @@ let mat4 =
 
 let tests =
   "test suite for distance"  >::: [
-    "min diff" >:: (fun _ -> assert_equal (-1.0) (min_diff mat));
+    "min diff" >:: (fun _ -> assert_equal (1.0) (min_diff mat));
     "min index 1" >:: (fun _ -> assert_equal (0, 1) (min_index mat));
     "min index 2 and combine" >:: 
     (fun _ -> assert_equal (3, 4) (min_index mat2)); 
-    "min diff 2 and combine" >:: (fun _ -> assert_equal (-2.0) (min_diff mat2)); 
+    "min diff 2 and combine" >:: (fun _ -> assert_equal (2.0) (min_diff mat2)); 
     "is_done false" >:: (fun _ -> assert_equal false (is_done mat2)); 
     "min index 3 and combine" >:: 
     (fun _ -> assert_equal (0, 4) (min_index mat3)); 

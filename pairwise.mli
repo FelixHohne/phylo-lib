@@ -6,6 +6,6 @@
     alignment score. *)
 val align_pair : Dna.t -> Dna.t -> int -> int -> int -> (Dna.t array * int)
 
-(** [score d1 d2 align misalign indel] is the alignment score obtained when
-    calling [align_pair] on the given arguments. *)
-val score : Dna.t -> Dna.t -> int -> int -> int -> int
+(** [diff d1 d2 gap] is the difference score obtained after
+    aligning [d1] and [d2]. *)
+val diff :  Dna.t -> Dna.t -> int -> int -> int -> int

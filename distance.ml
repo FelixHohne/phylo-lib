@@ -13,7 +13,7 @@ let dist_dna (dnas: Dna.t array) align misalign indel : t =
   (for i = 0 to (m - 1) do
      (for j = i + 1 to (m - 1) do
         Hashtbl.add dist_matrix (i, j) 
-          (float_of_int (score dnas.(i) dnas.(j) align misalign indel))
+          (float_of_int (diff dnas.(i) dnas.(j) align misalign indel))
       done);
    done);
   dist_matrix
@@ -45,12 +45,10 @@ let min dist =
     Hashtbl.fold (fun k v acc -> if v < snd acc then (k, v) else acc) dist acc
 
 let min_diff (dist: t) : float =  
-  let x = dist |> min |> snd in
-  print_newline (); print_float x; print_newline (); x
+  dist |> min |> snd
 
 let min_index dist : index = 
-  let x = dist |> min |> fst in
-  print_int (fst x); print_newline (); print_int (snd x); x
+  dist |> min |> fst
 
 (** [remove i dist] removes all bindings in [dist] that contains [i] as 
     one of its indices. *)
