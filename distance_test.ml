@@ -9,19 +9,14 @@ let d2 = from_fasta "FASTA/example_3.fasta"
 let d3 = from_fasta "FASTA/example_4.fasta"
 let d4 = from_fasta "FASTA/example_5.fasta"
 let d5 = from_fasta "FASTA/example_6.fasta"
-let aligned = Msa.align [|d1; d2; d3; d4; d5;|]
-(* 
-let c1 = zip_no_params [leaf_no_params "A"; leaf_no_params "B"]
-let c2 = zip_no_params [leaf_no_params "E"; leaf_no_params "F"]
-let c3 = zip_no_params [c1; leaf_no_params "D"]
-let tree1 = zip_no_params [c2; c3]
-let tree2 = zip_no_params [c2; leaf_no_params "D"] *)
+let dnas = [|d1; d2; d3; d4; d5;|]
 
-let mat = dist aligned 1
-let mat2 = dist aligned 1 |> combine 0 1
-let mat3 = dist aligned 1 |> combine 0 1 |> combine 0 2 |> combine 0 3
+let mat = dist_dna dnas 1 (-1) (-1)
+let mat2 = dist_dna dnas 1 (-1) (-1) |> combine 0 1
+let mat3 = dist_dna dnas 1 (-1) (-1) |> combine 0 1 |> combine 0 2 |>combine 0 3
 let mat4 = 
-  dist aligned 1 |> combine 0 1 |> combine 0 2 |> combine 0 3 |> combine 0 4
+  dist_dna dnas 1 (-1) (-1) |> combine 0 1 |> combine 0 2 |> combine 0 3 |> 
+  combine 0 4
 
 let tests =
   "test suite for distance"  >::: [
