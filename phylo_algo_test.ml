@@ -9,7 +9,7 @@ let d2 = from_fasta "FASTA/example_3.fasta"
 let d3 = from_fasta "FASTA/example_4.fasta"
 let d4 = from_fasta "FASTA/example_5.fasta"
 let d5 = from_fasta "FASTA/example_6.fasta"
-let aligned = Msa.align [|d1; d2; d3; d4; d5;|]
+let dnas = [|d1; d2; d3; d4; d5;|]
 
 let c1 = zip_no_params [leaf_no_params "A"; leaf_no_params "B"]
 let c2 = zip_no_params [leaf_no_params "E"; leaf_no_params "F"]
@@ -17,29 +17,29 @@ let c3 = zip_no_params [c1; leaf_no_params "D"]
 let tree1 = zip_no_params [c2; c3]
 let tree2 = zip_no_params [c2; leaf_no_params "D"]
 
-let mat = dist aligned 1
+let mat = dist_dna dnas 1 (-1) (-1)
 let upgma1 = Phylo_algo.upgma mat [|"A"; "B"; "D"; "E"; "F"|]
 
-let mat2 = dist aligned 1
+let mat2 = dist_dna dnas 1 (-1) (-1)
 let rotated1 = Phylo_algo.upgma mat2 [|"B"; "A"; "D"; "F"; "E"|]
 
-let aligned2 = Msa.align [|d3; d4; d5|]
-let mat3 = dist aligned2 1
+let dnas2 = [|d3; d4; d5|]
+let mat3 = dist_dna dnas 1 (-1) (-1)
 let upgma2 = Phylo_algo.upgma mat3 [|"D"; "E"; "F"|]
 
-let aligned3 = Msa.align [|d1; d2; d4; d5|]
-let mat4 = dist aligned3 1
+let dnas3 = [|d1; d2; d4; d5|]
+let mat4 = dist_dna dnas3 1 (-1) (-1)
 let upgma3 = upgma mat4 [|"A"; "B"; "E"; "F"|]
 let tree3 = zip_no_params [c1; c2]
 
 let emptyFails = 
   try ignore(let emptyAlign = (Msa.align [||]) in 
-             let mat5 = (dist emptyAlign 1) in 
+             let mat5 = (dist_msa emptyAlign 1) in 
              upgma mat5 [||]); false
   with _ -> true
 
-let aligned4 = Msa.align [|d1|]
-let mat5 = dist aligned4 1
+let dnas4 = [|d1|]
+let mat5 = dist_dna dnas4 1 (-1) (-1)
 let upgma4 = upgma mat5 [|"A"|]
 
 let upgma_tests = [

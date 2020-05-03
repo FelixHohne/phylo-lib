@@ -33,10 +33,9 @@ let fill_matrix d1 d2 align misalign indel m n =
   done;
   mat
 
-let align_pair d1 d2 align misalign indel = 
+let backtrack d1 d2 mat align misalign indel = 
   let m = (Dna.length d1) + 1 in
   let n = (Dna.length d2) + 1 in
-  let mat = fill_matrix d1 d2 align misalign indel m n in
   let r = ref (m - 1) in 
   let c = ref (n - 1) in
   let acc1 = ref "" in
@@ -46,9 +45,9 @@ let align_pair d1 d2 align misalign indel =
     let up = if !r < 1 then Int.min_int else indel + mat.(!r - 1).(!c) in
     let diagonal = (if !r < 1 || !c < 1 then min_int else
                       (mat.(!r-1).(!c-1) + 
-                      (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
-                      then align 
-                      else misalign)))
+                       (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
+                        then align 
+                        else misalign)))
     in
     let cell = mat.(!r).(!c) in
     (if cell = diagonal then
@@ -72,3 +71,17 @@ let align_pair d1 d2 align misalign indel =
      else failwith "This should not happen");
   done;
   [|Dna.from_string !acc1; Dna.from_string !acc2|]
+
+let align_pair d1 d2 align misalign indel =
+  let m = (Dna.length d1) + 1 in
+  let n = (Dna.length d2) + 1 in
+  let mat = fill_matrix d1 d2 align misalign indel m n in
+  let score = mat.(m - 1).(n - 1) in
+  let alignment = backtrack d1 d2 mat align misalign indel in 
+  (alignment, score)
+
+let score d1 d2 align misalign indel =
+  let m = (Dna.length d1) + 1 in
+  let n = (Dna.length d2) + 1 in
+  let mat = fill_matrix d1 d2 align misalign indel m n in
+  mat.(m - 1).(n - 1)

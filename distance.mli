@@ -4,11 +4,16 @@ type t
 
 type index = int * int
 
-(** [dist msa gap] is the distance matrix created from [msa]. Distances are 
+(** [dist_dna dnas align misalign indel] is the distance matrix created from 
+    pairwise alignments of the sequences in [dnas], with align, misalign, and 
+    indel penalties given by [align], [misalign], and [indel]. *)
+val dist_dna : Dna.t array -> int -> int -> int -> t
+
+(** [dist_msa msa gap] is the distance matrix created from [msa]. Distances are 
     based on Hamming distance, where a distance of 1 represents a mismatch 
     between two different nucleotides, and a distance of [gap] when either a gap
     or a nucleotide is compared with a gap. *)
-val dist : Msa.t -> int -> t
+val dist_msa : Msa.t -> int -> t
 
 (** [min_index dist_matrix] is a pair of indices of DNA sequences with the 
     minimum distance between them. *)

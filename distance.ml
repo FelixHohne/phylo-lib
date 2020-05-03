@@ -1,4 +1,5 @@
 open Msa
+open Pairwise
 
 (** RI: The index of the first sequence is strictly less than the index of the 
     second sequence. As a result, if there is only one sequence, 
@@ -6,15 +7,24 @@ open Msa
 type index = int * int 
 type t = (index, float) Hashtbl.t
 
-let dist (msa: Msa.t) (gap: int) : t = 
+let dist_dna (dnas: Dna.t array) align misalign indel : t =
+  let m = Array.length dnas in
+  let dist_matrix = Hashtbl.create m in 
+  (for i = 0 to (m - 1) do
+     (for j = i + 1 to (m - 1) do
+        Hashtbl.add dist_matrix (i, j) 
+          (float_of_int (score dnas.(i) dnas.(j) align misalign indel))
+      done);
+   done);
+  dist_matrix
+
+let dist_msa (msa: Msa.t) (gap: int) : t = 
   let m = num_seq msa in
   let n = seq_len msa in
   let dist_matrix = Hashtbl.create m in 
-
   (for i = 0 to (m - 1) do
      let diff = ref 0 in
      (for j = i + 1 to (m - 1) do
-
         (for k = 0 to (n - 1) do
            if (get_base i k msa) = '_' ||  (get_base j k msa) = '_' then
              diff := !diff + gap

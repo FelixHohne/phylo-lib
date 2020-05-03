@@ -18,44 +18,43 @@ let d1 = Dna.from_fasta "FASTA/pairwise_len_5.fasta"
 let d2 = Dna.from_fasta "FASTA/insert.fasta"
 let a11 = "ATGCA"
 let a12 = "AT_CG"
-let align1 = Pairwise.align_pair d1 d2 1 (-2) (-5)
+let align1 = Pairwise.align_pair d1 d2 1 (-2) (-5) |> fst
 
 let d3 = Dna.from_string "ATGCATGAAC"
 let d4 = Dna.from_string "ATTCATGC"
 let a21 = "ATGCATGAAC" 
 let a22 = "ATTCATG__C"
-let align2 = Pairwise.align_pair d3 d4 1 (-2) (-5)
-
+let align2 = Pairwise.align_pair d3 d4 1 (-2) (-5) |> fst
 
 let d5 = Dna.from_string "TCGGTA" 
 let d6 = Dna.from_string "TGGTGA"
 let a31 = "TCGGT_A"
 let a32 = "T_GGTGA"
-let align3 = Pairwise.align_pair d5 d6 3 (-1) (-2)
+let align3 = Pairwise.align_pair d5 d6 3 (-1) (-2) |> fst
 
 let d7 = Dna.from_string "ATATA" 
 let d8 = Dna.from_string "AAGTA"
 let a41 = "ATA_TA"
 let a42 = "A_AGTA"
-let align4 = Pairwise.align_pair d7 d8 3 (-1) (-2)
+let align4 = Pairwise.align_pair d7 d8 3 (-1) (-2) |> fst
 
 let d9 = Dna.from_string "TCTAA" 
 let d10 = Dna.from_string "TCTGG"
 let a51 = "TCTAA"
 let a52 = "TCTGG"
-let align5 = Pairwise.align_pair d9 d10 2 (-1) (-2)
+let align5 = Pairwise.align_pair d9 d10 2 (-1) (-2) |> fst
 
 
 let d11 = Dna.from_string "AT"
 let d12 = Dna.from_string "AATCG"
-let align6 = Pairwise.align_pair d11 d12 1 (-1) (-1)
+let align6 = Pairwise.align_pair d11 d12 1 (-1) (-1) |> fst
 let a61 = ["_AT__";"A_T__"]
 let a62 = "AATCG"
 
 
 let d13 = Dna.from_string "GGTAC"
 let d14 = Dna.from_string "ATC"
-let align7 = Pairwise.align_pair d13 d14 1 (-1) (-1)
+let align7 = Pairwise.align_pair d13 d14 1 (-1) (-1) |> fst
 let a71 = "GGTAC"
 let a72 = ["_AT_C"; "A_T_C"]
 
