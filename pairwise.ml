@@ -27,7 +27,7 @@ let fill_matrix d1 d2 align misalign indel m n =
       let up = indel + mat.(r -1).(c) in
       let diagonal = match Dna.get d1 (r-1), Dna.get d2 (c-1) with
         | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
-        | _ -> failwith "this should never happen" in
+        | _ -> failwith ((string_of_int (r - 1)) ^ " " ^ (string_of_int (c - 1))) in
       mat.(r).(c) <- max_three left up diagonal
     done;
   done;

@@ -16,6 +16,7 @@ play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
 test:
+	$(OCAMLBUILD) -tag 'debug' phylo_algo_test.byte && ./phylo_algo_test.byte
 	$(OCAMLBUILD) -tag 'debug' distance_test.byte && ./distance_test.byte
 	$(OCAMLBUILD) -tag 'debug' tree_test.byte && ./tree_test.byte
 	$(OCAMLBUILD) -tag 'debug' lexer_test.byte && ./lexer_test.byte
@@ -23,7 +24,6 @@ test:
 	$(OCAMLBUILD) -tag 'debug' dna_test.byte && ./dna_test.byte
 	$(OCAMLBUILD) -tag 'debug' pairwise_test.byte && ./pairwise_test.byte
 	$(OCAMLBUILD) -tag 'debug' msa_test.byte && ./msa_test.byte
-	$(OCAMLBUILD) -tag 'debug' phylo_algo_test.byte && ./phylo_algo_test.byte
 
 bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
