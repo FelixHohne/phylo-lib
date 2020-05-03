@@ -84,4 +84,14 @@ let score d1 d2 align misalign indel =
   let m = (Dna.length d1) + 1 in
   let n = (Dna.length d2) + 1 in
   let mat = fill_matrix d1 d2 align misalign indel m n in
-  mat.(m - 1).(n - 1)
+  let aligned = backtrack d1 d2 mat align misalign indel in
+
+  failwith "un"
+
+
+(* (for k = 0 to (n - 1) do
+         if (get_base i k msa) = '_' ||  (get_base j k msa) = '_' then
+           diff := !diff + gap
+         else if (get_base i k msa) <> (get_base j k msa) then
+           incr(diff)
+       done); *)

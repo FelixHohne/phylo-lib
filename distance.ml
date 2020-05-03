@@ -45,10 +45,11 @@ let min dist =
     Hashtbl.fold (fun k v acc -> if v < snd acc then (k, v) else acc) dist acc
 
 let min_diff (dist: t) : float =  
-  dist |> min |> snd
+  let x = dist |> min |> snd in
+  print_newline (); print_float x; print_newline (); x
 
 let min_index dist : index = 
-  dist |> min |> fst
+  let x = dist |> min |> fst in x
 
 (** [remove i dist] removes all bindings in [dist] that contains [i] as 
     one of its indices. *)
