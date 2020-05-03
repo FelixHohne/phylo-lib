@@ -49,7 +49,8 @@ let min_diff (dist: t) : float =
   print_newline (); print_float x; print_newline (); x
 
 let min_index dist : index = 
-  let x = dist |> min |> fst in x
+  let x = dist |> min |> fst in
+  print_int (fst x); print_newline (); print_int (snd x); x
 
 (** [remove i dist] removes all bindings in [dist] that contains [i] as 
     one of its indices. *)
