@@ -24,7 +24,7 @@ test:
 	$(OCAMLBUILD) -tag 'debug' dna_test.byte && ./dna_test.byte
 	$(OCAMLBUILD) -tag 'debug' pairwise_test.byte && ./pairwise_test.byte
 	$(OCAMLBUILD) -tag 'debug' msa_test.byte && ./msa_test.byte
-	
+
 
 bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
