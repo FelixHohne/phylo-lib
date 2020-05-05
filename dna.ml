@@ -54,13 +54,13 @@ let parse_file f dna counter =
   | e -> close_in_noerr in_channel; raise Malformed
 
 let from_fasta (f:string) : t = 
-  let dna_sequence = (ref "", Hashtbl.create 10485760) in 
+  let dna_sequence = (ref "", Hashtbl.create 65536) in 
   let counter = ref (-1) in 
   try parse_file f dna_sequence counter; dna_sequence  
   with Malformed -> raise Malformed 
 
 let from_string (str: string) : t = 
-  let dna = Hashtbl.create 10485760 in 
+  let dna = Hashtbl.create 65536 in 
   let counter = ref (-1) in 
   add_dna str dna counter; 
   (ref "", dna)

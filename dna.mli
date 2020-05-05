@@ -9,6 +9,10 @@ type dna = A | C | T | G | Gap | Mismatch
     Implementation Note: Supports DNA only. Other characters ignored. *)
 val from_fasta : string -> t
 
+(** [from_fastas lst] parses .FASTA files in lst and creates an array of DNA sequences. 
+ * The ordering of DNA sequences from [lst] is maintained. *)
+val from_fastas : string list -> t array 
+
 (** [from_string] parses a .FASTA file and creates a DNA sequence. 
     Note: name will be empty. *)
 val from_string : string -> t
@@ -21,7 +25,7 @@ val length : t -> int
 
 (** [get t int] is the DNA letter at [pos]. 0 indexed. Returns None
     if [int] is not a valid position for [t]. *)
-val get : t -> int -> char option 
+val get_opt : t -> int -> char option 
 
 (** [get_e dna pos] is the DNA letter at position [pos].0 indexed.
     Requires [pos] is a valid position. *)
@@ -41,23 +45,4 @@ val string_of_range : t -> int -> int -> string
 
 (** [to_string t] is a string representation of dna sequence [t]. *)
 val to_string: t -> string 
-
-(** [append dna dna_seq] appends [dna] to the end of [dna_seq]. 
-    Performance: O(1). *)
-val append: dna -> t -> unit 
-
-(** [mutate d pos dna_seq] replaces previous dna sequence at [pos] with 
-    [d] in [dna_seq]. 
-    Requires: [pos] is a valid index in [dna_seq]. 
-    Performance: O(1). *)
-val mutate: dna -> int -> t -> unit 
-
-(** [insert d pos dna_seq] inserts [d] at [pos] in [dna_seq]. 
-    The previous value at [pos] and all elements to the right are shifted 
-    to the right by 1. 
-    Example: [A; T; C; G] -> insert A 1 -> [A; A; T; C; G]
-    Performance: O(n).  
-    Requires: pos is a valid index in [dna_seq]. To add a nucleotide 
-    to the end of a [dna_seq], use append. *)
-val insert: dna -> int -> t -> unit
-
+ 
