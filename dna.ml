@@ -5,9 +5,11 @@ exception Not_DNA
 
 (* Helper Functions *)
 
+(** [is_name_line str] checks if [str] is the first line of a .FASTA file *)
 let is_name_line str = 
   if String.sub str 0 1 = ">" then true else false
 
+  (** [is_dna c] checks if [c] is a dna nucleotide *)
 let is_dna c = 
   match c with 
   | 'A'
