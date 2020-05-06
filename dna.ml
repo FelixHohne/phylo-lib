@@ -27,6 +27,7 @@ let parse_char (c: char) (dna_seq : Buffer.t) : unit =
 (** [parse_line str dna_seq] parses the string of DNA sequences and updates 
     dna_seq. *)
 let parse_line (str : string) (dna_seq: Buffer.t) : unit = 
+  let str = String.uppercase_ascii str in 
   String.iter (fun c -> parse_char c dna_seq) str
 
 (** [parse_first_line dna_stream] removes the descriptive first line, 
