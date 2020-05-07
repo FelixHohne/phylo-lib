@@ -11,7 +11,7 @@ exception Empty
     or lower case variants of 'A', 'T', 'C', 'G', '_'. 
     Raises [Empty] if file is empty.
     Set init_size to set size of data structure holding dna_sequence. *)
-    val from_fasta : ?init_size:int -> string -> t
+val from_fasta : ?init_size:int -> string -> t
 
 (** [from_string] parses a .FASTA file and creates a DNA sequence. *)
 val from_string : string -> t
@@ -33,7 +33,7 @@ val get_e: t -> int -> char
 (** [string_of_range t start finish] is a string with base pairs represented as 
     chars in the interval from [t.start] to [t.finish], excluding [t.finish].
     Requires: [start], [finish] are valid positions in [t], [finish] > [start]. 
-    *)
+*)
 val string_of_range : t -> int -> int -> string
 
 (** [to_string dna_seq] is a string representation of [dna_seq]. *)

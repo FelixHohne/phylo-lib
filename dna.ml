@@ -9,7 +9,7 @@ exception Not_DNA
 let is_name_line str = 
   if String.sub str 0 1 = ">" then true else false
 
-  (** [is_dna c] checks if [c] is a dna nucleotide *)
+(** [is_dna c] checks if [c] is a dna nucleotide *)
 let is_dna c = 
   match c with 
   | 'A'
@@ -49,15 +49,15 @@ let from_fasta ?init_size:(init_size = 16384) (loc: string) =
   dna_seq 
 
 let from_string str = 
-    let dna_seq = Buffer.create 128 in 
-    parse_line str dna_seq; 
-    dna_seq
+  let dna_seq = Buffer.create 128 in 
+  parse_line str dna_seq; 
+  dna_seq
 
 let is_empty (dna_seq : t) = 
-    if Buffer.length dna_seq = 0 then true else false
+  if Buffer.length dna_seq = 0 then true else false
 
 let length (dna_seq : t) = 
-    Buffer.length dna_seq 
+  Buffer.length dna_seq 
 
 let get (dna_seq: t) pos = 
   try Some (Buffer.nth dna_seq pos) 

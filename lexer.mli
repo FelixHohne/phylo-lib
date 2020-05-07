@@ -1,3 +1,5 @@
+(** The Lexer module lexes phyloXML files. *)
+
 (** The type of lexer tokens. *)
 type token =
   | Phylogeny | Name | Description
@@ -14,7 +16,9 @@ val is_word : token -> bool
 val to_string : token -> string
 
 (** [stream_of_file f] is a stream of lines from the file with filename 
-    [f]. Requires [f] to be a valid file. *)
+    [f]. Requires [f] to be a valid file. 
+    Raises: [End_of_file] if the file is empty or if it has fewer than 5 
+    characters. *)
 val stream_of_file : string -> string Stream.t
 
 (** [tokenize_next_line stream] is a list of tokens represented by the 
@@ -28,10 +32,10 @@ val tokenize_next_line: string Stream.t ->  token list
     peek or consume the next token in [stream].
 
     Sample usage:
-    [let x = stream_of_file "file.txt" in
-    let token_fun = token_function_builder x in
+    [let line_stream = stream_of_file "file.txt" in
+    let token_fun = token_function_builder line_stream in
     let peek = token_fun true in
     let consume = token_fun false in
-    true] will bind peek and consume to functions that take in a unit and
+    true] will bind [peek] and [consume] to functions that take in a unit and
     peek and consume from the "file.txt" stream, respectively. *)
 val token_function_builder : string Stream.t -> (bool -> (unit -> token))

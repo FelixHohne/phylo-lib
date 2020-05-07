@@ -6,7 +6,6 @@ type token =
   | Word of string | True | False
   | EOF | Unit
 
-(** [is_word t] is true if [t] represents either a word or number. *)
 let is_word (t : token) : bool = 
   match t with 
   | LAngle
@@ -72,8 +71,13 @@ let stream_of_file (f : string) : string Stream.t =
         try Some (input_line in_channel) with End_of_file -> None)
   in 
   match Stream.peek streams with
-  | Some s -> if String.sub s 0 5 = "<?xml" then (Stream.junk streams; streams)
-    else streams
+  | Some s -> 
+    begin 
+      match String.sub s 0 5 with 
+      | "<?xml" -> (Stream.junk streams; streams)
+      | exception (Invalid_argument _) -> raise End_of_file
+      | _ ->  streams
+    end 
   | None -> raise End_of_file
 
 (** [stream_of_line stream] is a character stream of the next line of 
@@ -100,22 +104,24 @@ let is_special_char (c : char) : bool =
     [acc]. *)
 let rec lex_keyword (stream : char Stream.t) (acc : string) : token =
   match Stream.peek stream with 
-  | Some t ->
-    begin
-      match t with
-      | ' ' 
-      | exception Stream.Failure -> lex_keyword_helper acc
-      | c -> 
-        if is_token acc
-        then string_to_token acc
-        else if (is_special_char c) then Word acc
-        else (Stream.junk stream; lex_keyword stream (acc ^ (Char.escaped c)))
-    end
+  | Some c -> lex_char stream acc c
   | None -> lex_keyword_helper acc
-and 
-  lex_keyword_helper (acc : string) : token =
+
+and lex_char (stream : char Stream.t) (acc : string) (c : char) : token =
+  match c with
+  | ' ' 
+  | exception Stream.Failure -> lex_keyword_helper acc
+  | _ -> 
+    if is_token acc
+    then string_to_token acc
+    else if is_special_char c
+    then Word acc
+    else (Stream.junk stream; lex_keyword stream (acc ^ (Char.escaped c)))
+
+and lex_keyword_helper (acc : string) : token =
   if is_token acc
-  then string_to_token acc else Word acc
+  then string_to_token acc 
+  else Word acc
 
 (** [is_number c] is true if c represents a numerical digit. *)
 let is_number (c : char) : bool = 
@@ -133,12 +139,15 @@ let rec lex_number (stream : char Stream.t) (acc : string) : token =
     lex_number (stream) (acc ^ (Char.escaped c))
   | Some _ | None -> Num (int_of_string acc)
 
-(** [tokenize_line stream] is a list of the tokens in [stream] *)
+(** [tokenize_line stream] is a list of the tokens in [stream].
+    Effects: Removes the first element of [stream]. *)
 let rec tokenize_line (stream : char Stream.t) (acc : token list): token list = 
   match Stream.next stream with 
-  | '<' -> begin
+  | '<' -> 
+    begin
       match Stream.peek stream with
-      | Some n when (n = '/') -> Stream.junk stream; 
+      | Some n when (n = '/') -> 
+        Stream.junk stream; 
         tokenize_line stream (LAngleSlash::acc) 
       | Some n -> tokenize_line stream (LAngle::acc)
       | None -> List.rev (LAngle::acc)
@@ -159,17 +168,29 @@ let tokenize_next_line (stream : string Stream.t) : token list =
   | exception End_of_file -> [EOF]
   | x -> tokenize_line x []
 
+(** [peek_fun stream tokens_in_line token_function] is a function that
+    takes in a unit and outputs the next token in [stream] without modifying 
+    [stream]. *)
+let peek_fun stream tokens_in_line token_function =
+  fun () ->
+  match !tokens_in_line with
+  | [] -> tokens_in_line := (tokenize_next_line stream); !token_function true ()
+  | h::_ -> h
+
+(** [consume_fun stream tokens_in_line] is a function that takes in a unit
+    and outputs the next token in [stream].
+    Effects: Consumes the next token in [stream]. *)
+let consume_fun stream tokens_in_line =
+  fun () ->
+  match !tokens_in_line with
+  | [] -> tokens_in_line := (tokenize_next_line stream); Unit
+  | _::t -> tokens_in_line := t; Unit
+
 let token_function_builder (stream : string Stream.t)
   : (bool -> (unit -> token)) =
   let tokens_in_line = ref (tokenize_next_line stream) in 
-  let token_function = ref (fun x -> ( fun () -> EOF)) in
-  (token_function := (fun x ->
-       if x then (fun () ->
-           match !tokens_in_line with
-           | [] -> tokens_in_line := (tokenize_next_line stream); 
-             !token_function x ()
-           | h::_ -> h)
-       else (fun () ->
-           match !tokens_in_line with
-           | [] -> tokens_in_line := (tokenize_next_line stream); Unit
-           | _::t -> tokens_in_line := t; Unit))); !token_function
+  let token_function = ref (fun b -> (fun () -> EOF)) in
+  token_function := (fun b ->
+      if b then peek_fun stream tokens_in_line token_function
+      else consume_fun stream tokens_in_line); 
+  !token_function
