@@ -16,6 +16,33 @@ let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) (m:int) (n:int)  =
   done;
   mat
 
+(** [neighbors d1 d2 r c mat align misalign indel] is a 3 element tuple that
+    contains the distance score of the cell in [mat] with row [r] and column 
+    [c], calculated using the left, top and top left diagonal neighbor.
+
+    The score is calculated using the following rules - for the left/top cells, 
+    the [indel] penalty is added to the value in the left/top cell. For the 
+    diagonal cell, the [align] bonus/[misalign] penalty is added to the value 
+    in the diagonal cell, depending on whether the [r]th character of DNA [d1] 
+    and the [c]th character of [d2] match or not.
+
+    Requires:
+    0<=[!r]<=[Dna.length d1]
+    0<=[!c]<=[Dna.length d2]
+    [mat] has [dimx] [r]-1 and [dimy] [c]-1
+*)
+let neighbors d1 d2 r c mat align misalign indel =
+  let left = if !c < 1 then Int.min_int else indel + mat.(!r).(!c - 1) in
+  let up = if !r < 1 then Int.min_int else indel + mat.(!r - 1).(!c) in
+  let diagonal =
+    begin
+      if !r < 1 || !c < 1 then min_int 
+      else mat.(!r-1).(!c-1) + 
+           (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
+            then align else misalign)
+    end in
+  (left, up, diagonal)
+
 (** [fill_matrix d1 d2 mat align misalign indel] is a filled-in matrix of 
     dimensions m by n that uses the [align], [misalign], 
     and [indel] parameters. *)
@@ -23,32 +50,29 @@ let fill_matrix d1 d2 align misalign indel m n =
   let mat = init_matrix d1 d2 indel m n in
   for r = 1 to m - 1 do 
     for c = 1 to n - 1 do
-      let left = indel + mat.(r).(c-1) in
-      let up = indel + mat.(r -1).(c) in
-      let diagonal = match Dna.get d1 (r-1), Dna.get d2 (c-1) with
-        | Some i, Some j -> mat.(r-1).(c-1) + if i = j then align else misalign
-        | _ -> failwith ((string_of_int (r - 1)) ^ " " ^ (string_of_int (c - 1))) in
+      let (left, up, diagonal) = 
+        neighbors d1 d2 (ref r) (ref c) mat align misalign indel in
       mat.(r).(c) <- max_three left up diagonal
     done;
   done;
   mat
 
+(** [backtrack d1 d2 mat align misalign indel] is the array consisting of the
+    two sequences that are a result of aligning [d1] and [d2]. The aligned 
+    sequences are guaranteed to be the globally optimum alignment that results 
+    in the highest match score given the weights [align], [misalign] and 
+    [indel], but there can also be other equally optimum alignments.
+
+    Requires: [mat] is the filled in dp matrix constructed by calling 
+    [fill_matrix] on [d1] and [d2] using weights [align], [misalign] and 
+    [indel]. *)
 let backtrack d1 d2 mat align misalign indel = 
-  let m = (Dna.length d1) + 1 in
-  let n = (Dna.length d2) + 1 in
-  let r = ref (m - 1) in 
-  let c = ref (n - 1) in
+  let r = ref (Dna.length d1) in 
+  let c = ref ((Dna.length d2)) in
   let acc1 = ref "" in
   let acc2 = ref "" in
   while (!r > 0 || !c > 0) do
-    let left = if !c < 1 then Int.min_int else indel + mat.(!r).(!c - 1) in
-    let up = if !r < 1 then Int.min_int else indel + mat.(!r - 1).(!c) in
-    let diagonal = (if !r < 1 || !c < 1 then min_int else
-                      (mat.(!r-1).(!c-1) + 
-                       (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
-                        then align 
-                        else misalign)))
-    in
+    let (left, up, diagonal) = neighbors d1 d2 r c mat align misalign indel in
     let cell = mat.(!r).(!c) in
     (if cell = diagonal then
        begin
@@ -96,10 +120,3 @@ let diff d1 d2 align misalign indel=
       incr(diff)
   done;
   !diff
-
-(* (for k = 0 to (n - 1) do
-         if (get_base i k msa) = '_' ||  (get_base j k msa) = '_' then
-           diff := !diff + gap
-         else if (get_base i k msa) <> (get_base j k msa) then
-           incr(diff)
-       done); *)
