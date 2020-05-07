@@ -78,7 +78,7 @@ let consume_token = ref (fun () -> EOF)
     processed. 
     Raises: [SyntaxError] if the next token is not equal to [token]. *)
 let consume (token : token) = 
-  match (!peek ()) with
+  match !peek () with
   | x when x = token -> ignore(!consume_token ())
   | x -> 
     print_debug ("Expected " ^ to_string token ^ ", got " ^ to_string x); 
@@ -128,49 +128,59 @@ let consume_end_tag (t : token) : unit =
   consume t;
   consume RAngle
 
-(** [parse_start_tag ()] is a start_tag that represents the information
-    gained from parsing a starting phyloXML tag that may have attributes, 
-    for example, <phylogeny rooted="true">, in the file currently being
-    processed. 
-    Effects: consumes the tokens representing the start tag. *)
-let rec parse_start_tag () : start_tag =
-  consume LAngle;
-  let tag =
-    begin
-      match (!peek ()) with
-      | x when is_valid_tag x -> consume x; empty_start_tag x
-      | _ -> print_debug "parse_start_tag error"; raise SyntaxError 
-    end in 
-  parse_attr tag
-
-and parse_attr (tag : start_tag) : start_tag = 
-  match (!peek ()) with
-  | x when is_word x -> consume x; consume Eq; 
-    let attr = to_string x in
-    let new_tag = create_new_tag tag attr
-    in parse_attr new_tag
-  | RAngle -> consume RAngle; tag
-  | _ -> print_debug "parse_attr match failure"; raise SyntaxError
-
-and create_new_tag (tag : start_tag) (attr : string): start_tag =
-  match (!peek ()) with
+(** [add_attr tag attr] parses the attribute with name [attr] in the
+    file currently being processed and adds it to [tag].
+    Requires: Caller is [parse_attr]. 
+    Effects: Consumes the tokens representing the rest of the attribute. *)
+let rec add_attr (tag : start_tag) (attr : string): start_tag =
+  match !peek () with
   | Quote -> consume Quote; 
     let return_tag =
       begin
-        match (!peek ()) with
+        match !peek () with
         | Word _ | Num _ -> let words = parse_words "" in 
           {tag with str_attr = add_assoc tag.str_attr (attr, words)}
         | True -> consume True; 
           {tag with bool_attr = add_assoc tag.bool_attr (attr, true)}
         | False -> consume False;
           {tag with bool_attr = add_assoc tag.bool_attr (attr, false)}
-        | _ -> print_debug "create_new_tag attribute error"; raise SyntaxError
+        | _ -> print_debug "add_attr
+       attribute error"; raise SyntaxError
       end
     in consume Quote; return_tag
   | Num x -> consume (Num x);
     {tag with num_attr = add_assoc tag.num_attr (attr, x)}
-  | _ -> print_debug "create_new_tag match failure"; raise SyntaxError
+  | _ -> print_debug "add_attr
+ match failure"; raise SyntaxError
 
+(** [parse_attr tag] parses tag attributes in the file currently being processed
+    and adds those attributes to [tag]. 
+    Requires: Caller is [parse_start_tag].
+    Effects: Consumes the tokens representing the rest of the start tag. *)
+let rec parse_attr (tag : start_tag) : start_tag = 
+  match !peek () with
+  | x when is_word x -> consume x; consume Eq; 
+    let attr = to_string x in
+    let new_tag = add_attr
+        tag attr
+    in parse_attr new_tag
+  | RAngle -> consume RAngle; tag
+  | _ -> print_debug "parse_attr match failure"; raise SyntaxError
+
+(** [parse_start_tag ()] is a start_tag that represents the information
+    gained from parsing a starting phyloXML tag that may have attributes, 
+    for example, <phylogeny rooted="true">, in the file currently being
+    processed. 
+    Effects: Consumes the tokens representing the start tag. *)
+let rec parse_start_tag () : start_tag =
+  consume LAngle;
+  let tag =
+    begin
+      match !peek () with
+      | x when is_valid_tag x -> consume x; empty_start_tag x
+      | _ -> print_debug "parse_start_tag error"; raise SyntaxError 
+    end in 
+  parse_attr tag
 
 (** [ignore_tag t] consumes the tokens in the current file representing the 
     phyloXML that is nested within the phyloXML tag with name [t], including the
@@ -179,7 +189,7 @@ and create_new_tag (tag : start_tag) (attr : string): start_tag =
     Raises: [SyntaxError] if the name of the ending phyloXML tag does not match
     [t]. *)
 let rec ignore_tag (t : token) : unit =
-  match (!peek ()) with 
+  match !peek () with 
   | LAngle -> let tag = parse_start_tag () in 
     ignore_tag tag.tag_name; 
     ignore_tag t
@@ -193,7 +203,7 @@ let rec ignore_tag (t : token) : unit =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Name], or
     if there is invalid phyloXML syntax. *)
 let parse_name () : string =
-  match (!peek ()) with
+  match !peek () with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag Name; name
   | _ -> print_debug "Name not word/number"; raise SyntaxError 
 
@@ -205,7 +215,7 @@ let parse_name () : string =
     Raises: [SyntaxError] if the ending phyloXML tag does not match 
     [Description], or if there is invalid phyloXML syntax. *)
 let parse_description () : string =
-  match (!peek ()) with
+  match !peek () with
   | Word _ | Num _ -> 
     let descr = parse_words "" in consume_end_tag Description; descr
   | _ -> print_debug "Description not word/number";
@@ -219,7 +229,7 @@ let parse_description () : string =
     the rank does not represent a string, or if there is invalid phyloXML 
     syntax. *)
 let parse_rank () : string = 
-  match (!peek ()) with 
+  match !peek () with 
   | Word _ -> let rank = parse_words "" in consume_end_tag Rank; rank
   | _ -> print_debug "Rank not a string"; raise SyntaxError 
 
@@ -229,7 +239,7 @@ let parse_rank () : string =
     Note: It is 0.0 if an error is encountered when parsing. *)
 let parse_float n : float = 
   consume Dot; 
-  match (!peek ()) with 
+  match !peek () with 
   | Num x -> 
     let f = float_of_string ((string_of_int n) ^ "." ^ (string_of_int x)) 
     in consume (Num x); consume_end_tag Confidence; f
@@ -246,10 +256,10 @@ let parse_float n : float =
     [Confidence], if the tokens do not represent a number, or if there is 
     invalid phyloXML syntax. *)
 let parse_confidence () : float = 
-  match (!peek ()) with 
+  match !peek () with 
   | Num n -> 
     consume (Num n);
-    if (!peek ()) = Dot then parse_float n
+    if !peek () = Dot then parse_float n
     else (consume_end_tag Confidence; float_of_int n)
   | Dot -> parse_float 0
   | _ -> print_debug "Confidence not a number"; raise SyntaxError 
@@ -261,7 +271,7 @@ let parse_confidence () : float =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Id], or
     if there is invalid phyloXML syntax. *)
 let parse_id () : string =
-  match (!peek ()) with
+  match !peek () with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag ID; name
   | _ -> print_debug "ID not word/number";
     raise SyntaxError 
@@ -274,7 +284,7 @@ let parse_id () : string =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Name], or
     if there is invalid phyloXML syntax. *)
 let parse_scientific_name () : string =
-  match (!peek ()) with
+  match !peek () with
   | Word _ | Num _ -> let name = parse_words "" in consume_end_tag SciName; 
     name
   | _ -> print_debug "Scientific name not word/number"; raise SyntaxError 
@@ -287,7 +297,7 @@ let parse_scientific_name () : string =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Taxonomy], 
     or if there is invalid phyloXML syntax. *)
 let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
-  match (!peek ()) with
+  match !peek () with
   | LAngle -> let tag = parse_start_tag () in
     begin
       match (tag.tag_name) with
@@ -302,6 +312,29 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
   | _ -> print_debug "Unexpected token encountered when parsing taxonomy";
     raise SyntaxError
 
+(** [create_leaf attr] is the tree consisting of a single leaf that represents
+    the species with attributes [attr]. *)
+let create_leaf attr =
+  match attr.taxonomy with
+  | Some taxon -> leaf taxon.scientific_name taxon.id attr.name
+  | None -> 
+    begin
+      match attr.name with 
+      | Some n -> leaf n None (Some n)
+      | None -> print_debug "Warning: no name provided"; 
+        leaf_no_params "Unnamed"
+    end
+
+(** [add_branch t attr] adds the species with attributes [attr] to [t]. *)
+let add_branch t attr = 
+  let id = 
+    begin
+      match attr.taxonomy with 
+      | None -> None 
+      | Some taxon -> taxon.id
+    end in 
+  zip [t] attr.confidence attr.rank id attr.name
+
 (** [parse_clade ()] is the clade represented within a pair of phyloXML
     "clade" tags.
     Requires: [parse_start_tag ()] to be called directly before calling this.
@@ -310,13 +343,13 @@ let rec parse_taxonomy (taxonomy : taxonomy) : taxonomy option =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Clade], 
     or if there is invalid phyloXML syntax. *)
 let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
-  match (!peek ()) with 
+  match !peek () with 
   | LAngle -> 
     let tag = parse_start_tag () in parse_clade_attr acc attr tag
   | LAngleSlash -> consume_end_tag Clade; 
     begin
       match acc with
-      | t when is_empty t -> create_leaf acc attr
+      | t when is_empty t -> create_leaf attr
       | t -> add_branch acc attr
     end
   | _ -> print_debug "parse_clade match failure"; raise SyntaxError 
@@ -337,26 +370,6 @@ and parse_clade_attr acc attr tag =
        parse_clade (zip_no_params [acc; clade]) attr)
   | x -> ignore_tag x; parse_clade acc attr
 
-and create_leaf acc attr =
-  match attr.taxonomy with
-  | Some taxon -> leaf taxon.scientific_name taxon.id attr.name
-  | None -> 
-    begin
-      match attr.name with 
-      | Some n -> leaf n None (Some n)
-      | None -> print_debug "Warning: no name provided"; 
-        leaf_no_params "Unnamed"
-    end
-
-and add_branch acc attr = 
-  let id = 
-    begin
-      match attr.taxonomy with 
-      | None -> None 
-      | Some taxon -> taxon.id
-    end in 
-  zip [acc] attr.confidence attr.rank id attr.name
-
 (** [parse_phylogeny ()] is the phylogeny represented within a pair of phyloXML
     "phylogeny" tags.
     Requires: [parse_start_tag ()] to be called directly before calling this.
@@ -365,7 +378,7 @@ and add_branch acc attr =
     Raises: [SyntaxError] if the ending phyloXML tag does not match [Phylogeny], 
     or if there is invalid phyloXML syntax. *)
 let rec parse_phylogeny (acc : phylo) : phylo =
-  match (!peek ()) with
+  match !peek () with
   | LAngle -> let tag = parse_start_tag () in
     begin
       match tag.tag_name with
@@ -380,18 +393,13 @@ let rec parse_phylogeny (acc : phylo) : phylo =
   | LAngleSlash -> consume_end_tag Phylogeny; acc
   | _ -> print_debug "parse_phylogeny match failure"; raise SyntaxError
 
-(** [from_phylo_helper file_stream] is the phylogenetic tree represented by
-    the phyloXML in [file_stream]. *)
-let rec from_phylo_helper (f : string Stream.t )=
-  let tokenizer = token_function_builder f in
-  peek := tokenizer true;
-  consume_token := tokenizer false;
-  match (!peek ()) with
-  | EOF -> empty_phylo
-  | LAngle -> let tag = parse_start_tag () in parse_phylo_tag tag
-  | _ -> print_debug "from_phylo_helper error"; raise SyntaxError
-
-and parse_phylo_tag tag =
+(** [parse_phylo_tag tag] is the phylogenetic tree represented by
+    the file currently being processed.
+    Requires: Caller is [from_phylo_helper]. 
+    Raises: [SyntaxError] if [tag] is not a phyloxml tag or if the next tag
+    is not a phylogeny tag, or if there is a syntax error when parsing the 
+    file. *)
+let parse_phylo_tag tag =
   match tag.tag_name with
   | Word s when s = "phyloxml" -> 
     let tag = parse_start_tag () in
@@ -402,6 +410,18 @@ and parse_phylo_tag tag =
       | _ -> print_debug "parse_phylo_tag error 1"; raise SyntaxError
     end
   | _ -> print_debug "parse_phylo_tag error 2"; raise SyntaxError
+
+(** [from_phylo_helper file_stream] is the phylogenetic tree represented by
+    the phyloXML in [file_stream]. 
+    Effects: Modifies [peek] and [consume] to peek and consume from [f]. *)
+let rec from_phylo_helper (f : string Stream.t )=
+  let tokenizer = token_function_builder f in
+  peek := tokenizer true;
+  consume_token := tokenizer false;
+  match !peek () with
+  | EOF -> empty_phylo
+  | LAngle -> let tag = parse_start_tag () in parse_phylo_tag tag
+  | _ -> print_debug "from_phylo_helper error"; raise SyntaxError
 
 let from_phylo f = 
   f |> stream_of_file |> from_phylo_helper

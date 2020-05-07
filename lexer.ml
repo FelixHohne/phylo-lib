@@ -33,9 +33,9 @@ let to_string (t : token) : string =
   | RAngle -> ">"
   | Quote -> "quote"
   | Eq -> "="
-  | Num int -> string_of_int int
+  | Num n -> string_of_int n
   | Dot -> "."
-  | Word string -> string
+  | Word s -> s
   | True -> "true"
   | False -> "false"
   | EOF -> "EOF"
@@ -65,20 +65,20 @@ let string_to_token (s : string) : token =
   Hashtbl.find word_token_map s
 
 let stream_of_file (f : string) : string Stream.t =
-  let streams = 
+  let stream = 
     let in_channel = open_in f in 
     Stream.from (fun _ ->
         try Some (input_line in_channel) with End_of_file -> None)
   in 
-  match Stream.peek streams with
+  match Stream.peek stream with
   | Some s -> 
     begin 
       match String.sub s 0 5 with 
-      | "<?xml" -> (Stream.junk streams; streams)
-      | exception (Invalid_argument _) -> raise End_of_file
-      | _ ->  streams
+      | "<?xml" -> (Stream.junk stream; stream)
+      | exception (Invalid_argument _) 
+      | _ ->  stream
     end 
-  | None -> raise End_of_file
+  | None -> stream
 
 (** [stream_of_line stream] is a character stream of the next line of 
     string stream [stream]. 
@@ -137,7 +137,8 @@ let rec lex_number (stream : char Stream.t) (acc : string) : token =
   | Some c when (is_number c) -> 
     Stream.junk stream; 
     lex_number (stream) (acc ^ (Char.escaped c))
-  | Some _ | None -> Num (int_of_string acc)
+  | Some _ 
+  | None -> Num (int_of_string acc)
 
 (** [tokenize_line stream] is a list of the tokens in [stream].
     Effects: Removes the first element of [stream]. *)
@@ -146,7 +147,7 @@ let rec tokenize_line (stream : char Stream.t) (acc : token list): token list =
   | '<' -> 
     begin
       match Stream.peek stream with
-      | Some n when (n = '/') -> 
+      | Some n when n = '/' -> 
         Stream.junk stream; 
         tokenize_line stream (LAngleSlash::acc) 
       | Some n -> tokenize_line stream (LAngle::acc)
@@ -170,7 +171,8 @@ let tokenize_next_line (stream : string Stream.t) : token list =
 
 (** [peek_fun stream tokens_in_line token_function] is a function that
     takes in a unit and outputs the next token in [stream] without modifying 
-    [stream]. *)
+    [stream]. 
+    Requires: Caller is [token_function_builder]. *)
 let peek_fun stream tokens_in_line token_function =
   fun () ->
   match !tokens_in_line with
@@ -179,7 +181,8 @@ let peek_fun stream tokens_in_line token_function =
 
 (** [consume_fun stream tokens_in_line] is a function that takes in a unit
     and outputs the next token in [stream].
-    Effects: Consumes the next token in [stream]. *)
+    Effects: Consumes the next token in [stream]. 
+    Requires: Caller is [token_function_builder]. *)
 let consume_fun stream tokens_in_line =
   fun () ->
   match !tokens_in_line with
