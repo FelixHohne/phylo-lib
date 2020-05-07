@@ -1,6 +1,8 @@
 open Tree
 exception SyntaxError
 
+(** The Phylo_parser module parses phyloXML files. *)
+
 (** The type of a parsed phyloXML phylogenetic tree. *)
 type phylo = {
   name : string; 

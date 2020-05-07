@@ -2,6 +2,15 @@ open OUnit2
 open Tree
 open Lexer
 
+(** This tests the Lexer module. 
+    Black box tests proceed by lexing fragments of phyloXML files and 
+    comparing the result to the tokens that were expected to be produced.
+    Glass box tests lex fragments of phyloXML files that have inputs that
+    were likely to cause problems, such as numbers or decimals. 
+    The correctness of the lexer is also tested in the test module for 
+    Phylo_parser, as that test module parses many large phyloXML files, and 
+    relies upon the correctness of the Lexer. *)
+
 let file1 = "resources/common_xml.txt"
 let file2 = "resources/small_xml.txt"
 let file3 = "resources/edge_case_xml.txt"
@@ -41,8 +50,7 @@ let n4 = peek ()
 let () = consume_token ()
 let n5 = peek ()
 let () = consume_token ()
-let () = consume () |> ignore; consume () |> ignore;
-  consume () |> ignore; ()
+let () = consume () |> ignore; consume () |> ignore; consume () |> ignore; ()
 let n6 = peek ()
 
 let s3 = stream_of_file file3

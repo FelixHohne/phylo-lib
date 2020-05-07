@@ -10,28 +10,23 @@ let d3 = from_fasta "FASTA/example_4.fasta"
 let d4 = from_fasta "FASTA/example_5.fasta"
 let d5 = from_fasta "FASTA/example_6.fasta"
 let dnas = [|d1; d2; d3; d4; d5;|]
-let () = print_endline "ok1"
 
 let c1 = zip_no_params [leaf_no_params "A"; leaf_no_params "B"]
 let c2 = zip_no_params [leaf_no_params "E"; leaf_no_params "F"]
 let c3 = zip_no_params [c1; leaf_no_params "D"]
 let tree1 = zip_no_params [c2; c3]
 let tree2 = zip_no_params [c2; leaf_no_params "D"]
-let () = print_endline "ok2"
 let mat = dist_dna dnas 1 (-1) (-1)
-let () = print_endline "ok3"
 let upgma1 = Phylo_algo.upgma mat [|"A"; "B"; "D"; "E"; "F"|]
 
 let mat2 = dist_dna dnas 1 (-1) (-1)
-let () = print_endline "ok4"
 let rotated1 = Phylo_algo.upgma mat2 [|"B"; "A"; "D"; "F"; "E"|]
 
 let dnas2 = [|d3; d4; d5|]
-let () = print_endline "ok5"
 let mat3 = dist_dna dnas2 1 (-1) (-1)
-let () = print_endline "ok6"
+
 let upgma2 = Phylo_algo.upgma mat3 [|"D"; "E"; "F"|]
-let () = print_endline "ok7"
+
 let dnas3 = [|d1; d2; d4; d5|]
 let mat4 = dist_dna dnas3 1 (-1) (-1)
 let upgma3 = upgma mat4 [|"A"; "B"; "E"; "F"|]

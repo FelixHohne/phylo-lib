@@ -1,12 +1,17 @@
 open OUnit2
 open Phylo_parser
 
+(** Whether trees will be printed by [doesParse]. *)
+let display_tree = false
+
 (** [doesParse f] is true if the phyloXML file pointed to by file 
     [f] is successfully parsed. 
-    Requires: [f] is a phyloXML file within the PhyloXML folder. *)
+    Requires: [f] is a phyloXML file within the PhyloXML folder.
+    Effects: Prints tree to standard output if [display_tree] is true. *)
 let doesParse f =
   try 
-    ignore(from_phylo ("PhyloXML/" ^ f));
+    let phylo = from_phylo ("PhyloXML/" ^ f) in
+    if display_tree then Tree.print_tree phylo.tree else ();
     true
   with _ -> false
 
