@@ -1,6 +1,18 @@
 open OUnit2
 open Phylo_parser
 
+(** This tests the Phylo_parser module, and also indirectly tests the Lexer 
+    module.
+    Black box tests proceed by parsing small phyloXML files and 
+    comparing the result to the trees that were expected to be produced.
+    To increase the variety of inputs for the tests, several large phyloXML
+    files were also parsed. Since it would be time-consuming to generate the 
+    correct trees by hand, the [display_tree] flag is included to help visually
+    verify the correctness of the parsed tree. The assumption is that if the
+    parser can produce a tree that can be printed without producing errors,
+    the parser likely will also successfully parse phyloXML files similar to
+    the ones tested. *)
+
 (** Whether trees will be printed by [doesParse]. *)
 let display_tree = false
 
