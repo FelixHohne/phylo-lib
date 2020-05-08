@@ -112,10 +112,8 @@ and lex_char (stream : char Stream.t) (acc : string) (c : char) : token =
   | ' ' 
   | exception Stream.Failure -> lex_keyword_helper acc
   | _ -> 
-    if is_token acc
-    then string_to_token acc
-    else if is_special_char c
-    then Word acc
+    if is_token acc then string_to_token acc
+    else if is_special_char c then Word acc
     else (Stream.junk stream; lex_keyword stream (acc ^ (Char.escaped c)))
 
 and lex_keyword_helper (acc : string) : token =
@@ -123,7 +121,8 @@ and lex_keyword_helper (acc : string) : token =
   then string_to_token acc 
   else Word acc
 
-(** [is_number c] is true if c represents a numerical digit. *)
+(** [is_number c] is true if c represents a numerical digit. 
+    Implementation Note: cleaner than RegEx. *)
 let is_number (c : char) : bool = 
   match c with 
   | '0'..'9' -> true
@@ -132,8 +131,7 @@ let is_number (c : char) : bool =
 (** [lex_number stream acc] lexes a number in [stream], taking into account 
     the digits of the number that have already been read, which are in [acc]. *)
 let rec lex_number (stream : char Stream.t) (acc : string) : token =
-  let x = Stream.peek stream in
-  match x with 
+  match Stream.peek stream with 
   | Some c when (is_number c) -> 
     Stream.junk stream; 
     lex_number (stream) (acc ^ (Char.escaped c))
@@ -188,8 +186,7 @@ let consume_fun stream tokens_in_line =
   | [] -> tokens_in_line := (tokenize_next_line stream); Unit
   | _::t -> tokens_in_line := t; Unit
 
-let token_function_builder (stream : string Stream.t)
-  : (bool -> (unit -> token)) =
+let token_function_builder stream : (bool -> (unit -> token)) =
   let tokens_in_line = ref (tokenize_next_line stream) in 
   let token_function = ref (fun b -> (fun () -> EOF)) in
   token_function := (fun b ->
