@@ -38,13 +38,13 @@ Dna module - from a string and from a .FASTA file.
 
 let dna1 = Dna.from_string "AATCGTAGGCCCC";; 
 let dna2 = Dna.from_string "ATTGCGACTCGTATC";; 
-let arr = Pairwise.align_pair dna1 dna2 1 (-1) (-1);;
+let arr = Pairwise.align_pair dna1 dna2 1 (-1) (-1) |> fst;;
 Dna.to_string arr.(0);;
 Dna.to_string arr.(1);;
 
 let dna3 = Dna.from_fasta "FASTA/install_dna1.fasta";; 
 let dna4 = Dna.from_fasta "FASTA/install_dna2.fasta";; 
-let arr2 = Pairwise.align_pair dna3 dna4 1 (-1) (-1);;
+let arr2 = Pairwise.align_pair dna3 dna4 1 (-1) (-1) |> fst;;
 Dna.to_string arr2.(0);;
 Dna.to_string arr2.(1);;
 
