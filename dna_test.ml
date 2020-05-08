@@ -64,12 +64,10 @@ let bisect_gap = [
   "empty" >:: (fun _ -> assert_equal (is_empty empty2) true); 
   "get" >:: (fun _ -> assert_equal (get empty_seq (-1)) None); 
 ]
-let tests =
+let dna_tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
-  create_DNA; 
-  dna_functions; 
-  more_dna; 
-  bisect_gap;
+    create_DNA; 
+    dna_functions; 
+    more_dna; 
+    bisect_gap;
   ]
-
-let _ = run_test_tt_main tests

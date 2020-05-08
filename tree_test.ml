@@ -26,12 +26,10 @@ let tree_print = [
   (* can't test printing!! ! *)
 ]
 
-let tests =
+let tree_tests =
   "test suite for phylo_lib tree"  >::: List.flatten [
     tree_empty;
     tree_size; 
     tree_zip;
   ]
-
-let _ = run_test_tt_main tests
 

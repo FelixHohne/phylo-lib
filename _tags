@@ -1,11 +1,8 @@
 <pairwise.ml>: coverage
-<pairwise_test.{byte,native}>: coverage
+<distance.ml>: coverage
 <lexer.ml>: coverage
-<lexer_test.{byte,native}>: coverage
 <phylo_parser.ml>: coverage
-<phylo_parser_test.{byte,native}>: coverage
 <phylo_algo.ml>: coverage
-<phylo_algo_test.{byte,native}>: coverage
 <dna.ml>: coverage
-<dna_test.{byte,native}>:coverage
+<test.{byte,native}>:coverage
 true: package(oUnit)
