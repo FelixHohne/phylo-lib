@@ -45,4 +45,4 @@ clean:
 	rm -rf doc.public doc.private report phylo_lib_src.zip bisect*.out bisect*.coverage
 
 zip:
-	zip phylo_lib_src.zip *.ml* _tags Makefile FASTA/* PhyloXML/* resources/* .ocamlinit INSTALL.txt
+	zip phylo_lib_src.zip *.ml* _tags Makefile FASTA/* PhyloXML/* resources/* viruses/* .ocamlinit INSTALL.txt
