@@ -38,7 +38,7 @@ let neighbors d1 d2 r c mat align misalign indel =
     begin
       if !r < 1 || !c < 1 then min_int 
       else mat.(!r-1).(!c-1) + 
-           (if Dna.get_e d1 (max 0 !r-1) = Dna.get_e d2 (max 0 !c-1) 
+           (if Dna.get d1 (max 0 !r-1) = Dna.get d2 (max 0 !c-1) 
             then align else misalign)
     end in
   (left, up, diagonal)
@@ -114,9 +114,26 @@ let diff d1 d2 align misalign indel=
   let len = Dna.length s1 in
   let diff = ref 0 in
   for r = 0 to len - 1 do 
-    if (get_e s1 r) = '_' || (get_e s2 r) = '_' then
+    if (get s1 r) = Some '_' || (get s2 r) = Some '_' then
       diff := !diff - indel
-    else if (get_e s1 r) <> (get_e s2 r) then
+    else if (get s1 r) <> (get s2 r) then
       incr(diff)
   done;
   !diff
+
+let print_alignment d1 d2 =
+  let n = Dna.length d1 in
+  for i = 0 to (n-1)/80 do
+    print_endline (Dna.string_of_range d1 (80*i) (min n (80*(i+1))));
+    for j = 80*i to min (n-1) (80*(i+1)-1) do
+      if Dna.get d1 j = Dna.get d2 j then
+        print_char '*'
+      else if Dna.get d1 j = Some '_' || Dna.get d2 j = Some '_' then
+        print_char ' '
+      else 
+        print_char '|'
+    done;
+    print_newline ();
+    print_endline (Dna.string_of_range d2 (80*i) (min n (80*(i+1))));
+    print_newline ();
+  done

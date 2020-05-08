@@ -1,10 +1,12 @@
 open Msa
 open Pairwise
 
-(** RI: The index of the first sequence is strictly less than the index of the 
-    second sequence. As a result, if there is only one sequence, 
-    t is empty. *)
 type index = int * int 
+
+(** 
+   AF: A binding [i -> f] indicates that the distance between the pair of sequences in [i] is [f]. Equivalent to an [n] by [n] distance matrix, where [n] is the number of sequences in the distance matrix and [n]>0. [t] will then have [n*(n-1)/2] bindings.
+
+   RI: If there is only one sequence, t is empty. There is a binding for every possible [index] pairing that can be generated from the [n] DNA sequences in the distance matrix. *)
 type t = (index, float) Hashtbl.t
 
 let dist_dna (dnas: Dna.t array) align misalign indel : t =
@@ -12,8 +14,8 @@ let dist_dna (dnas: Dna.t array) align misalign indel : t =
   let dist_matrix = Hashtbl.create m in 
   (for i = 0 to (m - 1) do
      (for j = i + 1 to (m - 1) do
-        Hashtbl.add dist_matrix (i, j) 
-          (float_of_int (diff dnas.(i) dnas.(j) align misalign indel))
+        Hashtbl.add dist_matrix (i, j)
+          (float_of_int (Pairwise.diff dnas.(i) dnas.(j) align misalign indel))
       done);
    done);
   dist_matrix
@@ -50,6 +52,9 @@ let min_diff (dist: t) : float =
 let min_index dist : index = 
   dist |> min |> fst
 
+let diff index dist =
+  Hashtbl.find dist index
+
 (** [remove i dist] removes all bindings in [dist] that contains [i] as 
     one of its indices. *)
 let remove i dist =
@@ -59,7 +64,6 @@ let remove i dist =
 (** [avg_helper j k dist] is the value stored at 
     indices [j] and [k] in [dist]. *)
 let avg_helper j k dist =
-  (* print_int j; print_newline (); print_int k; print_newline (); *)
   Hashtbl.find dist ((Stdlib.min j k), max j k) 
 
 (** [average i j dist] iterates over the elements in matrix dist and updates 
@@ -68,7 +72,6 @@ let avg_helper j k dist =
     Used for UPGMA. 
     See https://en.wikipedia.org/wiki/UPGMA for detailed algorithm.  *)
 let average (i : int) (j : int) dist = 
-  (* print_int i; print_newline (); print_int j; print_newline (); *)
   let avg (k : index) (v : float) = 
     if fst k = i then 
       let other = snd k in 
@@ -84,15 +87,15 @@ let average (i : int) (j : int) dist =
 let combine i j dist = 
   if i >= j 
   then failwith "invalid input"
-  else 
-    (* print_endline "calling avg"; *)
+  else
     average i j dist;
-  (* print_endline "calling remove"; *)
-  remove j dist; 
-  (* print_endline "finished remove"; *)
+  remove j dist;
   dist
 
-let size dist = Hashtbl.length dist
+let dim dist = 
+  Hashtbl.fold (fun k v acc -> if fst k = 0 then acc+1 else acc) dist 1
 
 let is_done dist = 
-  (size dist = 0)
+  (Hashtbl.length dist = 0)
+
+
