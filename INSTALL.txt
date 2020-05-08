@@ -3,8 +3,12 @@ Note:  We have primarily tested on Mac OS. For the optimal experience, please
 use a Mac. We can't guarantee that the formatting will look perfect on all 
 other systems.
 
+
 First, run 'make'. This builds the system and imports all the needed modules
 into utop. You can see the modules imported in .ocamlinit.
+
+--------------------------------------------------------------------------------
+MS1 DEMO BELOW:
 The functionality we would like to demo right now is:
 1) XML parser for phylogenetic trees stored in the phyloXML format
 2) ASCII pretty-printer for the phylogenetic trees
@@ -53,5 +57,42 @@ In case you want to test these features out with more files, we also have
 "PhyloXML/tol_156.xml" to use with the xml parser, and the .FASTA files in the 
 FASTA folder to use as DNA sequences. Some .FASTA may be quite long and might 
 take time to perform an alignment on.
-
+--------------------------------------------------------------------------------
  
+MS2 BELOW: 
+
+We would like to demonstrate our final phylogenetic tree construction 
+functionality here. We read in DNA sequences from different species, create a 
+distance matrix for them, and use the UPGMA algorithm to construct a most 
+likely phylogenetic tree based on the distance matrix.
+
+First, we construct a phylogenetic tree for the H1N1, H5N1, and H3N2 viruses 
+sing their PB-2 gene data. The resulting tree shows that H1N1 and H3N2 are more 
+closely related, which makes sense since they are swine flus while H5N1 is an 
+avian flu.
+
+let d1 = Dna.from_fasta "viruses/h5n1.fasta";;
+let d2 = Dna.from_fasta "viruses/h1n1.fasta";;
+let d3 = Dna.from_fasta "viruses/h3n2.fasta";;
+let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1);;
+Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree;;
+
+Compared to the outgroup ebola, H5N1 and H1N1 are more closely related, and our
+resulting tree demonstrates that.
+
+let d1 = Dna.from_fasta "viruses/h5n1.fasta";;
+let d2 = Dna.from_fasta "viruses/h1n1.fasta";;
+let d3 = Dna.from_fasta "viruses/ebola.fasta";;
+let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1);;
+Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "Ebola"|] |> Tree.print_tree;;
+
+let d1 = Dna.from_fasta "viruses/h5n1.fasta";;
+let d2 = Dna.from_fasta "viruses/h1n1.fasta";;
+let d3 = Dna.from_fasta "viruses/h7n7.fasta";;
+let d4 = Dna.from_fasta "viruses/h7n9.fasta";;
+let d5 = Dna.from_fasta "viruses/h3n2.fasta";;
+let d6 = Dna.from_fasta "viruses/ebola.fasta";;
+let mat = Distance.dist_dna [| d1; d2; d3; d4; d5; d6 |] 1 (-1) (-1);;
+let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"; "Ebola"|];;
+(Phylo_algo.upgma mat virus_names) |> Tree.print_tree;;
+--------------------------------------------------------------------------------
