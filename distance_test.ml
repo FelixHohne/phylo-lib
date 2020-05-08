@@ -18,7 +18,7 @@ let mat4 =
   dist_dna dnas 1 (-1) (-1) |> combine 0 1 |> combine 0 2 |> combine 0 3 |> 
   combine 0 4
 
-let tests =
+let distance_tests =
   "test suite for distance"  >::: [
     "min diff" >:: (fun _ -> assert_equal (1.0) (min_diff mat));
     "min index 1" >:: (fun _ -> assert_equal (0, 1) (min_index mat));
@@ -37,5 +37,3 @@ let tests =
     "dim 3" >:: (fun _ -> assert_equal 1 (dim mat4));
     "is_done true" >:: (fun _ -> assert_equal true (is_done mat4)); 
   ]
-
-let _ = run_test_tt_main tests

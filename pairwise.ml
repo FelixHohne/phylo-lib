@@ -123,9 +123,9 @@ let diff d1 d2 align misalign indel=
 
 let print_alignment d1 d2 =
   let n = Dna.length d1 in
-  for i = 0 to (n-1)/80 do
-    print_endline (Dna.string_of_range d1 (80*i) (min n (80*(i+1))));
-    for j = 80*i to min (n-1) (80*(i+1)-1) do
+  for i = 0 to (n - 1) / 80 do
+    print_endline (Dna.string_of_range d1 (80 * i) (min n (80 * (i + 1))));
+    for j = 80 * i to min (n - 1) (80 * (i + 1) - 1) do
       if Dna.get d1 j = Dna.get d2 j then
         print_char '*'
       else if Dna.get d1 j = Some '_' || Dna.get d2 j = Some '_' then
@@ -134,6 +134,6 @@ let print_alignment d1 d2 =
         print_char '|'
     done;
     print_newline ();
-    print_endline (Dna.string_of_range d2 (80*i) (min n (80*(i+1))));
+    print_endline (Dna.string_of_range d2 (80 * i) (min n (80 * (i + 1))));
     print_newline ();
   done

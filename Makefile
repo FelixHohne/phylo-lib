@@ -1,5 +1,7 @@
 MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo authors
 OBJECTS=$(MODULES:=.cmo)
+TESTS = phylo_algo_test distance_test tree_test lexer_test phylo_parser_test dna_test pairwise_test msa_test
+TESTOBJECTS = $(TESTS:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
 MAIN=phylo_parser.byte 
@@ -10,21 +12,14 @@ default: build
 
 build:
 	$(OCAMLBUILD) $(OBJECTS)
+	$(OCAMLBUILD) $(TESTOBJECTS)
 	$(OCAMLBUILD) sample_trees.cmo
 
 play:
 	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
 
 test:
-	$(OCAMLBUILD) -tag 'debug' phylo_algo_test.byte && ./phylo_algo_test.byte
-	$(OCAMLBUILD) -tag 'debug' distance_test.byte && ./distance_test.byte
-	$(OCAMLBUILD) -tag 'debug' tree_test.byte && ./tree_test.byte
-	$(OCAMLBUILD) -tag 'debug' lexer_test.byte && ./lexer_test.byte
-	$(OCAMLBUILD) -tag 'debug' phylo_parser_test.byte && ./phylo_parser_test.byte
-	$(OCAMLBUILD) -tag 'debug' dna_test.byte && ./dna_test.byte
-	$(OCAMLBUILD) -tag 'debug' pairwise_test.byte && ./pairwise_test.byte
-	$(OCAMLBUILD) -tag 'debug' msa_test.byte && ./msa_test.byte
-
+	$(OCAMLBUILD) test.byte && ./test.byte
 
 bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
@@ -42,6 +37,9 @@ bisect:
 	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' dna_test.byte
 	./dna_test.byte -runner sequential
 	bisect-ppx-report -I _build -html report bisect0005.out
+	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' distance_test.byte
+	./distance_test.byte -runner sequential
+	bisect-ppx-report -I _build -html report bisect0006.out
 
 
 docs: docs-public docs-private

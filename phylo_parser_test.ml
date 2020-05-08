@@ -63,11 +63,9 @@ let large_files = [
   "apaf.xml" >:: (fun _ -> assert_equal true (doesParse "apaf.xml"));
 ]
 
-let tests =
-  "test suite for lexer"  >::: List.flatten [
+let phylo_parser_tests =
+  "test suite for parser"  >::: List.flatten [
     rotated_trees;
     empty_trees;
     large_files;
   ]
-
-let _ = run_test_tt_main tests

@@ -76,7 +76,5 @@ let pair_wise_align = [
 
 ]
 
-let suite = "test suite for sorts" >:::
-            pair_wise_align
-
-let _ = run_test_tt_main suite
+let pairwise_suite = "test suite for sorts" >:::
+                     pair_wise_align

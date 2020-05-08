@@ -52,9 +52,7 @@ let upgma_tests = [
   "leaf" >:: (fun _ -> assert_equal (leaf_no_params "A") upgma4)
 ]
 
-let tests =
+let phylo_algo_tests =
   "test suite for phylo algorithms"  >::: List.flatten [
     upgma_tests;
   ]
-
-let _ = run_test_tt_main tests

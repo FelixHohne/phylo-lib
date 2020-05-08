@@ -93,12 +93,10 @@ let edge_token = [
   "tokenize edge case 3" >:: (fun _ -> assert_equal l3 e3);
 ]
 
-let tests =
+let lexer_tests =
   "test suite for lexer"  >::: List.flatten [
     tokenize_line; 
     next_token;
     edge_token;
   ]
-
-let _ = run_test_tt_main tests
 
