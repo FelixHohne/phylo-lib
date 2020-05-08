@@ -1,6 +1,7 @@
 (** The abstract data type representing a DNA sequence. *)
 type t
 
+(** The exception type for empty files *)
 exception Empty
 
 (** [from_fasta string ?init_size] parses a .FASTA file and creates a 
@@ -10,13 +11,13 @@ exception Empty
     Supports DNA only. Other characters ignored. DNA sequences are upper 
     or lower case variants of 'A', 'T', 'C', 'G', '_'. 
     Raises [Empty] if file is empty.
-    Set init_size to set size of data structure holding dna_sequence. *)
+    Set [init_size] to set size of data structure holding the dna sequence. *)
 val from_fasta : ?init_size:int -> string -> t
 
 (** [from_string] parses a .FASTA file and creates a DNA sequence. *)
 val from_string : string -> t
 
-(** [is_empty t ] is true iff. t is empty *)
+(** [is_empty t ] is true iff. [t] is empty *)
 val is_empty : t -> bool 
 
 (** [length t] is the number of base pairs stored in [t]. *)
@@ -31,7 +32,7 @@ val get : t -> int -> char option
 val get_e: t -> int -> char 
 
 (** [string_of_range t start finish] is a string with base pairs represented as 
-    chars in the interval from [t.start] to [t.finish], excluding [t.finish].
+    chars in the interval from [t.start] to [t.finish] exclusive.
     Requires: [start], [finish] are valid positions in [t], [finish] > [start]. 
 *)
 val string_of_range : t -> int -> int -> string

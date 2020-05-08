@@ -2,6 +2,7 @@
 (** The representation type for distance matrices. *)
 type t
 
+(** An index in the distance matrix *)
 type index = int * int
 
 (** [dist_dna dnas align misalign indel] is the distance matrix created from 

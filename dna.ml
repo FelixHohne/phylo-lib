@@ -1,3 +1,6 @@
+(** A function that reads in DNA sequences from various file types 
+and represents them. *)
+
 type t = Buffer.t 
 
 exception Empty

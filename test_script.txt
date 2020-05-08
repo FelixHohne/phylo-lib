@@ -17,10 +17,10 @@ Phylo_algo.upgma mat [|"A"; "B"; "D"; "E"; "F"|] |> Tree.print_tree;;
 
 Phylo_algo.upgma mat2 [|"A"; "B"; "D"; "E"; "F"|] |> Tree.print_tree;;
 
-let d1 = Dna.from_fasta "viruses/sars.fasta";;
-let d2 = Dna.from_fasta "viruses/ebola.fasta";;
-let d3 = Dna.from_fasta "viruses/Sars-Cov-v2.fasta";;
+let d1 = Dna.from_fasta "viruses/full_sars.fasta";;
+let d2 = Dna.from_fasta "viruses/h1n1.fasta";;
+let d3 = Dna.from_fasta "viruses/h3n2.fasta";;
 let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1);;
-Phylo_algo.upgma mat [|"A"; "B"; "D"; "E"; "F"|] |> Tree.print_tree;;
+Phylo_algo.upgma mat [|"SARS"; "H1N1"; "H3N2"|] |> Tree.print_tree;;
 
 
