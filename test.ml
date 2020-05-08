@@ -38,7 +38,7 @@ include Dna_test
 include Pairwise_test
 include Msa_test
 
-let phylo_suite = "test suite for sorts" >:::
+let phylo_suite = "test suite for phyo_lib" >:::
                   [dna_tests;
                    distance_tests;
                    lexer_tests;
