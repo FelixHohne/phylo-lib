@@ -13,3 +13,4 @@ report
 *.byte
 _build
 .DS_Store
+.vscode

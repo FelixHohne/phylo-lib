@@ -4,9 +4,14 @@ open Pairwise
 type index = int * int 
 
 (** 
-   AF: A binding [i -> f] indicates that the distance between the pair of sequences in [i] is [f]. Equivalent to an [n] by [n] distance matrix, where [n] is the number of sequences in the distance matrix and [n]>0. [t] will then have [n*(n-1)/2] bindings.
+   AF: A binding [i -> f] indicates that the distance between the pair of 
+   sequences in [i] is [f]. Equivalent to an [n] by [n] distance matrix, where 
+   [n] is the number of sequences in the distance matrix and [n] > 0. [t] will 
+   then have [n * (n - 1) / 2] bindings.
 
-   RI: If there is only one sequence, t is empty. There is a binding for every possible [index] pairing that can be generated from the [n] DNA sequences in the distance matrix. *)
+   RI: If there is only one sequence, t is empty. There is a binding for every 
+   possible [index] pairing that can be generated from the [n] DNA sequences in 
+   the distance matrix. *)
 type t = (index, float) Hashtbl.t
 
 let dist_dna (dnas: Dna.t array) align misalign indel : t =

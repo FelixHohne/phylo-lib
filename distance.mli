@@ -46,7 +46,8 @@ val diff : index -> t -> float
    Requires: [i] < [j]. *)
 val combine : int -> int -> t -> t
 
-(** dim [t] is the dimension [n] of an [n] by [n] distance matrix (one involving [n] DNA sequences).
+(** dim [t] is the dimension [n] of an [n] by [n] distance matrix (one 
+    involving [n] DNA sequences).
     n > 0 *)
 val dim : t -> int
 
