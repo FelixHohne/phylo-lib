@@ -1,6 +1,3 @@
-(** A function that reads in DNA sequences from various file types 
-and represents them. *)
-
 type t = Buffer.t 
 exception Empty
 
@@ -10,7 +7,8 @@ exception Empty
 let is_name_line (str : string) : bool = 
   String.sub str 0 1 = ">"
 
-(** [is_dna c] checks if [c] is a dna nucleotide *)
+(** [is_dna c] is true if [c] is a dna nucleotide or a gap, and false 
+    otherwise. *)
 let is_dna (c : char) : bool = 
   match c with 
   | 'A'
@@ -22,7 +20,7 @@ let is_dna (c : char) : bool =
 
 (* Main Functions *)
 
-(** [parse_char c dna_seq] adds c to dna_seq if c is a DNA sequence.  *)
+(** [parse_char c dna_seq] adds [c] to [dna_seq] if [c] is a DNA sequence. *)
 let parse_char (c: char) (dna_seq : Buffer.t) : unit = 
   if is_dna c then Buffer.add_char dna_seq c else ()
 
@@ -36,8 +34,8 @@ let parse_line (str : string) (dna_seq: Buffer.t) : unit =
     if one exists. *)
 let rec parse_first_line (dna_stream : string Stream.t) : unit = 
   match Stream.peek dna_stream with 
-  | Some v -> if is_name_line v then (Stream.junk dna_stream; ()) else ()
-  | None -> raise Empty 
+  | Some v -> if is_name_line v then Stream.junk dna_stream else ()
+  | None -> raise Empty
 
 let from_fasta ?init_size:(init_size = 16384) (loc: string) : t = 
   let f = open_in loc in 

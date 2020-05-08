@@ -1,10 +1,10 @@
 open Dna
 
-(** [max_thre a b c] is the largest of a, b, and c. *)
+(** [max_thre a b c] is the largest of [a], [b], and [c]. *)
 let max_three a b c = max (max a b) c
 
 (** [init_matrix d1 d2 indel m n ] is an initalized matrix of size 
-    m * n with the row and column headers initialized 
+    [m * n] with the row and column headers initialized 
     according to the [indel] penalty. *)
 let init_matrix (d1:Dna.t) (d2:Dna.t) (indel:int) (m:int) (n:int)  =
   let mat = Array.make_matrix m n Int.min_int in

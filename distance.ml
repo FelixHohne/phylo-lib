@@ -98,7 +98,7 @@ let combine i j dist =
   dist
 
 let dim dist = 
-  Hashtbl.fold (fun k v acc -> if fst k = 0 then acc+1 else acc) dist 1
+  Hashtbl.fold (fun k v acc -> if fst k = 0 then acc + 1 else acc) dist 1
 
 let is_done dist = 
   (Hashtbl.length dist = 0)

@@ -28,8 +28,7 @@ let rec add_species species i j acc =
     Preconditions: if [acc] is empty, then [is_done dist] must be false, i.e. 
     there must be more than one remaining column in distance matrix [dist].
     For every column index in [dist] there must be a corresponding name in 
-    [species].
-*)
+    [species]. *)
 let rec upgma_help dist species acc = 
   if is_done dist then 
     begin

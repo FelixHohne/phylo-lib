@@ -1,3 +1,6 @@
+(** This module reads in DNA sequences from various file types and represents 
+    them. *)
+
 (** The abstract data type representing a DNA sequence. *)
 type t
 

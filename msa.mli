@@ -1,4 +1,5 @@
-(* JUST MSA *)
+(** This module is currently only partially implemented. It is meant to
+    construct a multiple sequence alignment, given DNA sequences. *)
 
 (** The representation type for multiple sequence alignments consisting of
     nucleotides and gaps. *)

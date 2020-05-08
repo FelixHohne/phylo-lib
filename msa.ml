@@ -1,7 +1,5 @@
 open Dna
 
-(** JUST MSA *)
-
 type t = Dna.t array
 
 let align dnas = dnas
