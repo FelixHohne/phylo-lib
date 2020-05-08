@@ -20,9 +20,11 @@ val diff :  Dna.t -> Dna.t -> int -> int -> int -> int
     For example, if given the sequences ATCG and ATCC, the following would be 
     printed.
 
-    ATCG
-    ***|
-    ATCC
+    [ATCG]
+
+    [***|]
+
+    [ATCC]
 
     Requires: [d1] and [d2] are of the same length.
     The viewing screen is at least 80 characters wide. *)
