@@ -93,7 +93,7 @@ let d3 = Dna.from_fasta "viruses/h7n7.fasta";;
 let d4 = Dna.from_fasta "viruses/h7n9.fasta";;
 let d5 = Dna.from_fasta "viruses/h3n2.fasta";;
 let d6 = Dna.from_fasta "viruses/ebola.fasta";;
-let mat = Distance.dist_dna [| d1; d2; d3; d4; d5; d6 |] 1 (-1) (-1);;
+let mat = Distance.dist_dna [| d1; d2; d3; d4; d5; d6 |] 1 (-1) (-2);;
 let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"; "Ebola"|];;
 (Phylo_algo.upgma mat virus_names) |> Tree.print_tree;;
 --------------------------------------------------------------------------------
