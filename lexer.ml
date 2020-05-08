@@ -181,7 +181,6 @@ let peek_fun stream tokens_in_line token_function =
 
 (** [consume_fun stream tokens_in_line] is a function that takes in a unit
     and outputs the next token in [stream].
-    Effects: Consumes the next token in [stream]. 
     Requires: Caller is [token_function_builder]. *)
 let consume_fun stream tokens_in_line =
   fun () ->

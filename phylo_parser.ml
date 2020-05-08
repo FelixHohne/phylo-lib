@@ -413,7 +413,8 @@ let parse_phylo_tag tag =
 
 (** [from_phylo_helper file_stream] is the phylogenetic tree represented by
     the phyloXML in [file_stream]. 
-    Effects: Modifies [peek] and [consume] to peek and consume from [f]. *)
+    Effects: Modifies [peek] and [consume] to peek and consume from 
+    [file_stream]. *)
 let rec from_phylo_helper (f : string Stream.t )=
   let tokenizer = token_function_builder f in
   peek := tokenizer true;
