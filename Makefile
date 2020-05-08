@@ -22,24 +22,9 @@ test:
 	$(OCAMLBUILD) test.byte && ./test.byte
 
 bisect:
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' pairwise_test.byte
-	./pairwise_test.byte -runner sequential
+	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' test.byte
+	./test.byte -runner sequential
 	bisect-ppx-report -I _build -html report bisect0001.out
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' lexer_test.byte
-	./lexer_test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0002.out
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' phylo_parser_test.byte
-	./phylo_parser_test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0003.out
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' phylo_algo_test.byte
-	./phylo_algo_test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0004.out
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' dna_test.byte
-	./dna_test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0005.out
-	BISECT_COVERAGE=YES ocamlbuild -use-ocamlfind -plugin-tag 'package(bisect_ppx-ocamlbuild)' distance_test.byte
-	./distance_test.byte -runner sequential
-	bisect-ppx-report -I _build -html report bisect0006.out
 
 
 docs: docs-public docs-private
