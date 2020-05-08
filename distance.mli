@@ -8,6 +8,7 @@
     Note: This type is mutable.*)
 type t
 
+
 (** A pair of indices of DNA sequences. 
     RI: The index of the first sequence is strictly less than the index of the 
     second sequence.*)

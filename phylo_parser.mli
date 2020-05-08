@@ -1,4 +1,7 @@
 open Tree
+
+(** The Phylo_parser module parses phyloXML files. *)
+
 exception SyntaxError
 
 (** The type of a parsed phyloXML phylogenetic tree. *)

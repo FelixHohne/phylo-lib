@@ -24,7 +24,9 @@ let rotated1 = Phylo_algo.upgma mat2 [|"B"; "A"; "D"; "F"; "E"|]
 
 let dnas2 = [|d3; d4; d5|]
 let mat3 = dist_dna dnas2 1 (-1) (-1)
+
 let upgma2 = Phylo_algo.upgma mat3 [|"D"; "E"; "F"|]
+
 let dnas3 = [|d1; d2; d4; d5|]
 let mat4 = dist_dna dnas3 1 (-1) (-1)
 let upgma3 = upgma mat4 [|"A"; "B"; "E"; "F"|]

@@ -16,9 +16,7 @@ val is_word : token -> bool
 val to_string : token -> string
 
 (** [stream_of_file f] is a stream of lines from the file with filename 
-    [f]. Requires [f] to be a valid file. 
-    Raises: [End_of_file] if the file is empty or if it has fewer than 5 
-    characters. *)
+    [f]. Requires [f] to be a valid file. *)
 val stream_of_file : string -> string Stream.t
 
 (** [tokenize_next_line stream] is a list of tokens represented by the 
