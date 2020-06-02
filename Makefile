@@ -1,6 +1,6 @@
-MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo authors
+MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo authors phylo_printer
 OBJECTS=$(MODULES:=.cmo)
-TESTS = phylo_algo_test distance_test tree_test lexer_test phylo_parser_test dna_test pairwise_test msa_test
+TESTS = phylo_algo_test distance_test tree_test lexer_test phylo_parser_test dna_test pairwise_test msa_test phylo_printer_test
 TESTOBJECTS = $(TESTS:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
