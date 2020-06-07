@@ -1,3 +1,6 @@
+open Lwt 
+open Lwt_main
+
 (** A function that reads in DNA sequences from various file types 
 and represents them. *)
 
@@ -47,6 +50,11 @@ let from_fasta ?init_size:(init_size = 16384) (loc: string) : t =
   let dna_seq = Buffer.create init_size in 
   Stream.iter (fun str -> parse_line str dna_seq) dna_stream;
   dna_seq 
+
+let from_fastas ?init_size: (init_size = 16384) file_lst : t list = 
+    let file_streams = List.map (fun f -> open_in f) file_lst in 
+    let channels = Lwt_main.run Lwt_list.map_p (fun channel -> Lwt_io.read_lines channel) file_streams in 
+  failwith "unimplemented"
 
 let from_string str : t = 
   let dna_seq = Buffer.create 128 in 
