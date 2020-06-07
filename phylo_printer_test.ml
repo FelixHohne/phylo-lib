@@ -23,4 +23,10 @@ Phylo_printer.print_tree_xml tree2 "testfile2.xml";;
 let phylo3 = Phylo_parser.from_phylo "testfile2.xml";;
 Tree.print_tree tree2;;
 Tree.print_tree phylo3.tree;;
+
+#mod_use "tree.ml";;
+#mod_use "phylo_parser.ml";;
+#mod_use "phylo_printer.ml";;
+let phylo = Phylo_parser.from_phylo "PhyloXML/small_tree.xml";;
+let tree = phylo.tree;;
 *)
