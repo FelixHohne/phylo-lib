@@ -46,6 +46,9 @@ let from_fasta ?init_size:(init_size = 16384) (loc: string) : t =
   Stream.iter (fun str -> parse_line str dna_seq) dna_stream;
   dna_seq 
 
+let from_fastas ?init_size: (init_size = 16384) (files : string list) : t list = 
+  failwith "unimplemented"
+
 let from_string str : t = 
   let dna_seq = Buffer.create 128 in 
   parse_line str dna_seq; 

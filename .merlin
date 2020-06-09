@@ -2,3 +2,5 @@ B _build
 PKG oUnit
 PKG ocamlbuild
 PKG bisect_ppx-ocamlbuild
+PKG Core
+PKG Async
