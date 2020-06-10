@@ -1,11 +1,11 @@
-MODULES=tree lexer phylo_parser dna server_test pairwise msa distance phylo_algo authors
+MODULES=tree lexer phylo_parser dna pairwise msa distance phylo_algo authors
 OBJECTS=$(MODULES:=.cmo)
 TESTS = phylo_algo_test distance_test tree_test lexer_test phylo_parser_test dna_test pairwise_test msa_test
 TESTOBJECTS = $(TESTS:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
 MAIN=phylo_parser.byte 
-OCAMLBUILD=ocamlbuild -use-ocamlfind -pkg core -pkg async -tag thread -plugin-tag 'package(bisect_ppx-ocamlbuild)'
+OCAMLBUILD=ocamlbuild -use-ocamlfind -pkg lwt -pkg lwt.unix -tag thread -plugin-tag 'package(bisect_ppx-ocamlbuild)'
 
 default: build
 	utop
