@@ -1,8 +1,8 @@
-# An OCaml phylogenetic tree library 
+# An OCaml Phylogenetic Tree Library 
 
-### by Shiyuan Huang
-### Felix Hohne
-### Vaishnavi Gupta
+### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
+### Spring and Summer 2020 
+
 
 ___ 
 
