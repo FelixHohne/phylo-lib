@@ -19,9 +19,9 @@ looked like.
 
 ___ 
 
-### Algorithms 
+## Algorithms used 
 
 
 ___
-### Examples 
+## Examples 
 
