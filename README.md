@@ -25,11 +25,12 @@ ___
 
 ___ 
 ### Examples 
-1. _Running the XML Parser:_ Parse an amphibian species phyloXML file found in the Phylo folder 
+1. **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
    called frog.xml into our custom built n-ary tree, then pretty-print it using ASCII art.
    
+  ```
   let phylo1 = Phylo_parser.from_phylo "PhyloXML/frog.xml";;
   Tree.print_tree phylo1.tree;;
-
+   ```
 
 
