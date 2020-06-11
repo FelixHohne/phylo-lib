@@ -31,8 +31,8 @@ ___
   ```OCaml
   let phylo1 = Phylo_parser.from_phylo "PhyloXML/frog.xml";;
   Tree.print_tree phylo1.tree;;
-   ```\s\s  
-
+   ```
+<br>
 **Pairwise Alignment using the Needleman-Wunsch algorithm:** The Needleman-Wunsch algorithm is a globally optimal algorithm for finding the pairwise alignment of two strings using dynamic programming. Here we implement it to find an optimal alignment of two pairs of DNA sequences. 
 
 ```OCaml
