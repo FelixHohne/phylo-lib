@@ -2,8 +2,9 @@
 
 ### by Shiyuan Huang, Felix Hohne, Vaishnavi Gupta
 
+___ 
 
-## What are phylogenetic trees?
+### What are phylogenetic trees?
 
 Scientists often wish to infer evolutionary history between different organisms.
 In order to determine the closeness of species such as birds or fish, 
@@ -17,9 +18,10 @@ hypothetical evolutionary tree, called a phylogenetic tree, that estimates, to
 the best of our ability, what the actual historical evolutionary tree would have 
 looked like. 
 
+___ 
+### Algorithms used 
 
-## Algorithms used 
 
-
-## Examples 
+___ 
+### Examples 
 
