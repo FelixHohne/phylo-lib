@@ -17,11 +17,9 @@ hypothetical evolutionary tree, called a phylogenetic tree, that estimates, to
 the best of our ability, what the actual historical evolutionary tree would have 
 looked like. 
 
-___ 
 
 ## Algorithms used 
 
 
-___
 ## Examples 
 
