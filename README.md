@@ -1,4 +1,4 @@
-# An OCaml Phylogenetic Tree Library 
+# An OCaml Phylogenetic Tree Library With React Frontend
 
 ### Spring and Summer 2020 
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
