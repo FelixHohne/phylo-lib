@@ -25,7 +25,7 @@ ___
 
 ___ 
 ### Examples 
-1. **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
+**Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
    called frog.xml into our custom built n-ary tree, then pretty-print it using ASCII art.
    
   ```
@@ -33,4 +33,12 @@ ___
   Tree.print_tree phylo1.tree;;
    ```
 
+**Pairwise Alignment using the Needleman-Wunsch algorithm:** The Needleman-Wunsch algorithm is a globally optimal algorithm for finding the pairwise alignment of two strings using dynamic programming. Here we implement it to find an optimal alignment of two pairs of DNA sequences. 
 
+```
+let dna1 = Dna.from_string "AATCGTAGGCCCC";; 
+let dna2 = Dna.from_string "ATTGCGACTCGTATC";; 
+let arr = Pairwise.align_pair dna1 dna2 1 (-1) (-1) |> fst;;
+Dna.to_string arr.(0);;
+Dna.to_string arr.(1);;
+```
