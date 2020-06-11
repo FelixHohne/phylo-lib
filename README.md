@@ -2,7 +2,6 @@
 
 ### by Shiyuan Huang, Felix Hohne, Vaishnavi Gupta
 
-___
 
 ## What are phylogenetic trees?
 
