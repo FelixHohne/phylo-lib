@@ -11,8 +11,8 @@ type phylo = {
 
 (** The empty phylogenetic tree. *)
 let empty_phylo = {
-  name = "empty";
-  description = "empty tree";
+  name = "";
+  description = "";
   tree = Tree.empty
 }
 

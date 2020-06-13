@@ -99,12 +99,22 @@ let rec print_tree_helper (tree : Tree.t) (tabs : int) : unit =
 let print_phylo_helper (phylo : phylo) : unit =
   print_start_tag "phyloxml" [] 0 true;
   print_start_tag "phylogeny" [] 1 true;
-  print_tree_helper phylo.tree 2;
+  if String.length phylo.name <> 0 then 
+    print_inline_tag "name" 2 phylo.name
+  else ();
+  if String.length phylo.description <> 0 then
+    print_inline_tag "description" 2 phylo.description
+  else ();
+  if is_empty phylo.tree then () 
+  else print_tree_helper phylo.tree 2;
   print_end_tag "phylogeny" 1;
   print_end_tag "phyloxml" 0
 
 let print_phylo_xml (phylo : phylo) (f : string) : unit = 
-  failwith "Unimplemented"
+  oc := open_out f;
+  print_phylo_helper phylo;
+  close_out !oc;
+  oc := stdout
 
 let print_tree_xml (tree : Tree.t) (f : string) : unit = 
   oc := open_out f;
