@@ -30,17 +30,12 @@ ___
 
 ___ 
 
-### Task Breakdown 
-- Parsing DNA Files: Felix Hohne
-- Lexing PhyloXML Files: trio-programmed 
-- N-ary trees: Vaishnavi Gupta
-- Tree Pretty Printing: Vaishnavi Gupta
-- Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
-- Construction of Distance Matrices for UPGAM: trio-programmed 
-- Pairwise alignment using Dynamic Programming : trio-programmed
-- UPGMA: trio-programmed
-- Maximum Likelihood Estimation: Vaishnavi Gupta
-- README: Felix Hohne
+### Installation Instructions 
+
+1. Clone this repository 
+2. This library was constructed using OCaml 4.09.0 and has no further dependencies. 
+3. In the folder containing this respitory, run make in the terminal 
+4. UTop will compile the required modules and the functionality of this library will then be available. 
 ___ 
 ### Simple Examples 
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
@@ -72,3 +67,17 @@ let d3 = Dna.from_fasta "viruses/h3n2.fasta"
 let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1)
 Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
 ```
+
+___ 
+
+### Task Breakdown 
+- Parsing DNA Files: Felix Hohne
+- Lexing PhyloXML Files: trio-programmed 
+- N-ary trees: Vaishnavi Gupta
+- Tree Pretty Printing: Vaishnavi Gupta
+- Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
+- Construction of Distance Matrices for UPGAM: trio-programmed 
+- Pairwise alignment using Dynamic Programming : trio-programmed
+- UPGMA: trio-programmed
+- Maximum Likelihood Estimation: Vaishnavi Gupta
+- README: Felix Hohne
