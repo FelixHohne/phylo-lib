@@ -1,9 +1,8 @@
-# The OCaml Phylogenetic Tree Library
+# A OCaml Phylogenetic Tree Library for Phylo-Lib-Web
 
 ### Spring 2020 
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 
-This is the library used by phylo-lib-web, which compiles this code into JavaScript and implements a front-end for this library. 
 ___ 
 ### What are phylogenetic trees?
 
