@@ -20,10 +20,10 @@ the best of our ability, what the actual historical evolutionary tree would have
 looked like. 
 
 ___ 
-### Functionality: 
+### Library Functionality: 
 
 - Parsing existing phyloXML phylogenetic tree files into n-ary trees
-- Displaying phylogenetic trees in ASCII format
+- Displaying existing phylogenetic trees in ASCII format
 - Parsing DNA base pair sequences from FASTA files
 - Construction of phylogenetic trees from DNA sequences using Needleman-Wunsch for pairwise alignment and UPGMA to construct rooted phylogenetic trees
 - Outputting the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
