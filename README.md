@@ -48,8 +48,7 @@ ___
 | PhyloXML File      | Parsed PhyloXML |
 | ----------- | ----------- |
 | <img width="442" alt="Screen Shot 2020-06-14 at 8 55 18 PM" src="https://user-images.githubusercontent.com/58995473/84601554-63681080-ae81-11ea-9617-feade472f70e.png">
-|  <p align="center">
-    <img width="75%" height="75%" src="https://user-images.githubusercontent.com/24895015/84601340-63e6b400-ae4d-11ea-8562-83df502f1439.gif">
+| <img width="75%" height="75%" src="https://user-images.githubusercontent.com/24895015/84601340-63e6b400-ae4d-11ea-8562-83df502f1439.gif">
   </p> |
 
 
