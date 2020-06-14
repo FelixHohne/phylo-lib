@@ -1,5 +1,4 @@
 exception Empty
-open Lwt 
 
 type t = Buffer.t 
 
