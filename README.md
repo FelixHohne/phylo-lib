@@ -14,6 +14,7 @@ ___
 - Construction of Distance Matrices for UPGAM: trio-programmed 
 - Pairwise alignment using Dynamic Programming : trio-programmed
 - Phylogenetic Algorithms: trio-programmed
+- README: Felix Hohne
 
 ___ 
 
