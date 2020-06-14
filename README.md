@@ -68,7 +68,7 @@ Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
 ___ 
 
 
-### Task Breakdown 
+### Division of Work
 - Parsing DNA Files: Felix Hohne
 - Lexing PhyloXML Files: trio-programmed 
 - N-ary trees: Vaishnavi Gupta
