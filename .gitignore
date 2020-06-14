@@ -16,3 +16,4 @@ report
 *.byte
 _build
 .DS_Store
+FASTA/.DS_Store

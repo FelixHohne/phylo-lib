@@ -1,5 +1,7 @@
-type t = Buffer.t 
 exception Empty
+open Lwt 
+
+type t = Buffer.t 
 
 (* Helper Functions *)
 
