@@ -18,16 +18,13 @@ hypothetical evolutionary tree, called a phylogenetic tree, that estimates, to
 the best of our ability, what the actual historical evolutionary tree would have 
 looked like. 
 
-In this library. we use OCaml's Streams and Buffers to efficiently parse DNA sequences, such as H1N1 or the X chromosome of a fruit fly, use the dynamic programming algorithm of Needleman and Wunsch to find the global optimum pairwise alignment of DNA sequences, construct distances for different DNA sequences, and use the Unweighted Pair Group Method with Arithmetic mean (UPGMA) algorithm to construct parsimonious, rooted phylogenetic trees. 
 
 ___ 
 ### Summary of Library Functionality: 
 
-- Parse existing phyloXML phylogenetic tree files into n-ary trees
-- Display existing phylogenetic trees in ASCII format
-- Parse DNA base pair sequences from FASTA files
-- Construct rooted phylogenetic trees from DNA sequences using Needleman-Wunsch and UPGMA
-- Output the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
+In this library. we use OCaml's Streams and Buffers to efficiently parse DNA sequences such as H1N1 or the X chromosome of a fruit fly, use the dynamic programming algorithm of Needleman and Wunsch to find the global optimum pairwise alignment of DNA sequences, construct distance matrices for different DNA sequences, and use the Unweighted Pair Group Method with Arithmetic mean (UPGMA) algorithm to construct parsimonious, rooted phylogenetic trees. 
+
+We also provide additional functionality to parse already constructed phylogenetic trees from PhyloXML into our library's custom n-ary treeand visualize them in ASCII format, display phylogenetic trees in ASCII, and output the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs such as BioPython.
 
 ___ 
 
