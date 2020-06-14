@@ -1,6 +1,5 @@
-# An OCaml Phylogenetic Tree Library
+# An OCaml Phylogenetic Tree Library. Used by Phylo-Lib-Web.
 
-## For the front-end that uses this library, see phylo-lib-web
 ### Spring 2020 
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 ___ 
