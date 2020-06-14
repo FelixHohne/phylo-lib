@@ -5,6 +5,16 @@
 
 ___ 
 
+### Activity Breakdown 
+- Parsing DNA Files: Felix Hohne
+- Lexing PhyloXML Files: trio-programmed 
+- N-ary trees: Vaishnavi Gupta
+- Tree Pretty Printing: Vaishnavi Gupta
+- Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
+- Construction of Distance Matrices for UPGAM: trio-programmed 
+- Pairwise alignment using Dynamic Programming : trio-programmed
+- Phylogenetic Algorithms: trio-programmed
+
 ### What are phylogenetic trees?
 
 Scientists often wish to infer evolutionary history between different organisms.
