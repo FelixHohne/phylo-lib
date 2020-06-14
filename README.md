@@ -1,6 +1,6 @@
 # An OCaml Phylogenetic Tree Library for Phylo-Lib-Web
 
-### Spring 2020 
+### Spring 2020, CS 3110 Final Project
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 
 ___ 
