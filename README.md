@@ -5,7 +5,7 @@
 
 ___ 
 
-### Activity Breakdown 
+### Task Breakdown 
 - Parsing DNA Files: Felix Hohne
 - Lexing PhyloXML Files: trio-programmed 
 - N-ary trees: Vaishnavi Gupta
