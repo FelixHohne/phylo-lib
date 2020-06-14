@@ -38,7 +38,8 @@ ___
 - Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
 - Construction of Distance Matrices for UPGAM: trio-programmed 
 - Pairwise alignment using Dynamic Programming : trio-programmed
-- Phylogenetic Algorithms: trio-programmed
+- UPGMA: trio-programmed
+- Maximum Likelihood Estimation: Vaishnavi Gupta
 - README: Felix Hohne
 ___ 
 ### Simple Examples 
