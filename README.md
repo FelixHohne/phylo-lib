@@ -45,9 +45,13 @@ ___
   let phylo1 = Phylo_parser.from_phylo "PhyloXML/frog.xml"
   Tree.print_tree phylo1.tree
    ```
-  <p align="center">
+| PhyloXML File      | Parsed PhyloXML |
+| ----------- | ----------- |
+| <img width="696" alt="Screen Shot 2020-06-14 at 8 51 54 PM" src="https://user-images.githubusercontent.com/58995473/84601539-3e739d80-ae81-11ea-853d-d459beaf854d.png">
+      |  <p align="center">
     <img width="75%" height="75%" src="https://user-images.githubusercontent.com/24895015/84601340-63e6b400-ae4d-11ea-8562-83df502f1439.gif">
-  </p>
+  </p> |
+
 
 **Pairwise Alignment using the Needleman-Wunsch algorithm:** The Needleman-Wunsch algorithm is a globally optimal algorithm for finding the pairwise alignment of two strings using dynamic programming. Here we implement it to find an optimal alignment of two pairs of DNA sequences. 
 
