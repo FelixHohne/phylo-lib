@@ -33,7 +33,7 @@ ___
 1. Ensure that a modern version of OCaml is installed. This library was written using OCaml 4.09.0 and has no additional dependencies, except for bisect to test code coverage. 
 2. Clone this repository 
 3. In the folder containing this respitory, run `make` in the command line
-4. UTop will compile the required modules and the functionality of this library will then be available. 
+4. The REPL for OCaml, `utop` will compile the required modules and the functionality of this library will then be available. 
 5. To compile the documentation, run `make docs`. 
 6. To run tests, run `make test`.
 ___ 
