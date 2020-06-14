@@ -2,5 +2,3 @@ B _build
 PKG oUnit
 PKG ocamlbuild
 PKG bisect_ppx-ocamlbuild
-PKG Lwt
-PKG Lwt.unix 

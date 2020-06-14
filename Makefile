@@ -5,7 +5,7 @@ TESTOBJECTS = $(TESTS:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
 MAIN=phylo_parser.byte 
-OCAMLBUILD=ocamlbuild -use-ocamlfind -pkg lwt -pkg lwt.unix -tag thread -plugin-tag 'package(bisect_ppx-ocamlbuild)'
+OCAMLBUILD=ocamlbuild -use-ocamlfind -tag thread -plugin-tag 'package(bisect_ppx-ocamlbuild)'
 
 default: build
 	utop
