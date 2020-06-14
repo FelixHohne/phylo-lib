@@ -65,6 +65,7 @@ let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1)
 Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
 ```
 
+For more examples and demos, see INSTALL.txt. 
 ___ 
 
 
