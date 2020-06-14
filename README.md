@@ -5,19 +5,6 @@
 
 ___ 
 
-### Task Breakdown 
-- Parsing DNA Files: Felix Hohne
-- Lexing PhyloXML Files: trio-programmed 
-- N-ary trees: Vaishnavi Gupta
-- Tree Pretty Printing: Vaishnavi Gupta
-- Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
-- Construction of Distance Matrices for UPGAM: trio-programmed 
-- Pairwise alignment using Dynamic Programming : trio-programmed
-- Phylogenetic Algorithms: trio-programmed
-- README: Felix Hohne
-
-___ 
-
 ### What are phylogenetic trees?
 
 Scientists often wish to infer evolutionary history between different organisms.
@@ -41,6 +28,18 @@ ___
 - Construction of phylogenetic trees from DNA sequences using Needleman-Wunsch for pairwise alignment and UPGMA to construct rooted phylogenetic trees
 - Outputting the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
 
+___ 
+
+### Task Breakdown 
+- Parsing DNA Files: Felix Hohne
+- Lexing PhyloXML Files: trio-programmed 
+- N-ary trees: Vaishnavi Gupta
+- Tree Pretty Printing: Vaishnavi Gupta
+- Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
+- Construction of Distance Matrices for UPGAM: trio-programmed 
+- Pairwise alignment using Dynamic Programming : trio-programmed
+- Phylogenetic Algorithms: trio-programmed
+- README: Felix Hohne
 ___ 
 ### Simple Examples 
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
