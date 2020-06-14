@@ -15,6 +15,8 @@ ___
 - Pairwise alignment using Dynamic Programming : trio-programmed
 - Phylogenetic Algorithms: trio-programmed
 
+___ 
+
 ### What are phylogenetic trees?
 
 Scientists often wish to infer evolutionary history between different organisms.
