@@ -45,8 +45,9 @@ ___
   let phylo1 = Phylo_parser.from_phylo "PhyloXML/frog.xml"
   Tree.print_tree phylo1.tree
    ```
-<img width="423" alt="Screen Shot 2020-06-14 at 8 57 31 PM" src="https://user-images.githubusercontent.com/58995473/84601604-b772f500-ae81-11ea-8721-a8c19faea1fe.png">
-<img width="460" alt="Screen Shot 2020-06-14 at 9 06 48 PM" src="https://user-images.githubusercontent.com/58995473/84601803-1d13b100-ae83-11ea-8d98-2c1272cd2af8.png">
+| PhyloXML Input | N-ary Tree output |
+| ----------- | ----------- |
+| <img width="423" alt="Screen Shot 2020-06-14 at 8 57 31 PM" src="https://user-images.githubusercontent.com/58995473/84601604-b772f500-ae81-11ea-8721-a8c19faea1fe.png"> | <img width="460" alt="Screen Shot 2020-06-14 at 9 06 48 PM" src="https://user-images.githubusercontent.com/58995473/84601803-1d13b100-ae83-11ea-8d98-2c1272cd2af8.png">
 
 
 
