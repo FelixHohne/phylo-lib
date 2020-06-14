@@ -11,8 +11,8 @@ type phylo = {
 
 (** The empty phylogenetic tree. *)
 let empty_phylo = {
-  name = "empty";
-  description = "empty tree";
+  name = "";
+  description = "";
   tree = Tree.empty
 }
 
@@ -325,15 +325,24 @@ let create_leaf attr =
         leaf_no_params "Unnamed"
     end
 
-(** [add_branch t attr] adds the species with attributes [attr] to [t]. *)
-let add_branch t attr = 
-  let id = 
-    begin
-      match attr.taxonomy with 
-      | None -> None 
-      | Some taxon -> taxon.id
-    end in 
-  zip [t] attr.confidence attr.rank id attr.name
+(** [add_attr t attr] adds the attributes [attr] to [t] if [t] is a clade. *)
+let add_attr t attr = 
+  match t with 
+  | Leaf _ -> t
+  | Clade info -> 
+    let id = 
+      begin
+        match attr.taxonomy with 
+        | None -> None 
+        | Some taxon -> taxon.id
+      end in 
+    Clade {
+      info with 
+      bootstrap = attr.confidence; 
+      rank = attr.rank; 
+      id = id; 
+      name = attr.name
+    }
 
 (** [parse_clade ()] is the clade represented within a pair of phyloXML
     "clade" tags.
@@ -350,7 +359,7 @@ let rec parse_clade (acc : Tree.t) (attr : clade_attr) : Tree.t =
     begin
       match acc with
       | t when is_empty t -> create_leaf attr
-      | t -> add_branch acc attr
+      | t -> add_attr t attr
     end
   | _ -> print_debug "parse_clade match failure"; raise SyntaxError 
 

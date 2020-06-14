@@ -43,6 +43,7 @@ include Phylo_parser_test
 include Dna_test
 include Pairwise_test
 include Msa_test
+include Phylo_printer_test
 
 let phylo_suite = "test suite for phyo_lib" >:::
                   [dna_tests;
@@ -51,6 +52,7 @@ let phylo_suite = "test suite for phyo_lib" >:::
                    tree_tests;
                    pairwise_suite;
                    phylo_algo_tests;
-                   phylo_parser_tests]
+                   phylo_parser_tests;
+                   phylo_printer_tests]
 
 let _ = run_test_tt_main phylo_suite

@@ -1,15 +1,22 @@
+(** The type of clade node identifiers. *)
+type clade_id = int
+
 (** The abstract data type of values representing phylogenetic trees. 
     Representation invariant: the phylogenetic tree never contains two 
     species with the same name. In any given tree, all clade_ids must be 
     unique.*)
-type t
-
-(* (** The abstract data type of values representing a node in the phylo tree.
-    Can represent both clades and species.  *)
-   type node *)
-
-(** The type of clade node identifiers. *)
-type clade_id = int
+type t = Clade of {
+    clade_id : clade_id;
+    children : t list;
+    bootstrap : float option;
+    rank : string option;
+    id : string option;
+    name : string option;
+  } | Leaf of {
+    scientific_name : string;
+    id : string option;
+    name : string option;
+  }
 
 (** The clade_id [clade_id] could not be found in this phylogenetic tree *)
 exception UnknownClade of clade_id

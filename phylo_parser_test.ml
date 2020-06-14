@@ -13,14 +13,14 @@ open Phylo_parser
     the parser likely will also successfully parse phyloXML files similar to
     the ones tested. *)
 
-(** Whether trees will be printed by [doesParse]. *)
+(** Whether trees will be printed by [does_parse]. *)
 let display_tree = false
 
-(** [doesParse f] is true if the phyloXML file pointed to by file 
+(** [does_parse f] is true if the phyloXML file pointed to by file 
     [f] is successfully parsed. 
     Requires: [f] is a phyloXML file within the PhyloXML folder.
     Effects: Prints tree to standard output if [display_tree] is true. *)
-let doesParse f =
+let does_parse f =
   try 
     let phylo = from_phylo ("PhyloXML/" ^ f) in
     if display_tree then Tree.print_tree phylo.tree else ();
@@ -54,13 +54,13 @@ let empty_trees = [
 ]
 
 let large_files = [
-  "frog.xml" >:: (fun _ -> assert_equal true (doesParse "frog.xml"));
+  "frog.xml" >:: (fun _ -> assert_equal true (does_parse "frog.xml"));
   "expanded_tree.txt" >:: (fun _ -> assert_equal true 
-                              (doesParse "expanded_tree.xml"));
-  "tol_156.xml" >:: (fun _ -> assert_equal true (doesParse "tol_156.xml"));
+                              (does_parse "expanded_tree.xml"));
+  "tol_156.xml" >:: (fun _ -> assert_equal true (does_parse "tol_156.xml"));
   "collapsed_tree.txt" >:: (fun _ -> assert_equal true 
-                               (doesParse "collapsed_tree.xml"));
-  "apaf.xml" >:: (fun _ -> assert_equal true (doesParse "apaf.xml"));
+                               (does_parse "collapsed_tree.xml"));
+  "apaf.xml" >:: (fun _ -> assert_equal true (does_parse "apaf.xml"));
 ]
 
 let phylo_parser_tests =
