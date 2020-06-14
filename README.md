@@ -18,8 +18,10 @@ hypothetical evolutionary tree, called a phylogenetic tree, that estimates, to
 the best of our ability, what the actual historical evolutionary tree would have 
 looked like. 
 
+In this library. we use OCaml's Streams and Buffers to efficiently parse DNA sequences, such as H1N1 or the X chromosome of a fruit fly, use the dynamic programming algorithm of Needleman and Wunsch to find the global optimum pairwise alignment of DNA sequences, construct distances for different DNA sequences, and use the Unweighted Pair Group Method with Arithmetic mean (UPGMA) algorithm to construct parsimonious, rooted phylogenetic trees. 
+
 ___ 
-### Library Functionality: 
+### Summary of Library Functionality: 
 
 - Parse existing phyloXML phylogenetic tree files into n-ary trees
 - Display existing phylogenetic trees in ASCII format
