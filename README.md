@@ -3,7 +3,7 @@
 ### Spring 2020 
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 
-Note that this is the library used by phylo-lib-web, which compiles this code into JavaScript and implements a front-end for this library. 
+This is the library used by phylo-lib-web, which compiles this code into JavaScript and implements a front-end for this library. 
 ___ 
 ### What are phylogenetic trees?
 
