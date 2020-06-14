@@ -1,4 +1,4 @@
-#directory "_build";;
+#directory "_build/src";;
 #load_rec "tree.cmo";;
 #load_rec "lexer.cmo";;
 #load_rec "phylo_parser.cmo";;
