@@ -19,6 +19,14 @@ the best of our ability, what the actual historical evolutionary tree would have
 looked like. 
 
 ___ 
+
+### Installation Instructions 
+
+1. Ensure that a modern version of OCaml is installed. This library was written using OCaml 4.09.0 and has no additional dependencies. 
+2. Clone this repository 
+3. In the folder containing this respitory, run make in the command line
+4. UTop will compile the required modules and the functionality of this library will then be available. 
+___ 
 ### Library Functionality: 
 
 - Parse existing phyloXML phylogenetic tree files into n-ary trees
@@ -27,14 +35,6 @@ ___
 - Construct rooted phylogenetic trees from DNA sequences using Needleman-Wunsch and UPGMA
 - Output the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
 
-___ 
-
-### Installation Instructions 
-
-1. Ensure that a modern version of OCaml is installed. This library was written using OCaml 4.09.0 and has no further dependencies. 
-2. Clone this repository 
-3. In the folder containing this respitory, run make in the command line
-4. UTop will compile the required modules and the functionality of this library will then be available. 
 ___ 
 ### Simple Examples 
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
