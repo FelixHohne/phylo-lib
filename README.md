@@ -22,19 +22,19 @@ looked like.
 ___ 
 ### Library Functionality: 
 
-- Parsing existing phyloXML phylogenetic tree files into n-ary trees
-- Displaying existing phylogenetic trees in ASCII format
-- Parsing DNA base pair sequences from FASTA files
-- Construction of phylogenetic trees from DNA sequences using Needleman-Wunsch for pairwise alignment and UPGMA to construct rooted phylogenetic trees
-- Outputting the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
+- Parse existing phyloXML phylogenetic tree files into n-ary trees
+- Display existing phylogenetic trees in ASCII format
+- Parse DNA base pair sequences from FASTA files
+- Construct rooted phylogenetic trees from DNA sequences using Needleman-Wunsch and UPGMA
+- Output the constructed phylogenetic trees in the form of XML-format files to support compatibility with other biocomputational programs
 
 ___ 
 
 ### Installation Instructions 
 
-1. Clone this repository 
-2. This library was constructed using OCaml 4.09.0 and has no further dependencies. 
-3. In the folder containing this respitory, run make in the terminal 
+1. Ensure that a modern version of OCaml is installed. This library was written using OCaml 4.09.0 and has no further dependencies. 
+2. Clone this repository 
+3. In the folder containing this respitory, run make in the command line
 4. UTop will compile the required modules and the functionality of this library will then be available. 
 ___ 
 ### Simple Examples 
@@ -56,9 +56,8 @@ Dna.to_string arr.(0)
 Dna.to_string arr.(1)
 ```
 
-**Construct a phylogenetic tree from DNA .FASTA Files**:We construct a phylogenetic tree for the H1N1, H5N1, and H3N2 viruses using  their PB-2 gene data. The resulting tree shows that H1N1 and H3N2 are more 
-closely related, which makes sense since they are swine flus while H5N1 is an 
-avian flu.
+**Construct a phylogenetic tree from DNA .FASTA Files**:We construct a phylogenetic tree for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The resulting tree shows that H1N1 and H3N2 are more 
+closely related as they are swine flus while H5N1 is an avian flu.
 
 ```OCaml
 let d1 = Dna.from_fasta "viruses/h5n1.fasta"
