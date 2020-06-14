@@ -1,6 +1,6 @@
 # An OCaml Phylogenetic Tree Library
 
-### Spring and Summer 2020 
+### Spring 2020 
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 
 ___ 
@@ -20,8 +20,12 @@ the best of our ability, what the actual historical evolutionary tree would have
 looked like. 
 
 ___ 
-### Algorithms used 
+### Functionality: 
 
+- Parsing existing phyloXML phylogenetic tree files into n-ary trees
+- Displaying phylogenetic trees in ASCII format
+- Parsing DNA base pair sequences from FASTA files
+- Construction of phylogenetic trees from DNA sequences using Needleman-Wunsch for pairwise alignment and UPGMA to construct rooted phylogenetic trees
 
 ___ 
 ### Simple Examples 
