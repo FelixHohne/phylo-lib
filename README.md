@@ -77,7 +77,7 @@ ___
 - N-ary trees: Vaishnavi Gupta
 - Tree Pretty Printing: Vaishnavi Gupta
 - Phylo_Parser to parse PhyloXML Files: Shiyuan Huang the rest was trio-programmed 
-- Construction of Distance Matrices for UPGAM: trio-programmed 
+- Construction of Distance Matrices for UPGMA: trio-programmed 
 - Pairwise alignment using Dynamic Programming : trio-programmed
 - UPGMA: trio-programmed
 - Maximum Likelihood Estimation: Vaishnavi Gupta
