@@ -68,9 +68,12 @@ Pairwise.print_alignment paligned.(0) paligned.(1);;
 ```OCaml
 let d1 = Dna.from_fasta "viruses/h5n1.fasta"
 let d2 = Dna.from_fasta "viruses/h1n1.fasta"
-let d3 = Dna.from_fasta "viruses/h3n2.fasta"
-let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1)
-Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
+let d3 = Dna.from_fasta "viruses/h7n7.fasta"
+let d4 = Dna.from_fasta "viruses/h7n9.fasta"
+let d5 = Dna.from_fasta "viruses/h3n2.fasta"
+let mat = Distance.dist_dna [| d1; d2; d3; d4; d5 |] 1 (-1) (-1)
+let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"|]
+(Phylo_algo.upgma mat virus_names) |> Tree.print_tree
 ```
 
 | Sample DNA Input | Constructed Tree|
