@@ -4,7 +4,7 @@
 ### by Shiyuan Huang, Felix Hohne, and Vaishnavi Gupta
 
 ___ 
-### What are phylogenetic trees?
+## What are phylogenetic trees?
 
 Scientists often wish to infer evolutionary history between different organisms.
 In order to determine the closeness of species such as birds or fish, 
@@ -20,7 +20,7 @@ looked like.
 
 
 ___ 
-### Summary of Library Functionality
+## Summary of Library Functionality
 
 In this library. we use OCaml's Streams and Buffers to efficiently parse DNA sequences such as H1N1 or the X chromosome of a fruit fly, use the dynamic programming algorithm of Needleman and Wunsch to find the global optimum pairwise alignment of DNA sequences, construct distance matrices for different DNA sequences, and use the Unweighted Pair Group Method with Arithmetic mean (UPGMA) algorithm to construct parsimonious, rooted phylogenetic trees. 
 
@@ -28,7 +28,7 @@ We also provide additional functionality to parse already constructed phylogenet
 
 ___ 
 
-### Installation Instructions 
+## Installation Instructions 
 
 1. Ensure that a modern version of OCaml is installed. This library was written using OCaml 4.09.0 and has no additional dependencies, except for bisect to test code coverage. 
 2. Clone this repository 
@@ -37,7 +37,7 @@ ___
 5. To compile the documentation, run `make docs`. 
 6. To run tests, run `make test`.
 ___ 
-### Simple Examples 
+## Simple Examples 
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
    called frog.xml into our custom built n-ary tree, then pretty-print it using ASCII art.  
    
@@ -85,7 +85,7 @@ For more examples and demos, see examples.txt.
 ___ 
 
 
-### Division of Work
+## Division of Work
 - Parsing DNA Files: Felix Hohne
 - Lexing PhyloXML Files: trio-programmed 
 - N-ary trees: Vaishnavi Gupta
