@@ -39,7 +39,7 @@ ___
 ___ 
 ### Simple Examples 
 
-<br/>
+
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
    called frog.xml into our custom built n-ary tree, then pretty-print it using ASCII art.  
    
