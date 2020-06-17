@@ -63,8 +63,7 @@ Pairwise.print_alignment paligned.(0) paligned.(1);;
    <img width="572" alt="Screen Shot 2020-06-17 at 12 39 24 PM" src="https://user-images.githubusercontent.com/58995473/84888544-b74c4280-b097-11ea-8b2c-1de35df011cb.png">
 <p/>
 
-**Construct a phylogenetic tree from DNA .FASTA Files**: We construct a phylogenetic tree for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The resulting tree shows that H1N1 and H3N2 are more 
-closely related as they are swine flus while H5N1 is an avian flu.
+**Construct a phylogenetic tree from DNA .FASTA Files**: We construct a phylogenetic tree based on the PB-2 gene for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The source for this data is the National Center for Biotechnology Information (NCBI). The resulting tree shows that H1N1 and H3N2 are more closely related as they are swine flue, while H5N1 is an avian flu.
 
 ```OCaml
 let d1 = Dna.from_fasta "viruses/h5n1.fasta"
