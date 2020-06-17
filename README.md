@@ -84,7 +84,7 @@ let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"|]
 | ----------- | ----------- |
 | <img width="402" alt="Screen Shot 2020-06-17 at 12 51 17 PM" src="https://user-images.githubusercontent.com/58995473/84889521-486fe900-b099-11ea-802c-a8744b41db98.png"> | <img width="528" alt="Screen Shot 2020-06-17 at 1 02 06 PM" src="https://user-images.githubusercontent.com/58995473/84890505-ca144680-b09a-11ea-8bcc-b5b7c4b28491.png">
 
-<br/>
+
 For more examples and demos, see examples.txt. 
 ___ 
 
