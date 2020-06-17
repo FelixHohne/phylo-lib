@@ -39,6 +39,7 @@ ___
 ___ 
 ### Simple Examples 
 
+<br/>
 **Running the XML Parser:** Parse an amphibian species phyloXML file found in the Phylo folder 
    called frog.xml into our custom built n-ary tree, then pretty-print it using ASCII art.  
    
@@ -50,7 +51,7 @@ ___
 | ----------- | ----------- |
 | <img width="423" alt="Screen Shot 2020-06-14 at 8 57 31 PM" src="https://user-images.githubusercontent.com/58995473/84601604-b772f500-ae81-11ea-8721-a8c19faea1fe.png"> | <img width="460" alt="Screen Shot 2020-06-14 at 9 06 48 PM" src="https://user-images.githubusercontent.com/58995473/84601803-1d13b100-ae83-11ea-8d98-2c1272cd2af8.png">
 
-
+<br/>
 
 **Pairwise Alignment using the Needleman-Wunsch algorithm:** The Needleman-Wunsch algorithm is a globally optimal algorithm for finding the pairwise alignment of two strings using dynamic programming. Here we implement it to find an optimal alignment of two pairs of DNA sequences. We then pretty-print the final alignment. 
 
@@ -63,6 +64,8 @@ Pairwise.print_alignment paligned.(0) paligned.(1);;
 <p align="center">
    <img width="572" alt="Screen Shot 2020-06-17 at 12 39 24 PM" src="https://user-images.githubusercontent.com/58995473/84888544-b74c4280-b097-11ea-8b2c-1de35df011cb.png">
 <p/>
+
+<br/>
 
 **Construct a phylogenetic tree from DNA .FASTA Files**: We construct a phylogenetic tree based on the PB-2 gene for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The source for this data is the National Center for Biotechnology Information (NCBI). The resulting tree shows that H1N1 and H3N2 are more closely related as they are swine flue, while H5N1 is an avian flu.
 
