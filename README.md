@@ -74,6 +74,9 @@ Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
 ```
 <img width="402" alt="Screen Shot 2020-06-17 at 12 51 17 PM" src="https://user-images.githubusercontent.com/58995473/84889521-486fe900-b099-11ea-802c-a8744b41db98.png">
 
+<img width="531" alt="Screen Shot 2020-06-17 at 12 57 51 PM" src="https://user-images.githubusercontent.com/58995473/84890075-2fb40300-b09a-11ea-8f56-853bf155ff9e.png">
+
+
 
 For more examples and demos, see INSTALL.txt. 
 ___ 
