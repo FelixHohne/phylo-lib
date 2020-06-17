@@ -73,6 +73,8 @@ let d3 = Dna.from_fasta "viruses/h3n2.fasta"
 let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1)
 Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|] |> Tree.print_tree
 ```
+<img width="696" alt="Screen Shot 2020-06-17 at 12 49 29 PM" src="https://user-images.githubusercontent.com/58995473/84889388-152d5a00-b099-11ea-8a87-7752be8b8a5f.png">
+
 
 For more examples and demos, see INSTALL.txt. 
 ___ 
