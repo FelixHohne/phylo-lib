@@ -32,7 +32,7 @@ docs: build
 
 clean:
 	ocamlbuild -clean
-	rm -rf doc.public doc.private report phylo_lib_src.zip bisect*.out bisect*.coverage src/testfile.xml
+	rm -rf doc.public doc.private report testfile.xml phylo_lib_src.zip bisect*.out bisect*.coverage src/testfile.xml
 
 zip:
 	zip phylo_lib_src.zip _tags Makefile .merlin .ocamlinit FASTA/* INSTALL.txt myocamlbuild.ml src/* PhyloXML/* README.md resources/* viruses/*  
