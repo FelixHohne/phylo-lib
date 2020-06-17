@@ -54,11 +54,10 @@ ___
 **Pairwise Alignment using the Needleman-Wunsch algorithm:** The Needleman-Wunsch algorithm is a globally optimal algorithm for finding the pairwise alignment of two strings using dynamic programming. Here we implement it to find an optimal alignment of two pairs of DNA sequences. We then pretty-print the final alignment. 
 
 ```OCaml
-let dna1 = Dna.from_string "AATCGTAGGCCCC"
-let dna2 = Dna.from_string "ATTGCGACTCGTATC"
-let arr = Pairwise.align_pair dna1 dna2 1 (-1) (-1) |> fst
-Dna.to_string arr.(0)
-Dna.to_string arr.(1)
+let pdna1 = Dna.from_fasta "FASTA/install_dna1.fasta";; 
+let pdna2 = Dna.from_fasta "FASTA/install_dna2.fasta";; 
+let paligned = Pairwise.align_pair pdna1 pdna2 1 (-1) (-1) |> fst;;
+Pairwise.print_alignment paligned.(0) paligned.(1);;
 ```
 
 **Construct a phylogenetic tree from DNA .FASTA Files**:We construct a phylogenetic tree for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The resulting tree shows that H1N1 and H3N2 are more 
