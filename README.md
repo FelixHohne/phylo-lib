@@ -67,7 +67,7 @@ Pairwise.print_alignment paligned.(0) paligned.(1);;
 
 <br/>
 
-**Construct a phylogenetic tree from DNA .FASTA Files**: We construct a phylogenetic tree based on the PB-2 gene for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The source for this data is the National Center for Biotechnology Information (NCBI). The resulting tree shows that H1N1 and H3N2 are more closely related as they are swine flue, while H5N1 is an avian flu.
+**Construct a phylogenetic tree from DNA .FASTA Files:** We construct a phylogenetic tree based on the PB-2 gene for the H1N1, H5N1, and H3N2 viruses, focusing on the PB-2 gene. The source for this data is the National Center for Biotechnology Information (NCBI). The resulting tree shows that H1N1 and H3N2 are more closely related as they are swine flue, while H5N1 is an avian flu.
 
 ```OCaml
 let d1 = Dna.from_fasta "viruses/h5n1.fasta"
@@ -84,6 +84,22 @@ let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"|]
 | ----------- | ----------- |
 | <img width="402" alt="Screen Shot 2020-06-17 at 12 51 17 PM" src="https://user-images.githubusercontent.com/58995473/84889521-486fe900-b099-11ea-802c-a8744b41db98.png"> | <img width="528" alt="Screen Shot 2020-06-17 at 1 02 06 PM" src="https://user-images.githubusercontent.com/58995473/84890505-ca144680-b09a-11ea-8bcc-b5b7c4b28491.png">
 
+<br/>
+
+**Save constructed phylogenetic trees as XML files:** Constructed phylogenetic trees can also be saved as XML files in phyloXML format. Here we construct a small phylogenetic tree and output the resulting tree in phyloXML format in `example_file.xml`.
+
+```OCaml
+let d1 = Dna.from_fasta "viruses/h5n1.fasta"
+let d2 = Dna.from_fasta "viruses/h1n1.fasta"
+let d3 = Dna.from_fasta "viruses/h3n2.fasta"
+let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1);;
+let tree = Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|]
+Phylo_printer.print_tree_xml tree "example_file.xml"
+```
+
+<p align="center">
+   <img width="400" alt="PhyloXML output in example_file.xml" src="https://user-images.githubusercontent.com/19438967/85355954-b1ad8d00-b4db-11ea-876b-3311e790eeaa.jpg">
+<p/>
 
 For more examples and demos, see examples.txt. 
 ___ 
@@ -100,3 +116,4 @@ ___
 - UPGMA: trio-programmed
 - Maximum Likelihood Estimation: Vaishnavi Gupta
 - README: Felix Hohne
+- Saving Constructed Trees as XML Files: Shiyuan Huang
