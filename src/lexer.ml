@@ -64,11 +64,33 @@ let is_token (s : string) : bool =
 let string_to_token (s : string) : token =
   Hashtbl.find word_token_map s
 
-let stream_of_file (f : string) : string Stream.t =
+(** [get_next_line s acc] reads characters from [s] until '\n' or '\r' is 
+    reached, then returns the string representing the characters read, appended
+    to [acc]. *)
+let rec get_next_line (s : char Stream.t) (acc : string) : string = 
+  match Stream.peek s with 
+  | Some c ->
+    Stream.junk s;
+    begin
+      match c with 
+      | '\n' | '\r' -> acc
+      | _ -> get_next_line s (acc ^ (Char.escaped c))
+    end
+  | None -> if acc = "" then raise End_of_file else acc
+
+(** [make_stream_helper s is_file] is a stream of lines from the file with 
+    filename [s] if [is_file] is true, and a stream of lines from [s] if
+    [is_file] is false. *)
+let make_stream_helper (s : string) (is_file : bool) : string Stream.t = 
   let stream = 
-    let in_channel = open_in f in 
-    Stream.from (fun _ ->
-        try Some (input_line in_channel) with End_of_file -> None)
+    if is_file then 
+      let in_channel = open_in s in 
+      Stream.from (fun _ -> 
+          try Some (input_line in_channel) with End_of_file -> None)
+    else 
+      let char_stream = Stream.of_string s in 
+      Stream.from (fun _ ->
+          try Some (get_next_line char_stream "") with End_of_file -> None)
   in 
   match Stream.peek stream with
   | Some s -> 
@@ -79,6 +101,12 @@ let stream_of_file (f : string) : string Stream.t =
       | _ ->  stream
     end 
   | None -> stream
+
+let stream_of_file (f : string) : string Stream.t =
+  make_stream_helper f true
+
+let stream_of_string (s : string) : string Stream.t = 
+  make_stream_helper s false
 
 (** [stream_of_line stream] is a character stream of the next line of 
     string stream [stream]. 
