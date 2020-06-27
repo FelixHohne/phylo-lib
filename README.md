@@ -92,13 +92,13 @@ let virus_names = [|"H5N1"; "H1N1"; "H7N7"; "H7N9"; "H3N2"|]
 let d1 = Dna.from_fasta "viruses/h5n1.fasta"
 let d2 = Dna.from_fasta "viruses/h1n1.fasta"
 let d3 = Dna.from_fasta "viruses/h3n2.fasta"
-let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1);;
+let mat = Distance.dist_dna [| d1; d2; d3 |] 1 (-1) (-1)
 let tree = Phylo_algo.upgma mat [|"H5N1"; "H1N1"; "H3N2"|]
 Phylo_printer.print_tree_xml tree "example_file.xml"
 ```
 
 <p align="center">
-   <img width="400" alt="PhyloXML output in example_file.xml" src="https://user-images.githubusercontent.com/19438967/85355954-b1ad8d00-b4db-11ea-876b-3311e790eeaa.jpg">
+   <img width="400" alt="PhyloXML output in example_file.xml" src="https://user-images.githubusercontent.com/19438967/85913359-23e6e000-b802-11ea-817b-dd3c11706f5a.png">
 <p/>
 
 For more examples and demos, see examples.txt. 
