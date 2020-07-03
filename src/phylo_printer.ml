@@ -4,13 +4,23 @@ open Printf
 
 type attr = (string * string) list
 
+(** Whether the printing helpers print to a file or append to 
+    a string ref. *)
+let printing = ref true
+
+(** Points to the string representation of the tree that is being processed
+    by [xml_of_tree]. *)
+let print_output = ref ""
+
 (** A reference that will point to the out_channel for the file currently 
     being written to. It points to [stdout] when no files are being written. *)
 let oc = ref stdout
 
-(** [print_f s] prints [s] to the current file. *)
+(** [print_f s] prints [s] to the current file if [printing] is true. Else, 
+    it appends [s] to [print_output]. *)
 let print_f (s : string) : unit = 
-  fprintf !oc "%s" s
+  if !printing then fprintf !oc "%s" s
+  else print_output := !print_output ^ s
 
 (** [print_tabs n oc] prints [n] 2-space tabs to the current file. *)
 let print_tabs (n : int) : unit =
@@ -117,8 +127,16 @@ let print_phylo_xml (phylo : phylo) (f : string) : unit =
   oc := stdout
 
 let print_tree_xml (tree : Tree.t) (f : string) : unit = 
+  printing := true;
   oc := open_out f;
   let phylo = { name = ""; description = ""; tree = tree} in 
   print_phylo_helper phylo;
   close_out !oc;
-  oc := stdout 
+  oc := stdout
+
+let xml_of_tree (tree : Tree.t) : string = 
+  printing := false;
+  print_output := "";
+  let phylo = { name = ""; description = ""; tree = tree} in 
+  print_phylo_helper phylo;
+  !print_output

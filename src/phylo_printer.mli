@@ -6,3 +6,6 @@ val print_phylo_xml : Phylo_parser.phylo -> string -> unit
     to a file named [file]. *)
 val print_tree_xml : Tree.t -> string -> unit
 
+(** [xml_of_tree tree] is the phyloXML representation of [tree]. *)
+val xml_of_tree : Tree.t -> string
+
