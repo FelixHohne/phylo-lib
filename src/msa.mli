@@ -25,3 +25,8 @@ val get_seq : int -> t -> Dna.t
     0-indexed. The result is either 'A', 'T', 'C', 'G', or 'N'.
     Requires: 0 <= [i] < [size t] and 0 <= [j] < [seq_len msa] *)
 val get_base : int -> int -> t -> char
+
+(** [to_string msa] is a string representation of [msa] suitable for printing
+    to console. DNA sequences of length greater than 80 are displayed in aligned
+    chunks of length 80 separated by newlines. *)
+val to_string : t -> string
