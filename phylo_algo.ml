@@ -50,3 +50,9 @@ let upgma dist species =
   | 0 -> Tree.empty
   | 1 -> Tree.leaf_no_params species.(0)
   | _ -> upgma_help dist species []
+
+let rec factorial_range n l acc  = if n = l then acc*l else 
+    factorial_range (n-1) l (acc*n)
+
+let b s = (factorial_range (2*s-2) (s-1) 1) * (1 lsl (s-2))
+let bayes msa species = Tree.empty
