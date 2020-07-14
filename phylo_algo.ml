@@ -54,5 +54,7 @@ let upgma dist species =
 let rec factorial_range n l acc  = if n = l then acc*l else 
     factorial_range (n-1) l (acc*n)
 
-let b s = (factorial_range (2*s-2) (s-1) 1) * (1 lsl (s-2))
+let b s = (factorial_range (2*s-3) (s-2) 1) / (1 lsl (s-2))
+
+let uninf_prior t s = 1. /. (float_of_int (b s))
 let bayes msa species = Tree.empty
