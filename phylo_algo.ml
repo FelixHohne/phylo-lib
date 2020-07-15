@@ -71,6 +71,21 @@ let rec initialize species i acc = if i == Array.length species then acc else
       else initialize species (i+1) (zip_no_params [leaf; acc])
     end
 
-let likelihood tree msa species = 0.5
+let log_likelihood_site tree msa species i = 0.5
 
-let bayes msa species = Tree.empty
+let rec log_likelihood tree msa species acc finished = 
+  if finished = Array.length species then acc else
+    log_likelihood tree msa species 
+      (acc +. log_likelihood_site tree msa species finished) (finished + 1)
+
+let log_proposal tree1 tree2 = 0.5
+
+let naccept = ref 0
+let nreject = ref 0
+
+let r tree1 tree2 msa species = min 0. (log_likelihood tree2 msa species 0. 0) 
+                                -. (log_likelihood tree1 msa species 0. 0) 
+                                +. (log_proposal tree1 tree2) 
+                                -. (log_proposal tree2 tree1)
+
+let bayes msa species = naccept
