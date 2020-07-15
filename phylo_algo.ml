@@ -51,10 +51,26 @@ let upgma dist species =
   | 1 -> Tree.leaf_no_params species.(0)
   | _ -> upgma_help dist species []
 
+
 let rec factorial_range n l acc  = if n = l then acc*l else 
     factorial_range (n-1) l (acc*n)
 
+(**[b s] is the total number of rooted trees possible with [s] species.*)
 let b s = (factorial_range (2*s-3) (s-2) 1) / (1 lsl (s-2))
 
+(**[substitution i j] is the probability of base pair [i] transitioning to [j]*)
+let substitution i j = 0.25
+
+(**[uninf_prior t s] is the probability of tree [t] with [s] species.*)
 let uninf_prior t s = 1. /. (float_of_int (b s))
+
+let rec initialize species i acc = if i == Array.length species then acc else
+    begin
+      let leaf = i |> Array.get species |> leaf_no_params in
+      if Tree.is_empty acc then leaf
+      else initialize species (i+1) (zip_no_params [leaf; acc])
+    end
+
+let likelihood tree msa species = 0.5
+
 let bayes msa species = Tree.empty
