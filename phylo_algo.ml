@@ -80,12 +80,44 @@ let rec log_likelihood tree msa species acc finished =
 
 let log_proposal tree1 tree2 = 0.5
 
-let naccept = ref 0
-let nreject = ref 0
+let next tree = Tree.empty
 
 let r tree1 tree2 msa species = min 0. (log_likelihood tree2 msa species 0. 0) 
                                 -. (log_likelihood tree1 msa species 0. 0) 
                                 +. (log_proposal tree1 tree2) 
                                 -. (log_proposal tree2 tree1)
 
-let bayes msa species = naccept
+let naccept = ref 0
+let nreject = ref 0
+
+type chain_state = {tree: Tree.t; chain: Tree.t list}
+
+let mcmc_sampler msa species =
+  naccept:= 0; nreject:=0;
+  (fun chain_state ->
+     let tree1 = chain_state.tree in
+     let tree2 = next tree1 in
+     let ratio = r tree1 tree2 msa species in 
+     if ratio > 0. then 
+       (incr naccept; {tree= tree2; chain = tree2::chain_state.chain})
+     else 
+       (incr nreject; {tree= tree1; chain = tree1::chain_state.chain}))
+
+let rec chain_helper sampler state acc = 
+  if acc = 100 then state 
+  else chain_helper sampler (sampler state) (acc + 1)
+
+let rec fold mode prev max_freq curr_freq l =
+  match l with
+    [] -> mode
+  | x :: xs -> if x = prev then fold mode prev max_freq (curr_freq + 1) xs else
+    if curr_freq > max_freq then fold prev x curr_freq 1 xs
+    else fold mode x max_freq 1 xs
+
+let bayes msa species =
+  let start_tree = initialize species 0 Tree.empty in
+  let init = {tree = start_tree; chain = [start_tree]} in
+  let sampler = mcmc_sampler msa species in 
+  let final = chain_helper sampler init 0 in
+  let sorted = List.sort compare final.chain in
+  fold start_tree start_tree 0 0 sorted
