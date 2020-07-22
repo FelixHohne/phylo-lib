@@ -114,6 +114,6 @@ ___
 - Construction of Distance Matrices for UPGMA: trio-programmed 
 - Pairwise alignment using Dynamic Programming : trio-programmed
 - UPGMA: trio-programmed
-- Maximum Likelihood Estimation: Vaishnavi Gupta
+- Bayesian Inference: Vaishnavi Gupta
 - README: Felix Hohne
 - Saving Constructed Trees as XML Files: Shiyuan Huang
