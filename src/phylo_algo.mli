@@ -8,3 +8,5 @@
     of the algorithm.
     Effects: Modifies [dist_matrix]. *)
 val upgma : Distance.t -> string array -> Tree.t
+
+val bayes : Msa.t -> string array -> Tree.t
