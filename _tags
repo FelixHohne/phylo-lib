@@ -4,5 +4,5 @@
 <phylo_parser.ml>: coverage
 <phylo_algo.ml>: coverage
 <dna.ml>: coverage
-<test.{byte,native}>:coverage
+<src/test.{byte,native}>:coverage
 true: package(oUnit)

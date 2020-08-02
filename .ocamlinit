@@ -1,4 +1,4 @@
-#directory "_build";;
+#directory "_build/src";;
 #load_rec "tree.cmo";;
 #load_rec "lexer.cmo";;
 #load_rec "phylo_parser.cmo";;
@@ -7,3 +7,4 @@
 #load_rec "msa.cmo";;
 #load_rec "distance.cmo";;
 #load_rec "phylo_algo.cmo";;
+#load_rec "phylo_printer.cmo";;
