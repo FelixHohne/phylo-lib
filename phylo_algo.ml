@@ -6,7 +6,7 @@ open Distance
     not part of any trees in [checked]@[unchecked]. Otherwise, the species that
     is not in the existing tree list is added to the tree that contains the 
     other species. *)
-let rec add_species species i j acc = 
+let add_species species i j acc = 
   let s1 = species.(i) in
   let s2 = species.(j) in
   match (List.assoc_opt i acc), (List.assoc_opt j acc) with
@@ -80,7 +80,43 @@ let rec log_likelihood tree msa species acc finished =
 
 let log_proposal tree1 tree2 = 0.5
 
-let next tree = Tree.empty
+let min i j = if i < j then i else j
+
+let max i j = if i > j then i else j
+
+let rec two_random species n =
+  let i = Random.int n in
+  let j = Random.int n in 
+  if species.(i) = species.(j) then two_random species n
+  else 
+    let ct = if species.(i) = i then 1 else 0 in
+    (species.(i), species.(j), if species.(j) = j then ct+1 else ct)
+
+let combine_species i j clubbed =
+  Array.set clubbed (max i j) (min i j)
+
+let rec next_help ct species clubbed acc = 
+  if ct = Array.length species then 
+    begin
+      let tree_list = (List.rev_map (fun x -> snd x) acc) in
+      if List.length tree_list = 1 then (List.hd tree_list)
+      else if List.length tree_list > 1 then zip_no_params tree_list
+      else failwith "Precondition violated in next_help"
+    end
+  else
+    begin
+      let i, j, new_ct = species |> Array.length |> two_random clubbed in
+      let t = add_species species i j acc in
+      combine_species i j clubbed;
+      next_help new_ct species clubbed t
+    end
+
+
+(** Returns a random tree with the given [species]*)
+let next species = 
+  let blank = Array.make (Array.length species) 0 in
+  let clubbed = Array.mapi (fun i x -> i) blank in
+  next_help 0 species clubbed []
 
 let r tree1 tree2 msa species = min 0. (log_likelihood tree2 msa species 0. 0) 
                                 -. (log_likelihood tree1 msa species 0. 0) 
@@ -93,15 +129,16 @@ let nreject = ref 0
 type chain_state = {tree: Tree.t; chain: Tree.t list}
 
 let mcmc_sampler msa species =
-  naccept:= 0; nreject:=0;
+  (* naccept:= 0; nreject:=0; *)
   (fun chain_state ->
      let tree1 = chain_state.tree in
-     let tree2 = next tree1 in
+     let tree2 = next species in
      let ratio = r tree1 tree2 msa species in 
      if ratio > 0. then 
-       (incr naccept; {tree= tree2; chain = tree2::chain_state.chain})
-     else 
-       (incr nreject; {tree= tree1; chain = tree1::chain_state.chain}))
+       {tree= tree2; chain = tree2::chain_state.chain}
+     else if Random.float 1.0 < ratio then
+       {tree= tree2; chain = tree2::chain_state.chain}
+     else {tree= tree1; chain = tree1::chain_state.chain})
 
 let rec chain_helper sampler state acc = 
   if acc = 100 then state 
